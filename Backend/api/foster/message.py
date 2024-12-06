@@ -3,5 +3,5 @@ import fastapi
 router = fastapi.APIRouter()
 
 @router.get("/fetch/{user_id}")
-def add_user():
+def affirm():
     return {"message": "User removed"}
