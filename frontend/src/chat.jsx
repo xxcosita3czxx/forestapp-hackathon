@@ -6,7 +6,7 @@ function App() {
 
   return (
     <div style={{ backgroundColor: 'red' }}>
-      <h1>Vwefwefwggwrgwergwet</h1>
+      <h1>dsadasdasdassd</h1>
     </div>
   )
 }
