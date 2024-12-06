@@ -28,7 +28,7 @@ jobs:
 
     - name: Merge changes from GitLab
       run: |
-        git merge gitlab/main --strategy-option theirs
+        git merge gitlab/main --strategy-option theirs --allow-unrelated-histories
 
     - name: Push to GitLab
       run: |
