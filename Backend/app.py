@@ -50,7 +50,7 @@ def load_routes_from_directory(directory, parent_router=None):
             module_name = filename[:-3]  # Strip '.py' from filename
             module_path = full_path
             try:
-                spec = importlib.util.spec_from_file_location(module_name, module_path)
+                spec = importlib.util.spec_from_file_location(module_name, module_path)  # noqa: E501
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
 
@@ -61,7 +61,7 @@ def load_routes_from_directory(directory, parent_router=None):
                     else:
                         app.include_router(module.router)
             except Exception as e:
-                logging.WARNING(f"Failed to load {module_name}, \n{e}")
+                logging.WARNING(f"Failed to load {str(module_name)}, \n{e}")
 
 load_routes_from_directory("api")
 
