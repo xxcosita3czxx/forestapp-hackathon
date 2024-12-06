@@ -1,8 +1,8 @@
-import os
+import os  # noqa: I001
 
 from config import Config
 from flask import Flask
-
+from database import test
 app = Flask(
     __name__,
     template_folder=os.path.abspath(Config.TEMPLATE_FOLDER),
