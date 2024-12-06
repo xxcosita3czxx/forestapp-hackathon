@@ -4,8 +4,8 @@ import utils.configmanager as cm
 router = fastapi.APIRouter()
 
 @router.get("/add")
-def add_user():
+def add_user(name: str, password: str, timestamp : int):
     try:
-        cm.users.set()
+        pass
     except Exception:
         return "error"

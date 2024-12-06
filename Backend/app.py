@@ -1,10 +1,16 @@
 import importlib
 import importlib.util
+import logging
 import os
 import sys
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+#TODO Forum
+#TODO Accounts
+#TODO Stastuses
+#TODO Random message
 
 app = FastAPI()
 
@@ -41,16 +47,19 @@ def load_routes_from_directory(directory, parent_router=None):
             # Import the Python module dynamically
             module_name = filename[:-3]  # Strip '.py' from filename
             module_path = full_path
-            spec = importlib.util.spec_from_file_location(module_name, module_path)
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
+            try:
+                spec = importlib.util.spec_from_file_location(module_name, module_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
 
-            # Check if the module has a router (WebSocket or API routes) and include it  # noqa: E501
-            if hasattr(module, 'router'):
-                if parent_router is not None:
-                    parent_router.include_router(module.router)
-                else:
-                    app.include_router(module.router)
+                # Check if the module has a router (WebSocket or API routes) and include it  # noqa: E501
+                if hasattr(module, 'router'):
+                    if parent_router is not None:
+                        parent_router.include_router(module.router)
+                    else:
+                        app.include_router(module.router)
+            except Exception as e:
+                logging.WARN(f"Failed to load {module_name}, \n{e}")
 
 load_routes_from_directory("api")
 
