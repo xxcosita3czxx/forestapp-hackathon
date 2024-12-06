@@ -1,6 +1,7 @@
 import ollama
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
+
 messages = {'role': 'system',
                 'content':"You are a master at thinking of affirmations. You will think of an infinite number of unique affirmations for children, teens, and even adults. Only reply with the affirmation. Nothing else. Be unique, yet grounded in broad terms applicable to almost anything."}
 tokenizer = AutoTokenizer.from_pretrained("facebook/nllb-200-3.3B", trust_remote_code=True)
