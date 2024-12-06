@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import './chat.css'
 
 const App = () => {
@@ -8,38 +7,26 @@ const App = () => {
 
   const fetchMessages = async () => {
     try {
-      // Mock API call - replace with your actual backend endpoint
-      const response = await axios.get('/api/messages');
-      setMessages(response.data);
+      // Mock messages for demonstration
+      const mockMessages = [
+        { text: 'Hello' },
+        { text: 'How are you?' }
+      ];
+      setMessages(mockMessages);
     } catch (error) {
-      console.error('Chyba při načítání zpráv:', error);
-      // Optional: Add mock messages for testing
-      setMessages([
-        { text: 'Test message 1' },
-        { text: 'Test message 2' }
-      ]);
+      console.error('Error fetching messages:', error);
     }
   };
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
     if (!inputMessage.trim()) return;
 
-    try {
-      // Mock API call - replace with your actual backend endpoint
-      await axios.post('/api/messages', { text: inputMessage });
-      setMessages([...messages, { text: inputMessage }]);
-      setInputMessage('');
-    } catch (error) {
-      console.error('Chyba při odesílání zprávy:', error);
-      // Optimistically add message to UI
-      setMessages([...messages, { text: inputMessage }]);
-    }
+    setMessages([...messages, { text: inputMessage }]);
+    setInputMessage('');
   };
 
   useEffect(() => {
     fetchMessages();
-    const interval = setInterval(fetchMessages, 5000);
-    return () => clearInterval(interval);
   }, []);
 
   return (
