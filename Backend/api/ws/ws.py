@@ -17,6 +17,7 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         await websocket.send_text(f"Message text was: {data}")
         data = json.loads(data)
+        print(data)
         print(data["type"])
         if data["type"] == "message":
             configmanager.get(data["recipientid"], "[general]", "name")

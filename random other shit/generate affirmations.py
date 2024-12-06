@@ -6,7 +6,7 @@ from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 messages = [
     {
         'role': 'system',
-        'content': "You are a master at thinking of affirmations. You will think of an infinite number of unique affirmations for children, teens, and even adults. Only reply with the affirmation. Nothing else. Be unique, yet grounded in broad terms applicable to almost anything."
+        'content': "You are a master at thinking of affirmations. You will think of an infinite number of unique affirmations for children, teens, and even adults. Only reply with the affirmation. Nothing else. Be unique, yet grounded in broad terms applicable to almost anything and anyone. Always respond with only one affirmation."
     }
 ]
 
@@ -20,7 +20,7 @@ eng_Latn = tokenizer.convert_tokens_to_ids("eng_Latn")
 ces_Latn = tokenizer.convert_tokens_to_ids("ces_Latn")
 
 def translate(text):
-    inputs = tokenizer(text, padding=True, truncation=True, max_length=512, return_tensors=" vbpt")  # noqa: E501
+    inputs = tokenizer(text, padding=True, truncation=True, max_length=512, return_tensors="pt")  # noqa: E501
     target_lang_id = ces_Latn
     with torch.no_grad():
         translated_tokens = transmodel.generate(
@@ -33,13 +33,18 @@ def translate(text):
 
 affirms = []
 for i in range(100):
-    response = ollama.chat(model="llama3.2:3b", messages=messages)
-    # Add the response to messages and affirms
-    messages.append({
-        'role': 'assistant',
-        'content': response['message']['content'],
-        })
-    print(f"Untranslated: {response['message']['content']}")
-    translated = translate(response['message']['content'])
-    affirms.append(translated)
-    print(f"Translated: {translated}")
+    response = ollama.chat(model="hermes3:8b", messages=messages)
+    check = ollama.generate(model="llama-guard3", prompt=response['message']['content'])["response"]["content"]
+    print(check)
+    if "unsafe" in check:
+        print(f"Untranslated and unsafe, babey: {response['message']['content']}")
+    else:
+        messages.append({
+            'role': 'assistant',
+            'content': response['message']['content'],
+            })
+        print(type(response['message']['content']))
+        print(f"Untranslated: {response['message']['content']}")
+        translated = translate(response['message']['content'])
+        affirms.append(translated)
+        print(f"Translated: {translated}")
