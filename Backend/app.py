@@ -8,6 +8,21 @@ load_dotenv()
 
 app = FastAPI()
 
+def load_routes_from_directory(directory):
+    for filename in os.listdir(directory):
+        if filename.endswith('.py') and filename != '__init__.py':
+            module_name = filename[:-3]
+            module_path = os.path.join(directory, filename)
+            spec = importlib.util.spec_from_file_location(module_name, module_path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+
+            # Assuming each module has a FastAPI app object to include
+            if hasattr(module, 'app'):
+                app.include_router(module.app)
+
+load_routes_from_directory("./api/")
+
 @app.get("/")
 def read_root():
     return {"message": "Custom environment works!"}
