@@ -26,9 +26,9 @@ jobs:
       run: |
         git fetch gitlab
 
-    - name: Rebase on GitLab main
+    - name: Merge changes from GitLab
       run: |
-        git rebase gitlab/main
+        git merge gitlab/main --strategy-option theirs
 
     - name: Push to GitLab
       run: |
