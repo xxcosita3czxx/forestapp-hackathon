@@ -2,26 +2,34 @@ name: Mirror to GitLab
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   mirror:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+    - name: Configure Git
+      run: |
+        git config --global user.name "dvorak"
+        git config --global user.email "xdvorakf@gmail.com"
 
-      - name: Add GitLab remote
-        run: |
-          git remote add gitlab https://gitlab.com/UZIVATELSKE_JMENO/NAZEV_REPOZITARE.git
+    - name: Add GitLab remote
+      run: |
+        git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.rtsoft.cz/co-hackaton-rtsoft-2024/co-hackaton-2024-project-8.git
 
-      - name: Push to GitLab
-        env:
-          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-        run: |
-          git push gitlab --all
+    - name: Fetch from GitLab
+      run: |
+        git fetch gitlab
+
+    - name: Rebase on GitLab main
+      run: |
+        git rebase gitlab/main
+
+    - name: Push to GitLab
+      run: |
+        git push gitlab main
