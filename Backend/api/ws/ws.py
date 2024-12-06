@@ -1,6 +1,9 @@
+import json
+
+import configmanager
 import fastapi
 from fastapi import WebSocket
-import json
+
 # Create the FastAPI app
 app = fastapi.FastAPI()
 
@@ -16,6 +19,6 @@ async def websocket_endpoint(websocket: WebSocket):
         data = json.loads(data)
         print(data["type"])
         if data["type"] == "message":
-            pass
+            configmanager.get(data["recipientid"], "[general]", "name" )
 # todle tu musi bejt nesahej na to
 app.include_router(router)
