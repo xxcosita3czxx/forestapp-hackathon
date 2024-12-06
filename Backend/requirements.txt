@@ -1,0 +1,2 @@
+pycryptodome
+fastapi
