@@ -15,5 +15,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_text(f"Message text was: {data}")
         data = json.loads(data)
         print(data["type"])
+        if data["type"] == "message":
+            pass
 # todle tu musi bejt nesahej na to
 app.include_router(router)
