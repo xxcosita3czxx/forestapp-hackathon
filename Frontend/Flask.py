@@ -1,7 +1,8 @@
-from flask import Flask, render_template, make_response, request, jsonify
 import os
-import requests
+
 from config import Config
+from flask import Flask
+
 app = Flask(
     __name__,
     template_folder=os.path.abspath(Config.TEMPLATE_FOLDER),
