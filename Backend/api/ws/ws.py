@@ -18,7 +18,12 @@ async def websocket_endpoint(websocket: WebSocket):
                 content = ""
                 recipientid = ""
                 senderid = ""
-                
+                data = data.replace("[message]")
+
+                print(data)
+                    #for i in data:
+                        
+            
         else:
             await websocket.send_text("Malformed request")
 # todle tu musi bejt nesahej na to
