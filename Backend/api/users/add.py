@@ -25,7 +25,7 @@ def check_aes_code(password, encrypted_code, original_string="success-uuid"):
     try:
         decrypted = unpad(cipher.decrypt(encrypted), AES.block_size).decode()
         return decrypted == original_string
-    except:
+    except Exception:
         return False
 
 

@@ -12,7 +12,9 @@ from fastapi.middleware.cors import CORSMiddleware
 #TODO Stastuses
 #TODO Random message
 
-app = FastAPI()
+app = FastAPI(root_path="/api/v1")
+
+logging.basicConfig(level=logging.WARNING)
 
 app.add_middleware(
     CORSMiddleware,
@@ -59,7 +61,7 @@ def load_routes_from_directory(directory, parent_router=None):
                     else:
                         app.include_router(module.router)
             except Exception as e:
-                logging.WARN(f"Failed to load {module_name}, \n{e}")
+                logging.WARNING(f"Failed to load {module_name}, \n{e}")
 
 load_routes_from_directory("api")
 
