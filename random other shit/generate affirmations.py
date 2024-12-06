@@ -20,7 +20,7 @@ eng_Latn = tokenizer.convert_tokens_to_ids("eng_Latn")
 ces_Latn = tokenizer.convert_tokens_to_ids("ces_Latn")
 
 def translate(text):
-    inputs = tokenizer(text, padding=True, truncation=True, max_length=512, return_tensors=" vbpt")  # noqa: E501
+    inputs = tokenizer(text, padding=True, truncation=True, max_length=512, return_tensors="pt")  # noqa: E501
     target_lang_id = ces_Latn
     with torch.no_grad():
         translated_tokens = transmodel.generate(
