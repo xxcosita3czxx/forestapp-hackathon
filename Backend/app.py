@@ -1,12 +1,36 @@
+import importlib
 import os
 
-from database import test
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket
+
+# Get the directory of the currently running script (main script)
+current_script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+# Path to the 'scripts' directory (relative to the main script)
+scripts_directory = os.path.join(current_script_directory, 'scripts')
+
+# Change working directory to the 'scripts' directory
+os.chdir(scripts_directory)
 
 load_dotenv()
 
 app = FastAPI()
+
+def load_routes_from_directory(directory):
+    for filename in os.listdir(directory):
+        if filename.endswith('.py') and filename != '__init__.py':
+            module_name = filename[:-3]
+            module_path = os.path.join(directory, filename)
+            spec = importlib.util.spec_from_file_location(module_name, module_path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+
+            # Assuming each module has a FastAPI app object to include
+            if hasattr(module, 'app'):
+                app.include_router(module.app)
+
+load_routes_from_directory("api")
 
 @app.get("/")
 def read_root():
