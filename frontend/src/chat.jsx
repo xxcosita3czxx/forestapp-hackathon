@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import './Chat.css'
+import './chat.css'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div style={{ backgroundColor: 'white' }}>
+    <div style={{ backgroundColor: 'red' }}>
       <h1>Vwefwefwggwrgwergwet</h1>
     </div>
   )
