@@ -4,10 +4,17 @@ import os
 import sys
 
 from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins or specify allowed domains here
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, WS, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 # Get the directory of the currently running script (main script)
 current_script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 

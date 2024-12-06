@@ -1,6 +1,10 @@
 import fastapi
 from fastapi import WebSocket
 
+# Create the FastAPI app
+app = fastapi.FastAPI()
+
+# Create routr
 router = fastapi.APIRouter()
 
 @router.websocket("/ws")
@@ -9,3 +13,6 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         await websocket.send_text(f"Message text was: {data}")
+
+# todle tu musi bejt nesahej na to
+app.include_router(router)
