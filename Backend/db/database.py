@@ -1,13 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import Annotated
 
-db = SQLAlchemy()
+from fastapi import Depends, FastAPI, HTTPException, Query
+from sqlmodel import Field, Session, SQLModel, create_engine, select
 
-class dbEdit:
-    def dumpall(table):
-        q = table.query.all()
-        return q
 
-class test(db.Model):
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, autoincrement=True)
-    huewhg: Mapped[str] = mapped_column(db.String, nullable=False)
+class test(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    huewhg: str = Field(index=True)
