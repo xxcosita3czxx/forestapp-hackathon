@@ -1,7 +1,7 @@
 import json
 
-import configmanager
 import fastapi
+import utils.configmanager as configmanager
 from fastapi import WebSocket
 
 # Create the FastAPI app

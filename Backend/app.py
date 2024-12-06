@@ -49,6 +49,7 @@ def load_routes_from_directory(directory, parent_router=None):
             # Import the Python module dynamically
             module_name = filename[:-3]  # Strip '.py' from filename
             module_path = full_path
+            print(module_name)
             try:
                 spec = importlib.util.spec_from_file_location(module_name, module_path)  # noqa: E501
                 module = importlib.util.module_from_spec(spec)
