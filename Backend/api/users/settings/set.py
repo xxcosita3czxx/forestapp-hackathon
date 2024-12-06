@@ -3,5 +3,5 @@ import fastapi
 router = fastapi.APIRouter()
 
 @router.get("/")
-def add_user():
-    return {"message": "User removed"}
+def set_settings():
+    return {"message": "Settings set"}
