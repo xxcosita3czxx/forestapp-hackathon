@@ -1,6 +1,6 @@
 import os  # noqa: I001
 
-from config import Config
+from Backend.config import Config
 from flask import Flask, make_response, render_template
 from backend.db.database import test
 app = Flask(
