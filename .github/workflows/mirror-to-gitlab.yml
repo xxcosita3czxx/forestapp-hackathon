@@ -18,10 +18,8 @@ jobs:
 
       - name: Add GitLab remote
         run: |
-          git remote add gitlab https://gitlab.rtsoft.cz/co-hackaton-rtsoft-2024/co-hackaton-2024-project-8.git
+          git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.rtsoft.cz/co-hackaton-rtsoft-2024/co-hackaton-2024-project-8.git
 
       - name: Push to GitLab
-        env:
-          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         run: |
           git push gitlab --all
