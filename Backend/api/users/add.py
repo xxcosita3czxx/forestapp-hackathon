@@ -1,7 +1,8 @@
 import fastapi
-
+import utils.configmanager as cm
 router = fastapi.APIRouter()
 
 @router.get("/add")
 def add_user():
-    return {"message": "User added"}
+    try:
+        cm.use

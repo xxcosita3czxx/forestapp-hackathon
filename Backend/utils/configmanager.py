@@ -74,3 +74,5 @@ class ConfigManager:
             self._save_config(id)
             self._load_all_configs()  # Reload all configs after saving
         logging.debug(f"Deleted {id}:{title}:{key}")
+
+users = ConfigManager("data/users/")
