@@ -4,6 +4,15 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket
 
+# Get the directory of the currently running script (main script)
+current_script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+# Path to the 'scripts' directory (relative to the main script)
+scripts_directory = os.path.join(current_script_directory, 'scripts')
+
+# Change working directory to the 'scripts' directory
+os.chdir(scripts_directory)
+
 load_dotenv()
 
 app = FastAPI()
@@ -21,7 +30,7 @@ def load_routes_from_directory(directory):
             if hasattr(module, 'app'):
                 app.include_router(module.app)
 
-load_routes_from_directory("./api/")
+load_routes_from_directory("api")
 
 @app.get("/")
 def read_root():
