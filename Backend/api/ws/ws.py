@@ -1,3 +1,6 @@
+import json
+
+import configmanager
 import fastapi
 from fastapi import WebSocket
 
@@ -13,18 +16,9 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         await websocket.send_text(f"Message text was: {data}")
-        if "\"" in data:
-            if "[message]" in data:
-                content = ""
-                recipientid = ""
-                senderid = ""
-                data = data.replace("[message]")
-
-                print(data)
-                    #for i in data:
-                        
-            
-        else:
-            await websocket.send_text("Malformed request")
+        data = json.loads(data)
+        print(data["type"])
+        if data["type"] == "message":
+            configmanager.get(data["recipientid"], "[general]", "name" )
 # todle tu musi bejt nesahej na to
 app.include_router(router)

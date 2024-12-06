@@ -6,3 +6,5 @@ router = fastapi.APIRouter()
 def add_user():
     try:
         cm.use
+    except:
+        pass
