@@ -1,10 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { useState } from 'react'
 import './Chat.css'
-import App from './index.jsx'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div style={{ backgroundColor: 'white' }}>
+      <h1>Vwefwefwggwrgwergwet</h1>
+    </div>
+  )
+}
+
+export default App
