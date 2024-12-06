@@ -13,6 +13,13 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         await websocket.send_text(f"Message text was: {data}")
-
+        if "\"" in data:
+            if "[message]" in data:
+                content = ""
+                recipientid = ""
+                senderid = ""
+                
+        else:
+            await websocket.send_text("Malformed request")
 # todle tu musi bejt nesahej na to
 app.include_router(router)
