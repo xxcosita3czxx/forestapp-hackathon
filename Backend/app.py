@@ -1,5 +1,6 @@
 import os
 
+from database import test
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
