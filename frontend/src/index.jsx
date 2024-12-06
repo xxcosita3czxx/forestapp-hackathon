@@ -1,10 +1,19 @@
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import './index.css'
 
-export default function Index() {
-  const navigate = useNavigate()
-  return <div>
-    <h1>hello world</h1>
-    <p>this is the index page</p>
-  </div>
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div className="app-container">
+      <div className="content">
+        <h1>Vwefwefwggwrgwergwet</h1>
+      </div>
+      <footer className="footer">
+        <p>Footer Content</p>
+      </footer>
+    </div>
+  )
 }
 
+export default App
