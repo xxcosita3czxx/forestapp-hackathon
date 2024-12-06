@@ -2,7 +2,7 @@ import os  # noqa: I001
 
 from config import Config
 from flask import Flask, make_response, render_template
-from database import test
+from backend.db.database import test
 app = Flask(
     __name__,
     template_folder=os.path.abspath(Config.TEMPLATE_FOLDER),

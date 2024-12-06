@@ -8,4 +8,3 @@ class Config:
     TEMPLATES_AUTO_RELOAD = True
     SQLALCHEMY_DATABASE_URI =  'sqlite:///' + os.path.join(basedir, 'db.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
