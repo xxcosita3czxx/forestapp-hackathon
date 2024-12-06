@@ -7,11 +7,6 @@ const App = () => {
 
   const fetchMessages = async () => {
     try {
-      // Mock messages for demonstration
-      const mockMessages = [
-        { text: 'Hello' },
-        { text: 'How are you?' }
-      ];
       setMessages(mockMessages);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -45,10 +40,42 @@ const App = () => {
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder="Napište zprávu..."
         />
-        <button onClick={sendMessage}>Odeslat</button>
+        <button onClick={() => { sendMessage(); sendMessageToBackend(); }}>Odeslat</button>
       </div>
     </div>
   );
 };
+
+function createMessage(Type, content, recipientid, senderid) {
+  return {
+    type,
+    content,
+    recipientid,
+    senderid
+  };
+}
+var client_id = Date.now();
+var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+
+const sendMessageToBackend = () => {
+  if (!inputMessage.trim()) return;
+
+  const messageToChange = createMessage("Message", inputMessage, "recipientid", "senderid");
+  const jsonMessage = JSON.stringify(messageToChange, null, 2);
+
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(jsonMessage);
+    console.log("Message sent:", jsonMessage); 
+  } else {
+    console.error("WebSocket is not open");
+  }
+};
+
+ws.onmessage = function(event) {
+  const messageObject = JSON.parse(event.data);
+  const recipientidRecieved = JSON.parse(messageObject.recipientid); 
+  const contentRecieved = JSON.parse(messageObject.content);  
+  sendMessage();
+}
 
 export default App

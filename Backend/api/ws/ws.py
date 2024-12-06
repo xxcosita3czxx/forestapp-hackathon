@@ -20,6 +20,6 @@ async def websocket_endpoint(websocket: WebSocket):
         print(data["type"])
         if data["type"] == "message":
             configmanager.get(data["recipientid"], "[general]", "name")
-            
+            print(data["content"])
 # todle tu musi bejt nesahej na to
 app.include_router(router)
