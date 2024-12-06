@@ -2,7 +2,7 @@ import os
 
 from database import test
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 
 load_dotenv()
 
@@ -11,7 +11,12 @@ app = FastAPI()
 @app.get("/")
 def read_root():
     return {"message": "Custom environment works!"}
-
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
 if __name__ == "__main__":
     host = os.getenv("HOST", "127.0.0.1")
     port = int(os.getenv("PORT", 8000))
