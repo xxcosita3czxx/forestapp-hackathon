@@ -34,7 +34,7 @@ def translate(text):
 affirms = []
 for i in range(100):
     response = ollama.chat(model="hermes3:8b", messages=messages)
-    check = ollama.generate(model="llama-guard3", prompt=response['message']['content'])
+    check = ollama.generate(model="llama-guard3", prompt=response['message']['content'])["response"]["content"]
     print(check)
     if "unsafe" in check:
         print(f"Untranslated and unsafe, babey: {response['message']['content']}")
