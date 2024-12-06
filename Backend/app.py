@@ -36,6 +36,10 @@ def load_routes_from_directory(directory, parent_router=None):
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
+            # Check if the module has a WebSocket handler
+            if hasattr(module, 'websocket'):
+                app.websocket("/" + module_name)(module.websocket)
+
             # Assuming each module has an APIRouter or endpoint function to add
             if hasattr(module, 'router'):
                 if parent_router is not None:
