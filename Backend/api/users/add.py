@@ -2,6 +2,6 @@ import fastapi
 
 router = fastapi.APIRouter()
 
-@router.get("/")
+@router.get("/add")
 def add_user():
     return {"message": "User added"}
