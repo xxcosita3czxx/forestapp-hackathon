@@ -6,8 +6,6 @@ from fastapi import WebSocket
 
 # Create the FastAPI app
 app = fastapi.FastAPI()
-cmi = configmanager.ConfigManager("data/users/")
-# Create routr
 router = fastapi.APIRouter()
 cmi = configmanager.ConfigManager("data/users/")
 
