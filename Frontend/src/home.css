@@ -344,3 +344,14 @@ body {
   font-size: 1.5rem;
   color: black;
 }
+
+/* In App.css or global CSS */
+:root {
+  --background-gradient: linear-gradient(45deg, #FF55E3, #F3C1EE);
+}
+
+body {
+  background: var(--background-gradient);
+  min-height: 100vh;
+  background: linear-gradient(45deg, #FF55E3, #F3C1EE); /* výchozí růžový gradient */
+}
