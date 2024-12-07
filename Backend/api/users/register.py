@@ -1,6 +1,6 @@
 import datetime
-
 import re
+
 import api.users.add as add
 import fastapi
 from fastapi import HTTPException
@@ -18,16 +18,20 @@ def is_possible_timestamp(ts):
         return False
 
 def is_valid_username(username):
-    allowed_chars = re.compile(r'^[a-zA-Z0-9_]+$')  # Letters, numbers, and underscore  # noqa: E501
+    allowed_chars = re.compile(r'^[a-zA-Z0-9._]+$')  # Uppercase, lowercase, numbers, dots, underscores  # noqa: E501
     return bool(allowed_chars.match(username))
+
+def is_valid_pass(passw):
+    allowed_chars = re.compile(r'^[a-zA-Z0-9._]+$')  # Uppercase, lowercase, numbers, dots, underscores  # noqa: E501
+    return bool(allowed_chars.match(passw))
 
 @router.post("/register",responses={406: {"description": "Password requirements wasnt met"},416: {"description": "Timestamp isnt possible to be, check if under or over 100 years"}})  # noqa: E501
 def add_user(username: str, password: str, timestamp: int,email: str,first_name: str,last_name: str):  # noqa: E501
     if is_possible_timestamp(timestamp):
-        if len(password) < 17 and len(password) > 7:  # noqa: PLR2004
+        if len(password) < 17 and len(password) > 7 and is_valid_pass(password):  # noqa: PLR2004
             if "@" in email:
                 if is_valid_username(username):
-                    add.add_user(name=username,password=password,timestamp=timestamp,email=email)
+                    add.add_user(name=username,password=password,timestamp=timestamp,email=email,first_name=first_name,last_name=last_name)
                     raise HTTPException(status_code=200, detail="Success")
             else:
                 raise HTTPException(status_code=406,detail="Email is not valid")
