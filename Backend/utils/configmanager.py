@@ -77,4 +77,4 @@ class ConfigManager:
 
 users = ConfigManager("data/users/")
 sessions = ConfigManager("data","data/sessions.toml")
-forums = ConfigManager("data/forums")
+forums = ConfigManager("data/forum")
