@@ -38,10 +38,10 @@ def search_data(input_value, data, login=False,full_match=False):
 
 
 @router.get("/fetch/{query}")
-def fetch(query:str):
+def fetch(query:str,login:bool=False,full_match:bool=False):
     users = cm.users.config
     users_formated = defaultdict(dict,users)
-    data = search_data(query,users_formated)
+    data = search_data(query,users_formated,login=login,full_match=full_match)
     if data is None:
         fastapi.HTTPException(status_code=404,detail="User not found")
     else:
