@@ -4,6 +4,16 @@
   padding: 20px;
   padding-bottom: 100px;
   position: relative;
+  overflow-y: auto; /* Add scrolling */
+  height: 100vh; /* Set fixed height */
+  box-sizing: border-box; /* Include padding in height calculation */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+/* Webkit browsers (Chrome, Safari, etc.) */
+.forum-page::-webkit-scrollbar {
+  display: none;
 }
 
 .forum-content {
@@ -11,6 +21,8 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 0 20px;
+  padding-bottom: 80px; /* Add space for navbar */
+  height: auto; /* Allow content to expand */
 }
 
 .forum-title {
@@ -134,13 +146,22 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 14px;
   justify-content: center;
+  transition: all 0.2s ease;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.filter-button:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
 }
 
 .filter-button svg {
@@ -152,15 +173,17 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   min-width: 180px;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 8px 0;
 }
 
 .filter-dropdown.active {
@@ -171,12 +194,16 @@
 }
 
 .filter-option {
-  padding: 8px 12px;
+  padding: 10px 16px;
   cursor: pointer;
+  color: #333;
+  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
 .filter-option:hover {
-  background: #f5f5f5;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
 }
 
 .post-date {
@@ -207,4 +234,11 @@
   .post-content {
     font-size: 0.95rem;
   }
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
 }

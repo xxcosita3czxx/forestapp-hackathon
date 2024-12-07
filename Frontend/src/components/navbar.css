@@ -3,18 +3,17 @@
     position: fixed;
     bottom: 20px;
     left: 50%;
-    transform: translateX(-50%);
-    right: 0;
-    margin: 0 auto; /* Center horizontally */
+    transform: translateX(-50%); /* Centers horizontally */
     display: flex;
     background-color: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(20px);
     border-radius: 30px;
     padding: 10px;
-    width: calc(100% - 40px);
-    max-width: 600px;
+    width: calc(100% - 40px); /* Full width minus margins */
+    max-width: 600px; /* Maximum width */
     box-sizing: border-box;
     z-index: 900;
+    margin: 0 auto; /* Ensures center alignment */
 }
   
 .nav-item {
