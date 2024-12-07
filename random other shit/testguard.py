@@ -1,10 +1,5 @@
 import ollama
-messages = [
-    {
-        'role': 'user',
-        'content': "/set system harm,violence,profanity,sexual_content",
-    },
-]
+
 """
 messages = [
     {
@@ -18,6 +13,16 @@ with open(r"C:\Users\adamd\Downloads\testin cs.txt", 'r', encoding='utf-8') as f
     for line in file:
         # Print the line (strip removes any extra newline characters)
         print(line.strip())
+        messages = [
+    {
+        'role': 'user',
+        'content': "/set system harm,social_bias,violence,profanity,sexual_content,unethical_behavior",
+    },
+    {
+        'role': 'user',
+        'content': line.strip(),
+    },
+]
         check = ollama.chat(model="granite3-guardian:8b", messages=messages)['message']['content']
         print(check)
         if "Yes" not in check:
