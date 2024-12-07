@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timedelta
 
 import api.users.fetch as fetch
 import fastapi
@@ -10,8 +11,9 @@ router = fastapi.APIRouter()
 def login(login:str,password:str):
     userdata = fetch.fetch(login)
     sessionid=str(uuid.uuid4())
-    print(userdata)
     userid = userdata["uuid"]
-    print(userid)
+    current_timestamp = datetime.now()
+    new_timestamp = current_timestamp + timedelta(minutes=30)
     cm.sessions.set("sessions",userid,"sessionid",sessionid)
-    return {"sessionid":sessionid,"valid_until":"infinite"}
+    cm.sessions.set("sessions",userid,"valid_until",new_timestamp)
+    return {"sessionid":sessionid,"valid_until":"infinite","user_id":userid}
