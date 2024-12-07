@@ -38,14 +38,14 @@ async def websocket_endpoint(websocket: WebSocket):
                 msgs = f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"recipient\"}}"
                 print(e)
             cm.users.set(data["recipientid"], "messages", data["senderid"], msgs)
-            msgs = cm.users.get(data["senderid"], "messages", data["senderid"])
+            msgs = str(cm.users.get(data["senderid"], "messages", data["recipientid"]))
             print(msgs)
             content = str(data["content"])
             try:
-                msgs += f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"recipient\"}}"
+                msgs += f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"sender\"}}"
             except Exception as e:
                 print(e)
-                msgs = f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"recipient\"}}"
+                msgs = f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"sender\"}}"
             cm.users.set(data["recipientid"], "messages", data["recipientid"], msgs)
 # todle tu musi bejt nesahej na to
 app.include_router(router)
