@@ -30,14 +30,28 @@ async def websocket_endpoint(websocket: WebSocket):
                 contacts += f",{data["recipientid"]}"
                 cm.users.set(data["senderid"], "general", "contacts", contacts)
             msgs = cm.users.get(data["recipientid"], "general", data["senderid"])
-            msgs = json.loads(msgs)
-            msgs["Messages"].append(json.loads({
-                "time": time.time(),
-                "content": data["content"],
-                "role":"recipient",
-            }))
-            cm.usres.set(data["recipientid"], "general")
-                
-            
+            content = str(data["content"])
+            try:
+                msgs = json.loads(msgs)
+                msgs["Messages"].append(json.loads({
+                    "time": time.time(),
+                    "content":content,
+                    "role":"recipient",
+                }))
+            except:
+                print(type(time.time()))
+                cm.users.set(data["recipientid"], "general", data["senderid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
+            msgs = cm.users.get(data["senderid"], "general", data["senderid"])
+            content = str(data["content"])
+            try:
+                msgs = json.loads(msgs)
+                msgs["Messages"].append(json.loads({
+                    "time": time.time(),
+                    "content":content,
+                    "role":"sender",
+                }))
+            except:
+                print(type(time.time()))
+                cm.users.set(data["senderid"], "general", data["recipientid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
 # todle tu musi bejt nesahej na to
 app.include_router(router)
