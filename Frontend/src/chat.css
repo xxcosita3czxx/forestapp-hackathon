@@ -134,6 +134,7 @@
 
 .chat-page-pink {
   min-height: 100vh;
+  width: 100vw; /* Add this */
   background: linear-gradient(135deg, #f8b7d2, #fcd1d1);
   display: flex;
   align-items: center;
@@ -142,6 +143,7 @@
 
 .chat-page-green {
   min-height: 100vh;
+  width: 100vw; /* Add this */
   background: linear-gradient(135deg, #c8e8b0, #a4d79c);
   display: flex;
   align-items: center;
@@ -150,14 +152,17 @@
 
 .chat-page-blue {
   min-height: 100vh;
+  width: 100vw; /* Add this */
   background: linear-gradient(135deg, #a3c0e1, #7a9bc8);
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
 
 .chat-page-dark {
   min-height: 100vh;
+  width: 100vw; /* Add this */
   background: linear-gradient(135deg, #2a2a2a, #121212);
   display: flex;
   align-items: center;
