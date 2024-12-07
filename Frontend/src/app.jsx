@@ -1,10 +1,13 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import PrivateRoute from './utils/privateroute';
+import PrivateRoute from './utils/PrivateRoute';
 import Home from './home';
 import Login from './login';
 import Chat from './chat';
 import ChatHistory from './chatHistory';
+import Forum from './forum';
+
+
 
 export default function App() {
   const [isChecking, setIsChecking] = useState(true);
@@ -26,16 +29,39 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
         <Route 
           path="/" 
-          element={isAuth ? <Home /> : <Navigate to="/login" replace />} 
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          } 
         />
         <Route 
-          path="/login" 
-          element={isAuth ? <Navigate to="/" replace /> : <Login />} 
+          path="/chat" 
+          element={
+            <PrivateRoute>
+              <Chat />
+            </PrivateRoute>
+          } 
         />
-        <Route path="/chat" element={<Chat to="/chat" replace />} />
-        <Route path="/chatHistory" element={<ChatHistory to="/chatHistory" replace />} />
+        <Route 
+          path="/chatHistory" 
+          element={
+            <PrivateRoute>
+              <ChatHistory />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/forum" 
+          element={
+            <PrivateRoute>
+              <Forum />
+            </PrivateRoute>
+          } 
+        />
       </Routes>
     </BrowserRouter>
   );

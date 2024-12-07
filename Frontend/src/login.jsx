@@ -37,28 +37,28 @@ const Login = () => {
     setError('');
     
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const params = new URLSearchParams({
+        login: credentials.email,
+        password: credentials.password
+      });
+      const response = await fetch(`${API_URL}/auth/login?${params}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password
-        })
+        }
       });
 
       const data = await response.json();
       
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('sessionId', data.sessionid);
+        localStorage.setItem('userId', data.user_id);
         navigate('/');
       } else {
         setError(data.message || 'Login failed');
       }
     } catch (err) {
-      setError('Network error occurred');
+      setError('Network error occurred: ' + err);
     } finally {
       setIsLoading(false);
     }

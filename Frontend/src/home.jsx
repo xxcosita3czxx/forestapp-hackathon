@@ -67,7 +67,7 @@ function App() {
         <div className="nav-item" onClick={() => setAccountMenuOpen(true)}>
           <FaUser />
         </div>
-        <div className="nav-item">
+        <div className="nav-item" onClick={() => navigate('/forum')}>
           <FaComments />
         </div>
         <div className="nav-item" onClick={() => navigate('/')}> {/* Add onClick here */}
