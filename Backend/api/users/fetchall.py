@@ -1,7 +1,8 @@
 import fastapi
+import utils.configmanager as cm
 
 router = fastapi.APIRouter()
 
 @router.get("/fetchall")
-def add_user():
-    return {"message": "User removed"}
+def fetchall():
+    return cm.users.config
