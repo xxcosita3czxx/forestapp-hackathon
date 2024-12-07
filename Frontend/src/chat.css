@@ -1,89 +1,156 @@
-.chat-container {
-  max-width: 600px; /* Sets the maximum width of the chat container */
-  margin: 0 auto; /* Centers the container horizontally */
-  border: 1px solid #ccc; /* Adds a light border around the container */
-  border-radius: 8px; /* Rounds the corners of the container */
-  overflow: hidden; /* Hides any content that exceeds the container boundaries */
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Adds a subtle shadow around the container */
+.chat-header {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
 }
 
-.messages-list {
-  height: 400px; /* Sets the height of the message list */
-  overflow-y: auto; /* Enables vertical scrolling when the content overflows */
-  overflow-x: hidden; /* Disables horizontal scrolling */
-  padding: 15px; /* Adds padding inside the message list */
-  background-color: #f9f9f9; /* Light background color for the message list */
+.chat-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: black;
+  flex-grow: 1;
+  text-align: center;
 }
 
-.message {
-  background-color: pink; /* Sets the background color of a message */
-  margin-bottom: 10px; /* Adds space between messages */
-  padding: 10px; /* Adds padding inside the message */
-  border-radius: 6px; /* Rounds the corners of the message */
-  max-width: 80%; /* Limits the width of the message */
-}
-
-.theirMessage {
-  background-color: purple; /* Sets background color for received messages */
-  color: black; /* Sets text color */
-  margin-bottom: 10px; /* Adds space below each message */
-  padding: 10px; /* Adds padding inside the message */
-  border-radius: 6px; /* Rounds the corners of the message */
-  max-width: auto; /* Allows the message to have no maximum width */
-  text-align: left; /* Aligns the text to the left */
-  word-break: break-all; /* Breaks words at the end of the line */
-}
-
-.yourMessage {
-  background-color: pink; /* Sets background color for sent messages */
-  color: black; /* Sets text color */
-  margin-bottom: 10px; /* Adds space below each message */
-  padding: 10px; /* Adds padding inside the message */
-  border-radius: 6px; /* Rounds the corners of the message */
-  max-width: auto; /* Allows the message to have no maximum width */
-  text-align: right; /* Aligns the text to the right */
-  word-break: break-all; /* Breaks words at the end of the line */
-}
-
-.message-wrapper.yourMessage {
-  justify-content: flex-end; /* Aligns sent messages to the right */
-}
-
-.input-area {
-  display: flex; /* Uses flexbox to align items horizontally */
-  padding: 10px; /* Adds padding inside the input area */
-  background-color: #f1f1f1; /* Light background color for the input area */
-}
-
-.input-area input {
-  flex-grow: 1; /* Allows the input field to grow and fill available space */
-  margin-right: 10px; /* Adds space between the input field and the button */
-  padding: 8px; /* Adds padding inside the input field */
-  border: 1px solid #ccc; /* Adds a light border around the input field */
-  border-radius: 4px; /* Rounds the corners of the input field */
-}
-
-.input-area button {
-  padding: 8px 15px; /* Adds padding inside the button */
-  background-color: #007bff; /* Sets the button background color */
-  color: white; /* Sets the text color */
-  border: none; /* Removes the border */
-  border-radius: 4px; /* Rounds the corners of the button */
-  cursor: pointer; /* Changes cursor to indicate the button is clickable */
-  transition: background-color 0.3s ease; /* Adds smooth transition effect for background color */
-}
-
-.input-area button:hover {
-  background-color: #0056b3; /* Changes the button background color on hover */
-}
-
-.chat-page {
-  min-height: 100vh;
-  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
+.messages-container {
+  flex-grow: 1;
+  padding: 90px 20px 90px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
+.message-wrapper {
+  display: flex;
+  margin-bottom: 12px;
+  max-width: 80%;
+}
+
+.message-wrapper.own-message {
+  margin-left: auto;
+}
+
+.message-wrapper.other-message {
+  margin-right: auto;
+}
+
+.message {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  padding: 12px 16px;
+  border-radius: 20px;
+  color: black;
+  font-size: 16px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.own-message .message {
+  background: rgba(0, 123, 255, 0.75);
+  color: white;
+}
+
+.input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.input-container input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 16px;
+  background: white;
+  outline: none;
+}
+
+.input-container input:focus {
+  border-color: #007bff;
+}
+
+.send-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.send-button:hover {
+  background: #0056b3;
+}
+
+.send-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.overlay {
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 101;
+}
+
+.color-toggle button {
+  background-color: transparent;
+  color: white;
+  padding: 10px;
+  border: 1px solid white;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.color-toggle button:hover {
+  background-color: white;
+  color: black;
+}
+
+.chat-page-pink {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8b7d2, #fcd1d1);
+}
+
+.chat-page-green {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #c8e8b0, #a4d79c);
+}
+
+.chat-page-blue {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #a3c0e1, #7a9bc8);
+}
+
+.chat-page-dark {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #2a2a2a, #121212);
+}
 .chat-header {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(10px);
