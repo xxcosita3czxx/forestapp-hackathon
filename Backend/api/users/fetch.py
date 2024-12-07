@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+import api.auth.verify_pass as vpass
 import fastapi
 import utils.configmanager as cm
 
@@ -42,7 +43,11 @@ def search_data(input_value, data, login=False, full_match=False):  # noqa: C901
 
 
 @router.get("/fetch/{query}")
-def fetch(query:str,login:bool=False,full_match:bool=False):
+def fetch(query:str,
+        login:bool=False,
+        full_match:bool=False,
+        authorization:str=fastapi.Depends(vpass.verify_permission_diez),
+        ):
     users = cm.users.config
     users_formated = defaultdict(dict,users)
     data = search_data(query,users_formated,login=login,full_match=full_match)

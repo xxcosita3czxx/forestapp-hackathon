@@ -10,4 +10,4 @@ def patch(user_id:str,title:str,setting:str,key:str):
 @router.get("/set/{user_id}")
 def get(user_id:str):
     settings = cm.users.config.get(user_id)
-    return settings()
+    return settings

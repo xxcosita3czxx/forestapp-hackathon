@@ -38,7 +38,7 @@ def add_user(name: str,
             first_name:str,
             last_name:str,
             perm_level:int=1,
-            #authorization:str=fastapi.Depends(vpass.verify_permission),  # noqa: E501
+            authorization:str=fastapi.Depends(vpass.verify_permission_diez),  # noqa: E501
             ):  # noqa: E501
     try:
         vpass.set_permission_level(10)
