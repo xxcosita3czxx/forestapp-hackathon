@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter } from 'react-icons/fa';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar';
 import './forum.css';
 
 const Forum = () => {
