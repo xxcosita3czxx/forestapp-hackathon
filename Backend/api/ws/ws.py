@@ -29,27 +29,23 @@ async def websocket_endpoint(websocket: WebSocket):
             if data["recipientid"] not in contacts:
                 contacts += f",{data["recipientid"]}"
                 cm.users.set(data["senderid"], "general", "contacts", contacts)
-            msgs = cm.users.get(data["recipientid"], "messages", data["senderid"])
+            content = str(data["content"])
+            msgs = str(cm.users.get(data["recipientid"], "messages", data["senderid"]))  # noqa: E501
+            print(f"String of msgs: {str(msgs)}")
+            try:
+                msgs += f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"recipient\"}}"
+            except Exception as e:
+                msgs = f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"recipient\"}}"
+                print(e)
+            cm.users.set(data["recipientid"], "messages", data["senderid"], msgs)
+            msgs = str(cm.users.get(data["senderid"], "messages", data["recipientid"]))
+            print(msgs)
             content = str(data["content"])
             try:
-                msgs = json.loads(msgs)
-                msgs["Messages"].append(json.loads({
-                    "time": time.time(),
-                    "content":content,
-                    "role":"recipient",
-                }))
-            except:
-                cm.users.set(data["recipientid"], "messages", data["senderid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
-            msgs = cm.users.get(data["senderid"], "messages", data["senderid"])
-            content = str(data["content"])
-            try:
-                msgs = json.loads(msgs)
-                msgs["Messages"].append(json.loads({
-                    "time": time.time(),
-                    "content":content,
-                    "role":"sender",
-                }))
-            except:
-                cm.users.set(data["senderid"], "messages", data["recipientid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
+                msgs += f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"sender\"}}"
+            except Exception as e:
+                print(e)
+                msgs = f",{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"sender\"}}"
+            cm.users.set(data["recipientid"], "messages", data["recipientid"], msgs)
 # todle tu musi bejt nesahej na to
 app.include_router(router)
