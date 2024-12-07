@@ -1,17 +1,39 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
-import './Navbar.css';
+import { FiSettings } from 'react-icons/fi';
+import './navbar.css';
+
+const THEMES = {
+  PINK: {
+    from: '#FF55E3',
+    to: '#F3C1EE'
+  },
+  BLUE: {
+    from: '#55A2FF',
+    to: '#C1DBF3'
+  },
+  GREEN: {
+    from: '#74FF55',
+    to: '#CEF3C1'
+  },
+  BLACK: {
+    from: '#696969',
+    to: '#151515'
+  }
+};
 
 const Navbar = () => {
   const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "cosita",
     username: "cosita123" 
   });
   const [showToast, setShowToast] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('PINK');
 
   const handleSearchClick = (e) => {
     if (!searchActive) {
@@ -34,6 +56,36 @@ const Navbar = () => {
       .catch(err => {
         console.error('Failed to copy:', err);
       });
+  };
+
+  const toggleSettings = () => {
+    if (accountMenuOpen) {
+      setAccountMenuOpen(false);
+      setTimeout(() => setSettingsOpen(true), 300); // Wait for account menu animation to finish
+    } else {
+      setSettingsOpen(true);
+    }
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
+    setTimeout(() => setAccountMenuOpen(true), 300); // Wait for settings animation to finish
+  };
+
+  const handleThemeChange = (e) => {
+    const selectedTheme = e.target.value;
+    setCurrentTheme(selectedTheme);
+    
+    // Update background gradient based on theme
+    const root = document.documentElement;
+    const gradients = {
+      PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
+      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+      GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
+      BLACK: 'linear-gradient(45deg, #333333, #666666)'
+    };
+    
+    document.body.style.background = gradients[selectedTheme];
   };
 
   return (
@@ -59,7 +111,7 @@ const Navbar = () => {
       <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
         <button type="submit" className="search-button" onClick={handleSearchClick}>
           <FaSearch />
-        </button>
+        </button> 
         <input type="text" className="search-input" placeholder="Search..." autoFocus={searchActive} />
       </form>
 
@@ -71,8 +123,8 @@ const Navbar = () => {
           
           <div className="account-header">
             <h1 className="account-title">Účet</h1>
-            <div className="profile-circle">
-              {/* Profile image */}
+            <div className="account-settings-icon" onClick={toggleSettings}>
+              <FiSettings />
             </div>
           </div>
           
@@ -107,6 +159,40 @@ const Navbar = () => {
                   <button className="edit-button">
                     Upravit
                   </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={`account-menu ${settingsOpen ? 'active' : ''}`}>
+        <div className="account-menu-content">
+          <div className="account-menu-close" onClick={handleSettingsClose}>
+            <FaChevronDown />
+          </div>
+          
+          <div className="account-header">
+            <h1 className="account-title">Nastavení</h1>
+          </div>
+          
+          <div className="profile-section">
+            <div className="profile-fields">
+              <div className="profile-fields">
+                <div className="field-group">
+                  <label>Motiv aplikace</label>
+                  <div className="input-with-button">
+                    <select 
+                      className="settings-select"
+                      value={currentTheme}
+                      onChange={handleThemeChange}
+                    >
+                      <option value="PINK">Růžová</option>
+                      <option value="BLUE">Modrá</option> 
+                      <option value="GREEN">Zelená</option>
+                      <option value="BLACK">Černá (experimental)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>

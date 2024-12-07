@@ -6,3 +6,6 @@ email = "cosita3cz@proton.me"
 first_name = "Test"
 last_name = "Test"
 perm_level = 10
+
+[settings]
+theme = "GREEN"

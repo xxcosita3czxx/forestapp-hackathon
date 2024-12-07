@@ -38,7 +38,7 @@ def add_user(name: str,
             first_name:str,
             last_name:str,
             perm_level:int=1,
-            authorization:str=fastapi.Depends(vpass.verify_permission),  # noqa: E501
+            #authorization:str=fastapi.Depends(vpass.verify_permission),  # noqa: E501
             ):  # noqa: E501
     try:
         vpass.set_permission_level(10)
@@ -51,5 +51,6 @@ def add_user(name: str,
         cm.users.set(new_id,"general","first_name",first_name)
         cm.users.set(new_id,"general","last_name",last_name)
         cm.users.set(new_id,"general","perm_level",perm_level)
+        cm.users.set(new_id,"settings","theme","pink")
     except Exception:
         return "error"
