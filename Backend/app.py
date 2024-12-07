@@ -58,12 +58,12 @@ def load_routes_from_directory(directory, parent_router=None):
                 if hasattr(module, 'router'):
                     if parent_router is not None:
                         parent_router.include_router(module.router)
-                        logging.info(f"Loaded {module_name}")
+                        print(f"Loaded {module_name}")
                     else:
                         app.include_router(module.router)
-                        logging.info(f"Loaded {module_name}")
+                        print(f"Loaded {module_name}")
             except Exception as e:
-                logging.warning(f"Failed to load {str(module_name)}, \n{e}")
+                print(f"Failed to load {str(module_name)}, \n{e}")
 
 load_routes_from_directory("api")
 
