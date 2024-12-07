@@ -76,3 +76,4 @@ class ConfigManager:
         logging.debug(f"Deleted {id}:{title}:{key}")
 
 users = ConfigManager("data/users/")
+sessions = ConfigManager("data","data/sessions.toml")

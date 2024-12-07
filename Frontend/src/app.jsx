@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import PrivateRoute from './utils/privateroute';
 import Home from './home';
 import Login from './login';
+import Chat from './chat';
+import Forum from './forum';
 
 export default function App() {
   const [isChecking, setIsChecking] = useState(true);
@@ -32,6 +34,8 @@ export default function App() {
           path="/login" 
           element={isAuth ? <Navigate to="/" replace /> : <Login />} 
         />
+        <Route path="/chat" element={<Chat to="/chat" replace />} />
+        <Route path="/forum" element={<Forum to="/forum" replace />} />
       </Routes>
     </BrowserRouter>
   );

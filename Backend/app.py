@@ -6,16 +6,22 @@ import sys
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 #TODO Forum
 #TODO Accounts
 #TODO Stastuses
 #TODO Random message
+#TODO Message controll
+
+class ServerHeaderMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers['server'] = 'FosterAppBackend/1.0'
+        return response
 
 app = FastAPI()  # noqa: E501
-
-logging.basicConfig(level=logging.WARNING)
-
+app.add_middleware(ServerHeaderMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins or specify allowed domains here
@@ -23,6 +29,8 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all methods (GET, POST, WS, etc.)
     allow_headers=["*"],  # Allow all headers
 )
+logging.basicConfig(level=logging.WARNING)
+
 # Get the directory of the currently running script (main script)
 current_script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 
@@ -69,7 +77,7 @@ load_routes_from_directory("api")
 
 @app.get("/")
 def read_root():
-    return {"message": "Custom environment works!"}
+    return {"message": "Welcome to foster app API!"}
 
 if __name__ == "__main__":
     host = os.getenv("HOST", "127.0.0.1")
