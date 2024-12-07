@@ -96,24 +96,24 @@ const App = () => {
           <FaArrowLeft />
         </button>
         <h1>Chat</h1>
-        <button 
+        {/*<button 
           className="settings-button" 
           onClick={() => setShowOverlay(!showOverlay)}
         >
           <FaCog />
-        </button>
+        </button>*/}
       </div>
 
       {showOverlay && (
         <div className="overlay">
-          <div className="color-toggle">
+          {/*<div className="color-toggle">
             <button onClick={() => changeBackgroundColor('chat-page-pink')}>Pink</button>
             <button onClick={() => changeBackgroundColor('chat-page-green')}>Green</button>
             <button onClick={() => changeBackgroundColor('chat-page-blue')}>Blue</button>
             <button onClick={() => changeBackgroundColor('chat-page-dark')}>Dark</button>
             <button onClick={() => changeHelpStatus()}>Help</button>
-          </div>
-          <div className="name-container">
+          </div>*/}
+          {/*<div className="name-container">
             <div className="name-display">
               {isEditing ? (
                 <input
@@ -129,7 +129,7 @@ const App = () => {
             <button onClick={handleEditName}>
               {isEditing ? 'Save' : 'Edit'}
             </button>
-          </div>
+          </div>*/}
         </div>
       )}
 
