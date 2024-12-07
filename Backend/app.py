@@ -78,12 +78,19 @@ def load_routes_from_directory(directory, parent_router=None):
 load_routes_from_directory("api")
 
 @app.get("/")
-def read_root():
+def root():
     return fastapi.HTTPException(status_code=418,detail="Welcome to foster app API!")
 
-def verify_permission(sessionid:str):
-    cm.sessions.get("sessions","")
-
+def verify_permission(sessionid:str, user_id:str, required_lvl:int):
+    perm_level = cm.users.get(user_id,"general","perm_level")
+    sessionid_saved = cm.sessions.get("sessions",user_id,"sessionid")
+    if sessionid == sessionid_saved:
+        if perm_level >= required_lvl:
+            return fastapi.HTTPException(status_code=200,detail="Success")
+        else:
+            return fastapi.HTTPException(status_code=403,detail="Unauthorized")
+    else:
+        return fastapi.HTTPException(status_code=401,detail="Please log in again")
 if __name__ == "__main__":
     host = os.getenv("HOST", "127.0.0.1")
     port = int(os.getenv("PORT", 8000))
