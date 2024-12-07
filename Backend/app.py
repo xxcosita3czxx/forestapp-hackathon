@@ -12,7 +12,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 #TODO Accounts
 #TODO Stastuses
 #TODO Random message
-#TODO Message controll
+#TODO Message control
 
 class ServerHeaderMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
