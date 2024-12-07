@@ -50,7 +50,6 @@ body {
   background: transparent; /* Removes gradient to show body gradient beneath */
   position: relative;
   z-index: 600;
-  padding: 20px;
   width: 100vw;
 }
 
