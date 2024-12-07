@@ -30,12 +30,13 @@ def check_aes_code(password, encrypted_code, original_string="success-uuid"):
 
 
 @router.post("/add")
-def add_user(name: str, password: str, timestamp : int):
+def add_user(name: str, password: str, timestamp : int, email : str):
     try:
         new_id = ug.generate_user_id()
         cm.users.set(new_id, "general", "name", name)
         cm.users.set(new_id,"general", "birthday", timestamp)
         enpassword = create_aes_encrypted_code(password,f"success-{new_id}")
         cm.users.set(new_id,"general","pass",str(enpassword))
+        cm.users.set(new_id,"general","email",email)
     except Exception:
         return "error"
