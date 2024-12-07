@@ -1,9 +1,11 @@
 // src/components/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './login.css';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import './login.css';
+
+const API_URL = 'http://localhost:8000';
 
 const Login = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -16,22 +18,9 @@ const Login = () => {
     password: '',
     confirmPassword: ''
   });
-  const [error, setError] = useState('');
   const [birthDate, setBirthDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState({
-    fullName: '',
-    username: '',
-    birthday: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [loginFieldErrors, setLoginFieldErrors] = useState({
-    email: '',
-    password: ''
-  });
-  const [attemptedNextStep, setAttemptedNextStep] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -39,18 +28,6 @@ const Login = () => {
     setCredentials(prev => ({
       ...prev,
       [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    setFieldErrors(prev => ({
-      ...prev,
-      [name]: ''
-    }));
-
-    // Clear field-specific error
-    setLoginFieldErrors(prev => ({
-      ...prev,
-      [name]: ''
     }));
   };
 
@@ -60,7 +37,7 @@ const Login = () => {
     setError('');
     
     try {
-      const response = await fetch('/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,16 +66,11 @@ const Login = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (credentials.password !== credentials.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
     setIsLoading(true);
     setError('');
 
     try {
-      const response = await fetch('/auth/register', {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +87,6 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Auto login after registration
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/login');
@@ -129,41 +100,8 @@ const Login = () => {
     }
   };
 
-  const validateStep1 = () => {
-    const errors = {};
-    if (!credentials.fullName.trim()) {
-      errors.fullName = 'Full name is required';
-    }
-    if (!credentials.username.trim()) {
-      errors.username = 'Username is required';
-    }
-    if (!birthDate) {
-      errors.birthday = 'Date of birth is required';
-    }
-    setFieldErrors(prev => ({...prev, ...errors}));
-    return Object.keys(errors).length === 0;
-  };
-
-  const validateLogin = () => {
-    const errors = {};
-    if (!credentials.email.trim()) {
-      errors.email = 'Email is required';
-    }
-    if (!credentials.password.trim()) {
-      errors.password = 'Password is required';
-    }
-    setLoginFieldErrors(prev => ({...prev, ...errors}));
-    return Object.keys(errors).length === 0;
-  };
-
+  // Registration Step 1 (Personal Info)
   const renderRegistrationStep1 = () => {
-    const handleNextClick = () => {
-      setAttemptedNextStep(true);
-      if (validateStep1()) {
-        setRegistrationStep(2);
-      }
-    };
-
     return (
       <>
         <div className="step-indicator">
@@ -175,28 +113,20 @@ const Login = () => {
           <input
             type="text"
             name="fullName"
-            className={`auth-input ${attemptedNextStep && fieldErrors.fullName ? 'error' : ''}`}
+            className="auth-input"
             value={credentials.fullName}
             onChange={handleChange}
-            required
           />
-          {attemptedNextStep && fieldErrors.fullName && 
-            <span className="error-message">{fieldErrors.fullName}</span>
-          }
         </div>
         <div className="input-group">
           <label className="input-label">Username</label>
           <input
             type="text"
             name="username"
-            className={`auth-input ${attemptedNextStep && fieldErrors.username ? 'error' : ''}`}
+            className="auth-input"
             value={credentials.username}
             onChange={handleChange}
-            required
           />
-          {attemptedNextStep && fieldErrors.username && 
-            <span className="error-message">{fieldErrors.username}</span>
-          }
         </div>
         <div className="input-group">
           <label className="input-label">Date of Birth</label>
@@ -204,21 +134,23 @@ const Login = () => {
             selected={birthDate}
             onChange={(date) => {
               setBirthDate(date);
-              setFieldErrors(prev => ({ ...prev, birthday: '' }));
+              setCredentials(prev => ({
+                ...prev,
+                birthday: date
+              }));
             }}
-            className={`auth-input ${attemptedNextStep && fieldErrors.birthday ? 'error' : ''}`}
+            className="auth-input"
             dateFormat="dd/MM/yyyy"
+            showYearDropdown
+            scrollableYearDropdown
+            yearDropdownItemNumber={100}
             placeholderText="Select date"
-            required
           />
-          {attemptedNextStep && fieldErrors.birthday && 
-            <span className="error-message">{fieldErrors.birthday}</span>
-          }
         </div>
         <button 
           type="button" 
           className="auth-button"
-          onClick={handleNextClick}
+          onClick={() => setRegistrationStep(2)}
         >
           Next
         </button>
@@ -226,6 +158,7 @@ const Login = () => {
     );
   };
 
+  // Registration Step 2 (Account Setup)
   const renderRegistrationStep2 = () => (
     <>
       <div className="step-indicator">
@@ -240,7 +173,6 @@ const Login = () => {
           className="auth-input"
           value={credentials.email}
           onChange={handleChange}
-          required
         />
       </div>
       <div className="input-group">
@@ -251,7 +183,6 @@ const Login = () => {
           className="auth-input"
           value={credentials.password}
           onChange={handleChange}
-          required
         />
       </div>
       <div className="input-group">
@@ -262,7 +193,6 @@ const Login = () => {
           className="auth-input"
           value={credentials.confirmPassword}
           onChange={handleChange}
-          required
         />
       </div>
       <div className="button-group">
@@ -273,22 +203,12 @@ const Login = () => {
         >
           Back
         </button>
-        <button type="submit" className={`auth-button ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
-          {isLoading ? <span className="loading-spinner"></span> : 'Register'}
+        <button type="submit" className="auth-button">
+          Register
         </button>
       </div>
     </>
   );
-
-  // Add token to all API requests
-  const makeRequest = async () => {
-    const token = localStorage.getItem('token');
-    const response = await fetch('/api/protected-route', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-  }
 
   return (
     <div className="login-page">
@@ -313,23 +233,16 @@ const Login = () => {
         </div>
 
         {isLoginForm ? (
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            if (validateLogin()) {
-              handleLogin(e);
-            }
-          }}>
+          <form onSubmit={handleLogin}>
             <div className="input-group">
               <input
-                type="email"
+                type="text"
                 name="email"
                 placeholder="Email"
                 value={credentials.email}
                 onChange={handleChange}
-                className={`auth-input ${loginFieldErrors.email ? 'error' : ''}`}
-                required
+                className="auth-input"
               />
-              {loginFieldErrors.email && <span className="error-message">{loginFieldErrors.email}</span>}
             </div>
             <div className="input-group">
               <input
@@ -338,13 +251,11 @@ const Login = () => {
                 placeholder="Password"
                 value={credentials.password}
                 onChange={handleChange}
-                className={`auth-input ${loginFieldErrors.password ? 'error' : ''}`}
-                required
+                className="auth-input"
               />
-              {loginFieldErrors.password && <span className="error-message">{loginFieldErrors.password}</span>}
             </div>
-            <button type="submit" className={`auth-button ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
-              {isLoading ? <span className="loading-spinner"></span> : 'Login'}
+            <button type="submit" className="auth-button">
+              Login
             </button>
           </form>
         ) : (
