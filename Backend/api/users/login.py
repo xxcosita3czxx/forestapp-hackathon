@@ -14,4 +14,4 @@ def login(login:str,password:str):
     userid = userdata["uuid"]
     print(userid)
     cm.sessions.set("sessions",userid,"sessionid",sessionid)
-    return {"sessionid":sessionid,"valid_until":}
+    return {"sessionid":sessionid,"valid_until":"infinite"}
