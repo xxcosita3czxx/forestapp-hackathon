@@ -5,36 +5,40 @@ import utils.configmanager as cm
 
 router = fastapi.APIRouter()
 
-def search_data(input_value, data, login=False,full_match=False):
+def search_data(input_value, data, login=False, full_match=False):
     # Search by username (partial match)
     if login is False:
         for _uuid, details in data.items():
             if full_match:
                 if details['general']['name'] == input_value:
-                    return details
+                    result = {'uuid': _uuid, **details}
+                    return result
             else:
                 if input_value.lower() in details['general']['name'].lower():
-                    return details
+                    result = {'uuid': _uuid, **details}
+                    return result
 
     # Search by email (partial match)
     for _uuid, details in data.items():
         if full_match:
             if details['general']['email'] == input_value:
-                return details
+                result = {'uuid': _uuid, **details}
+                return result
         else:
             if input_value.lower() in details['general']['email'].lower():
-                return details
+                result = {'uuid': _uuid, **details}
+                return result
 
     # Search by UUID (exact match)
     if full_match:
         if input_value in data:
-            return data[input_value]
+            result = {'uuid': input_value, **data[input_value]}
+            return result
     else:
         for uuid in data:
             if input_value.lower() in uuid.lower():
-                return data[uuid]
-
-    return "No match found."
+                result = {'uuid': uuid, **data[uuid]}
+                return result
 
 
 @router.get("/fetch/{query}")

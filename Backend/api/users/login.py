@@ -3,12 +3,15 @@ import uuid
 import api.users.fetch as fetch
 import fastapi
 import utils.configmanager as cm
-from fastapi import HTTPException
 
 router = fastapi.APIRouter()
 
 @router.get("/login")
 def login(login:str,password:str):
     userdata = fetch.fetch(login)
-    cm.sessions.set("sessions",userdata[uuid])
-    return {"sessionid":uuid.uuid4(),"data":userdata[uuid]}
+    sessionid=str(uuid.uuid4())
+    print(userdata)
+    userid = userdata["uuid"]
+    print(userid)
+    cm.sessions.set("sessions",userid,"sessionid",sessionid)
+    return {"sessionid":sessionid,"valid_until":}
