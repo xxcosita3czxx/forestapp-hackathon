@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Add this import
 import "./home.css";
-import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from "react-icons/fa";
+import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown, FaArrowRight } from "react-icons/fa";
 import Navbar from './components/navbar';
 
 function App() {
@@ -44,6 +44,33 @@ function App() {
         <h1>Home1</h1>
       </div>
       <div className="content">
+        <div className="cards-container">
+          <a 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/journey');
+            }} 
+            className="card journey"
+          >
+            <div className="card-content">
+              <div>
+                <h2>Tvoje cesta</h2>
+                <p>Nevíš jak dál? Zde ti poradíme</p>
+              </div>
+              <FaArrowRight className="arrow-icon" />
+            </div>
+          </a>
+          
+          <a href="#" className="card info">
+            <div className="card-content">
+              <div>
+                <h2>Informační kanál</h2>
+                <p>Informace a oznámení</p>
+              </div>
+              <FaArrowRight className="arrow-icon" />
+            </div>
+          </a>
+        </div>
       </div>
       <Navbar />
     </div>

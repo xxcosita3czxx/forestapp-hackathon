@@ -155,3 +155,63 @@ body {
   background: linear-gradient(45deg, #FF55E3, #F3C1EE); /* výchozí růžový gradient */
   transition: background 0.3s ease;
 }
+
+/* Card Container */
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Common Card Styles */
+.card {
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 15px;
+  padding: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+  font-weight: 600;
+}
+
+.card p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.arrow-icon {
+  color: #666;
+  font-size: 20px;
+  margin-left: 15px;
+}
+
+.card:hover .arrow-icon {
+  transform: translateX(5px);
+  transition: transform 0.2s ease;
+}

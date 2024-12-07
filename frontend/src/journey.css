@@ -1,0 +1,106 @@
+.journey-page {
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
+}
+
+.journey-path {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  position: relative;
+}
+
+.journey-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  position: relative;
+}
+
+.task-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  position: relative;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Keep existing task-circle styles */
+.task-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.task-circle.completed {
+  background: #4CAF50;
+  color: white;
+}
+
+.task-circle.unlocked {
+  border: 3px solid #4CAF50;
+}
+
+.task-circle.locked {
+  background: #ccc;
+  cursor: not-allowed;
+  border: 3px solid #999;
+}
+
+.task-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000000; /* Black numbers */
+}
+
+/* Override for completed tasks to keep number visible */
+.task-circle.completed .task-number {
+  color: #000000; /* Keep black even when circle is completed */
+}
+
+.task-info {
+  margin-left: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 10px;
+  flex: 1;
+}
+
+.task-info h3 {
+  margin: 0;
+  color: #333;
+}
+
+.task-info p {
+  margin: 5px 0 0;
+  color: #666;
+}
+
+.path-line {
+  position: absolute;
+  left: 30px;
+  top: 60px;
+  width: 3px;
+  height: calc(100% - 20px);
+  background: #ccc;
+  z-index: 1;
+}
+
+.path-line.unlocked {
+  background: #4CAF50;
+}
+
+.path-line.locked {
+  background: #999;
+}
