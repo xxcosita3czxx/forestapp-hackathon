@@ -16,4 +16,4 @@ def login(login:str,password:str):
     new_timestamp = current_timestamp + timedelta(minutes=30)
     cm.sessions.set("sessions",userid,"sessionid",sessionid)
     cm.sessions.set("sessions",userid,"valid_until",new_timestamp)
-    return {"sessionid":sessionid,"valid_until":"infinite"}
+    return {"sessionid":sessionid,"valid_until":"infinite","user_id":userid}

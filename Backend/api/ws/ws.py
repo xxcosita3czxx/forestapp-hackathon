@@ -1,5 +1,5 @@
 import json
-
+import time
 import fastapi
 import utils.configmanager as cm
 from fastapi import WebSocket
@@ -16,23 +16,42 @@ async def websocket_endpoint(websocket: WebSocket):
         data = json.loads(data)
         if data["type"] == "message":
             contacts = cm.users.get(data["recipientid"], "general", "contacts")
-            if contacts is None:
+            if cm.users.get(data["recipientid"], "general", "name") is not None and contacts is None:
                 contacts = data["senderid"]
                 cm.users.set(data["recipientid"], "general", "contacts", contacts)
-                cm.users.set(data["recipientid"], "general", data["recipientid"], data["content"])
-            if not data["senderid"] in contacts:
-                contacts += f",{data["senderid"]}"
-                cm.users.set(data["recipientid"], "general", "contacts", contacts)
-                cm.users.set(data["recipientid"], "general", data["recipientid"], "")
+                if data["senderid"] not in contacts:
+                    contacts += f",{data["senderid"]}"
+                    cm.users.set(data["recipientid"], "general", "contacts", contacts)
             contacts = cm.users.get(data["senderid"], "general", "contacts")
-            if contacts is None:
+            if cm.users.get(data["senderid"], "general", "name") is not None and contacts is None:
                 contacts = data["recipientid"]
                 cm.users.set(data["senderid"], "general", "contacts", contacts)
-                cm.users.set(data["senderid"], "general", data["senderid"], "")
-            if not data["recipientid"] in contacts:
+            if data["recipientid"] not in contacts:
                 contacts += f",{data["recipientid"]}"
                 cm.users.set(data["senderid"], "general", "contacts", contacts)
-                cm.users.set(data["senderid"], "general", data["senderid"], "")
-            
+            msgs = cm.users.get(data["recipientid"], "messages", data["senderid"])
+            content = str(data["content"])
+            try:
+                msgs = json.loads(msgs)
+                msgs["Messages"].append(json.loads({
+                    "time": time.time(),
+                    "content":content,
+                    "role":"recipient",
+                }))
+            except:
+                print(type(time.time()))
+                cm.users.set(data["recipientid"], "messages", data["senderid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
+            msgs = cm.users.get(data["senderid"], "messages", data["senderid"])
+            content = str(data["content"])
+            try:
+                msgs = json.loads(msgs)
+                msgs["Messages"].append(json.loads({
+                    "time": time.time(),
+                    "content":content,
+                    "role":"sender",
+                }))
+            except:
+                print(type(time.time()))
+                cm.users.set(data["senderid"], "messages", data["recipientid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
 # todle tu musi bejt nesahej na to
 app.include_router(router)
