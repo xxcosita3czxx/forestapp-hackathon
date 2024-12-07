@@ -31,7 +31,7 @@ def add_user(username: str, password: str, timestamp: int,email: str,first_name:
         if len(password) < 17 and len(password) > 7 and is_valid_pass(password):  # noqa: PLR2004
             if "@" in email:
                 if is_valid_username(username):
-                    add.add_user(name=username,password=password,timestamp=timestamp,email=email)
+                    add.add_user(name=username,password=password,timestamp=timestamp,email=email,first_name,last_name)
                     raise HTTPException(status_code=200, detail="Success")
             else:
                 raise HTTPException(status_code=406,detail="Email is not valid")
