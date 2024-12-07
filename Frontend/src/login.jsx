@@ -76,7 +76,7 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/dashboard');
+        navigate('/');
       } else {
         setError(data.message || 'Login failed');
       }
@@ -98,7 +98,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ const Login = () => {
         // Auto login after registration
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/dashboard');
+        navigate('/login');
       } else {
         setError(data.message || 'Registration failed');
       }
