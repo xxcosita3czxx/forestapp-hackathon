@@ -11,7 +11,8 @@ const Login = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [registrationStep, setRegistrationStep] = useState(1);
   const [credentials, setCredentials] = useState({
-    fullName: '',
+    firstname: '',     // Changed from fullName
+    lastname: '',      // Added lastname
     username: '',
     birthday: '',
     email: '',
@@ -76,7 +77,8 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: credentials.fullName,
+          first_name: credentials.firstname,  // Changed from fullName
+          last_name: credentials.lastname,    // Added lastname
           username: credentials.username,
           birthday: credentials.birthday,
           email: credentials.email,
@@ -108,15 +110,27 @@ const Login = () => {
           <span className="step active">Personal Info</span>
           <span className="step">Account Setup</span>
         </div>
-        <div className="input-group">
-          <label className="input-label">Full Name</label>
-          <input
-            type="text"
-            name="fullName"
-            className="auth-input"
-            value={credentials.fullName}
-            onChange={handleChange}
-          />
+        <div className="name-fields-container">
+          <div className="input-group">
+            <label className="input-label">First name</label>
+            <input
+              type="text"
+              name="firstname"
+              className="auth-input"
+              value={credentials.firstname}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Last name</label>
+            <input
+              type="text"
+              name="lastname"
+              className="auth-input"
+              value={credentials.lastname}
+              onChange={handleChange}
+            />
+          </div>
         </div>
         <div className="input-group">
           <label className="input-label">Username</label>

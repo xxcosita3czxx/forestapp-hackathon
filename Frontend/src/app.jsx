@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import PrivateRoute from './utils/PrivateRoute';
+import PrivateRoute from './utils/privateroute';
 import Home from './home';
 import Login from './login';
 import Chat from './chat';
