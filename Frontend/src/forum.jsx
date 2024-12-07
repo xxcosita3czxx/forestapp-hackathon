@@ -12,6 +12,64 @@ const Forum = () => {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   
+  function addPost(id, title, content, author, likes = 0, comments = 0, date = new Date()) {
+    const newPost = {
+      id: lastId,
+      title: title,
+      content: content,
+      author: author,
+      likes: likes,
+      comments: comments,
+      date: date
+    };
+
+    posts.push(newPost); // Přidání příspěvku do pole
+    return newPost; // Vrátí vytvořený příspěvek
+  }
+
+  useEffect(() => {
+    // Fetch users from the /users/fetchall API endpoint using GET request
+    const fetchPosts = async () => {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/forum/posts/fetchall', {
+        method: 'GET',
+        headers: {
+              'Accept': 'application/json', // Ensure that the response is in JSON format
+        },
+        });
+
+        // Check if response is successful
+        if (response.ok) {
+          const textData = await response.text(); // Get the response as raw text
+          console.log('Response Body (Text):', textData); // Log the raw text response
+
+          const data = JSON.parse(textData); // Manually parse the response text to JSON
+
+          addPost(
+            data.id,
+            data.title,
+            data.text,
+            data.author_id,
+            data.likes, // náhodný počet lajků
+            data.comments, // náhodný počet komentářů
+            data.date
+          );
+        } else {
+          setError(`Failed to fetch posts. Status: ${response.status}`);
+        }
+
+        //setLoading(false); // Stop loading once data is received
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        setError('Error fetching posts. Please try again later.');
+        //setLoading(false); // Stop loading if error occurs
+    }
+    };
+
+    fetchPosts(); // Call the fetchPosts function when the component mounts
+  }, []); // Empty dependency array ensures this runs only once
+
+
   // Example posts data - would normally come from an API
   const [posts] = useState([
     {
