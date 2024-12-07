@@ -65,44 +65,49 @@ const Login = () => {
     }
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+const handleRegister = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError('');
 
-    try {
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          first_name: credentials.firstname,  // Changed from fullName
-          last_name: credentials.lastname,    // Added lastname
+  try {
+      // Převod `birthDate` na timestamp (v milisekundách)
+      const timestamp = birthDate ? Math.floor(birthDate.getTime() / 1000) : null; // Timestamp v sekundách
+
+      // Vytvoření dotazového řetězce
+      const params = new URLSearchParams({
           username: credentials.username,
-          birthday: credentials.birthday,
+          password: credentials.password,
+          timestamp: timestamp,
           email: credentials.email,
-          password: credentials.password
-        })
+          first_name: credentials.firstname,
+          last_name: credentials.lastname,
+      });
+
+      const response = await fetch(`${API_URL}/auth/register?${params.toString()}`, {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json', // Přijetí JSON odpovědi
+          },
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/login');
+          // Uložení dat a přesměrování
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          navigate('/');
       } else {
-        setError(data.message || 'Registration failed');
+          setError(data.message || 'Registration failed');
       }
-    } catch (err) {
-      setError('Network error occurred');
-    } finally {
+  } catch (err) {
+      setError('Network error occurred: ' + err.message);
+  } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Registration Step 1 (Personal Info)
+  }
+};
+// Registration Step 1 (Personal Info)
   const renderRegistrationStep1 = () => {
     return (
       <>

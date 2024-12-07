@@ -12,7 +12,7 @@
             const response = await fetch('http://127.0.0.1:8000/users/fetchall', {
             method: 'GET',
             headers: {
-                'Accept': 'application/json', // Ensure that the response is in JSON format
+                  'Accept': 'application/json', // Ensure that the response is in JSON format
             },
             });
 

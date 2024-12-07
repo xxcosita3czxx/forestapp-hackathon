@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter } from 'react-icons/fa';
+import Navbar from './components/Navbar';
 import './forum.css';
 
 const Forum = () => {
@@ -31,15 +32,15 @@ const Forum = () => {
       comments: 12,
       date: new Date('2024-01-10')
     },
-    {
-      id: 3,
-      title: "Tipy na aktivity s dětmiXXXXX   @workspace Zarit aby se ve forumu dalo seradit podle a vyhladavani (pridej ten search uplne stejnej jako je je v home.jsx) XXXXX",
-      content: "Sestavil jsem seznam osvědčených aktivit, které pomáhají budovat vztah s přijatým dítětem. Patří mezi ně společné vaření, výlety do přírody, hraní společenských her...",
-      author: "Martin V.",
-      likes: 42,
-      comments: 16,
-      date: new Date('2024-01-05')
-    }
+    // {
+    //   id: 3,
+    //   title: "Tipy na aktivity s dětmiXXXXX   @workspace Zarit aby se ve forumu dalo seradit podle a vyhladavani (pridej ten search uplne stejnej jako je je v home.jsx) XXXXX",
+    //   content: "Sestavil jsem seznam osvědčených aktivit, které pomáhají budovat vztah s přijatým dítětem. Patří mezi ně společné vaření, výlety do přírody, hraní společenských her...",
+    //   author: "Martin V.",
+    //   likes: 42,
+    //   comments: 16,
+    //   date: new Date('2024-01-05')
+    // }
   ]);
 
   useEffect(() => {
@@ -100,21 +101,23 @@ const Forum = () => {
 
   return (
     <div className="forum-page">
-      <div className="forum-controls">
-        <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
-          <button type="submit" className="search-button" onClick={handleSearchClick}>
-            <FaSearch />
-          </button>
-          <input 
-            type="text" 
-            className="search-input" 
-            placeholder="Search..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            autoFocus={searchActive} 
-          />
-        </form>
+      <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
+        <button type="submit" className="search-button" onClick={handleSearchClick}>
+          <FaSearch />
+        </button>
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Search..." 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          autoFocus={searchActive} 
+        />
+      </form>
 
+      <div className="forum-content">
+        <h1 className="forum-title">Diskuzní fórum</h1>
+        
         <div className="filter-container">
           <button 
             className="filter-button"
@@ -136,20 +139,6 @@ const Forum = () => {
           </div>
         </div>
 
-        <select 
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="sort-select"
-        >
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-          <option value="mostLiked">Most Liked</option>
-        </select>
-      </div>
-
-      <div className="forum-content">
-        <h1 className="forum-title">Diskuzní fórum</h1>
-        
         <div className="posts-container">
           {filteredPosts.map(post => (
             <div key={post.id} className="post-card">
@@ -170,23 +159,7 @@ const Forum = () => {
         </div>
       </div>
 
-      <div className="navbar">
-        <div className="nav-item">
-          <FaUser />
-        </div>
-        <div className="nav-item">
-          <FaComments />
-        </div>
-        <div className="nav-item" onClick={() => navigate('/')}>
-          <FaHome />
-        </div>
-        <div className="nav-item">
-          <FaCommentDots />
-        </div>
-        <div className="nav-item">
-          <FaQuestionCircle />
-        </div>
-      </div>
+      <Navbar />
     </div>
   );
 };
