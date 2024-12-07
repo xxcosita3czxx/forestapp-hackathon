@@ -1,15 +1,12 @@
 import json
 
 import fastapi
-import utils.configmanager as configmanager
+import utils.configmanager as cm
 from fastapi import WebSocket
 
 # Create the FastAPI app
 app = fastapi.FastAPI()
-cmi = configmanager.ConfigManager("data/users/")
-# Create routr
 router = fastapi.APIRouter()
-cmi = configmanager.ConfigManager("data/users/")
 
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -20,7 +17,7 @@ async def websocket_endpoint(websocket: WebSocket):
         if data["type"] == "message":
             # Use the instance to access the get method
             print(data["recipientid"])
-            name = cmi.get(data["recipientid"], "[general]", "name")
+            name = cm.users.get(data["recipientid"], "general", "name")
             print(f"Recipient name: {name}")
 # todle tu musi bejt nesahej na to
 app.include_router(router)

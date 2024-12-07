@@ -11,5 +11,4 @@ os.chdir(scripts_directory)
 
 import utils.configmanager as cm
 
-
 print(cm.users.config)

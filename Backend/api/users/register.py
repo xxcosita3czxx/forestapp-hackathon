@@ -21,6 +21,10 @@ def is_valid_username(username):
     allowed_chars = re.compile(r'^[a-zA-Z0-9._]+$')  # Uppercase, lowercase, numbers, dots, underscores  # noqa: E501
     return bool(allowed_chars.match(username))
 
+def is_valid_fullname(username):
+    allowed_chars = re.compile(r'^[a-zA-Z]+$')  # Uppercase, lowercase, numbers, dots, underscores  # noqa: E501
+    return bool(allowed_chars.match(username))
+
 def is_valid_pass(passw):
     allowed_chars = re.compile(r'^[a-zA-Z0-9._]+$')  # Uppercase, lowercase, numbers, dots, underscores  # noqa: E501
     return bool(allowed_chars.match(passw))
@@ -31,8 +35,13 @@ def add_user(username: str, password: str, timestamp: int,email: str,first_name:
         if len(password) < 17 and len(password) > 7 and is_valid_pass(password):  # noqa: PLR2004
             if "@" in email:
                 if is_valid_username(username):
-                    add.add_user(name=username,password=password,timestamp=timestamp,email=email,first_name=first_name,last_name=last_name)
-                    raise HTTPException(status_code=200, detail="Success")
+                    if is_valid_fullname(first_name) and is_valid_fullname(last_name):  # noqa: E501
+                        add.add_user(name=username,password=password,timestamp=timestamp,email=email,first_name=first_name,last_name=last_name)
+                        raise HTTPException(status_code=200, detail="Success")
+                    else:
+                        raise HTTPException(status_code=406,detail="Full name is not valid")  # noqa: E501
+                else:
+                    raise HTTPException(status_code=406,detail="Username is not valid")  # noqa: E501
             else:
                 raise HTTPException(status_code=406,detail="Email is not valid")
         else:
