@@ -1,6 +1,7 @@
 import base64
 import hashlib
 
+import api.auth.verify_pass as vpass
 import fastapi
 import utils.configmanager as cm
 import utils.uuid_gen as ug
@@ -30,8 +31,17 @@ def check_aes_code(password, encrypted_code, original_string="success-uuid"):
 
 
 @router.post("/add")
-def add_user(name: str, password: str, timestamp : int, email : str,first_name:str,last_name:str,perm_level:int=1):  # noqa: E501
+def add_user(name: str,
+            password: str,
+            timestamp : int,
+            email : str,
+            first_name:str,
+            last_name:str,
+            perm_level:int=1,
+            authorization:str=fastapi.Depends(vpass.verify_permission),  # noqa: E501
+            ):  # noqa: E501
     try:
+        vpass.set_permission_level(10)
         new_id = ug.generate_user_id()
         cm.users.set(new_id, "general", "name", name)
         cm.users.set(new_id,"general", "birthday", timestamp)
