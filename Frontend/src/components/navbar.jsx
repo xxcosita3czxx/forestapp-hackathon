@@ -1,5 +1,4 @@
-import { useState
-   } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
@@ -73,22 +72,20 @@ const Navbar = () => {
     setTimeout(() => setAccountMenuOpen(true), 300); // Wait for settings animation to finish
   };
 
-  const handleThemeChange = async (e) => {
-    const theme = e.target.value;
-    setCurrentTheme(theme);
+  const handleThemeChange = (e) => {
+    const selectedTheme = e.target.value;
+    setCurrentTheme(selectedTheme);
     
-    // Get userId from localStorage
-    const userId = localStorage.getItem('userId');
+    // Update background gradient based on theme
+    const root = document.documentElement;
+    const gradients = {
+      PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
+      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+      GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
+      BLACK: 'linear-gradient(45deg, #333333, #666666)'
+    };
     
-    try {
-      await fetch(`/set/${userId}&settings&theme&${theme}`, {
-        method: 'PATCH'
-      });
-      
-      document.body.style.background = `linear-gradient(45deg, ${THEMES[theme].from}, ${THEMES[theme].to})`;
-    } catch (err) {
-      console.error('Failed to save theme:', err);
-    }
+    document.body.style.background = gradients[selectedTheme];
   };
 
   return (
@@ -108,9 +105,6 @@ const Navbar = () => {
         </div>
         <div className="nav-item">
           <FaQuestionCircle />
-        </div>
-        <div className="nav-item" onClick={toggleSettings}>
-          <FiSettings />
         </div>
       </div>
 
@@ -196,7 +190,7 @@ const Navbar = () => {
                       <option value="PINK">Růžová</option>
                       <option value="BLUE">Modrá</option> 
                       <option value="GREEN">Zelená</option>
-                      <option value="BLACK">Černá (coming soon)</option>
+                      <option value="BLACK">Černá (experimental)</option>
                     </select>
                   </div>
                 </div>

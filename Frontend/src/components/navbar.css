@@ -86,3 +86,143 @@
   outline: none;
   border-color: #007bff;
 }
+
+/* Account Menu Panel */
+.account-menu {
+  position: fixed;
+  bottom: -100%; /* Start hidden below the viewport */
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(227, 227, 227, 0.75); /* #E3E3E3 with 75% opacity */
+  backdrop-filter: blur(10px);
+  transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  border-radius: 30px 30px 0 0;
+}
+
+/* Active state when menu is open */
+.account-menu.active {
+  bottom: 0;
+}
+
+/* Optional: Add some inner padding and scrolling */
+.account-menu-content {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  color: black;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Close button */
+.account-menu-close {
+  position: absolute;
+  top: 20px;
+  left: 20px; /* Changed from right to left */
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 600px;
+  padding: 0 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.account-title {
+  font-size: 2.5rem;
+  margin: 0;
+  margin: 40px 0 30px 20px;
+  color: black;
+  font-size: 2.5rem;
+  margin: 0;
+  color: black;
+}
+
+.profile-section {
+  padding: 0 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.profile-circle {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  margin-left: 20px;
+  margin-bottom: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: white;
+}
+
+.field-group {
+  margin-bottom: 20px;
+}
+
+.field-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.input-with-button input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.edit-button {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+} 
+
+.edit-button:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  top: -100px; /* Start above viewport */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(50, 50, 50, 0.95);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 2000;
+}
+
+.toast-notification.show {
+  top: 20px; /* Slide to 20px from top */
+  opacity: 1;
+  visibility: visible;
+}
