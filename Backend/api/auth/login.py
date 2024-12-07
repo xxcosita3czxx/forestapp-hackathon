@@ -7,7 +7,7 @@ import utils.configmanager as cm
 
 router = fastapi.APIRouter()
 
-@router.get("/login")
+@router.post("/login")
 def login(login:str,password:str):
     userdata = fetch.fetch(login)
     sessionid=str(uuid.uuid4())
