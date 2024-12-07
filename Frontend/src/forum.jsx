@@ -90,15 +90,15 @@ const Forum = () => {
       comments: 12,
       date: new Date('2024-01-10')
     },
-    // {
-    //   id: 3,
-    //   title: "Tipy na aktivity s dětmiXXXXX   @workspace Zarit aby se ve forumu dalo seradit podle a vyhladavani (pridej ten search uplne stejnej jako je je v home.jsx) XXXXX",
-    //   content: "Sestavil jsem seznam osvědčených aktivit, které pomáhají budovat vztah s přijatým dítětem. Patří mezi ně společné vaření, výlety do přírody, hraní společenských her...",
-    //   author: "Martin V.",
-    //   likes: 42,
-    //   comments: 16,
-    //   date: new Date('2024-01-05')
-    // }
+    {
+      id: 3,
+      title: "Tipy na aktivity s dětmiXXXXX   @workspace Zarit aby se ve forumu dalo seradit podle a vyhladavani (pridej ten search uplne stejnej jako je je v home.jsx) XXXXX",
+      content: "Sestavil jsem seznam osvědčenych aktivit, které pomáhají budovat vztah s přijatým dítětem. Patří mezi ně společné vaření, výlety do přírody, hraní společenských her...",
+      author: "Martin V.",
+      likes: 42,
+      comments: 16,
+      date: new Date('2024-01-05')
+    }
   ]);
 
   useEffect(() => {
@@ -155,6 +155,11 @@ const Forum = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     console.log("Search submitted with query:", searchQuery);
+  };
+
+  const handleFilterClick = (option) => {
+    setSelectedFilter(option); // Set the selected filter
+    setIsDropdownOpen(false); // Close the dropdown
   };
 
   return (
