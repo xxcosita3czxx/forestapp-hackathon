@@ -31,5 +31,5 @@ jobs:
         git merge gitlab/main --strategy-option theirs --allow-unrelated-histories
 
     - name: Push to GitLab
-      run: |
+      run:  |
         git push --force gitlab main
