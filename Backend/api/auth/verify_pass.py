@@ -1,29 +1,45 @@
+import json
+from datetime import datetime
+
 import fastapi
 import utils.configmanager as cm
+from fastapi import HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 security = HTTPBearer()
 
+
 rq_level = 1
+def bearer_token(credentials: str = HTTPAuthorizationCredentials(security)):
+    try:
+        # Ensure the scheme is Bearer
+        if credentials.scheme != "Bearer":
+            raise HTTPException(status_code=401, detail="Invalid Authorization scheme")
 
-def bearer_token(authorization: HTTPAuthorizationCredentials = fastapi.Depends(security)):  # noqa: B008, E501
-    # Ensure the header starts with "Bearer"
-    print(authorization)
-    if not str(authorization).startswith("Bearer "):
-        raise fastapi.HTTPException(status_code=401, detail="Invalid Authorization header format")  # noqa: E501
+        # Parse the JSON-like token
+        try:
+            token_data = json.loads(credentials.credentials)
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=400, detail="Malformed Bearer token - Not JSON")  # noqa: B904
 
-    # Extract the token (after "Bearer ")
-    token = authorization.split(" ")[1]
+        # Extract required fields
+        sessionid = token_data.get("sessionid")
+        valid_until = token_data.get("valid_until")
+        user_id = token_data.get("user_id")
 
-    # Extract userid and sessionid
-    userid = token.get("userid")
-    sessionid = token.get("sessionid")
+        # Ensure all required fields are present
+        if not all([sessionid, valid_until, user_id]):
+            raise HTTPException(status_code=400, detail="Malformed Bearer token - Missing fields")
 
-    # Validate userid and sessionid presence
-    if not userid or not sessionid:
-        raise fastapi.HTTPException(status_code=400, detail="Malformed token")
+        # Validate expiration
+        valid_until_dt = datetime.fromisoformat(valid_until)
+        if datetime.utcnow() > valid_until_dt:
+            raise HTTPException(status_code=401, detail="Token has expired")
 
-    return userid, sessionid
+        return user_id, sessionid
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error processing token: {str(e)}")  # noqa: B904
 
 def verify_permission(session: str = fastapi.Depends(bearer_token)):  # noqa: E501
     print(rq_level)
