@@ -27,6 +27,11 @@ const Login = () => {
     password: '',
     confirmPassword: ''
   });
+  const [loginFieldErrors, setLoginFieldErrors] = useState({
+    email: '',
+    password: ''
+  });
+  const [attemptedNextStep, setAttemptedNextStep] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -38,6 +43,12 @@ const Login = () => {
     
     // Clear error when user starts typing
     setFieldErrors(prev => ({
+      ...prev,
+      [name]: ''
+    }));
+
+    // Clear field-specific error
+    setLoginFieldErrors(prev => ({
       ...prev,
       [name]: ''
     }));
@@ -133,7 +144,26 @@ const Login = () => {
     return Object.keys(errors).length === 0;
   };
 
+  const validateLogin = () => {
+    const errors = {};
+    if (!credentials.email.trim()) {
+      errors.email = 'Email is required';
+    }
+    if (!credentials.password.trim()) {
+      errors.password = 'Password is required';
+    }
+    setLoginFieldErrors(prev => ({...prev, ...errors}));
+    return Object.keys(errors).length === 0;
+  };
+
   const renderRegistrationStep1 = () => {
+    const handleNextClick = () => {
+      setAttemptedNextStep(true);
+      if (validateStep1()) {
+        setRegistrationStep(2);
+      }
+    };
+
     return (
       <>
         <div className="step-indicator">
@@ -145,24 +175,28 @@ const Login = () => {
           <input
             type="text"
             name="fullName"
-            className={`auth-input ${fieldErrors.fullName ? 'error' : ''}`}
+            className={`auth-input ${attemptedNextStep && fieldErrors.fullName ? 'error' : ''}`}
             value={credentials.fullName}
             onChange={handleChange}
             required
           />
-          {fieldErrors.fullName && <span className="error-message">{fieldErrors.fullName}</span>}
+          {attemptedNextStep && fieldErrors.fullName && 
+            <span className="error-message">{fieldErrors.fullName}</span>
+          }
         </div>
         <div className="input-group">
           <label className="input-label">Username</label>
           <input
             type="text"
             name="username"
-            className={`auth-input ${fieldErrors.username ? 'error' : ''}`}
+            className={`auth-input ${attemptedNextStep && fieldErrors.username ? 'error' : ''}`}
             value={credentials.username}
             onChange={handleChange}
             required
           />
-          {fieldErrors.username && <span className="error-message">{fieldErrors.username}</span>}
+          {attemptedNextStep && fieldErrors.username && 
+            <span className="error-message">{fieldErrors.username}</span>
+          }
         </div>
         <div className="input-group">
           <label className="input-label">Date of Birth</label>
@@ -170,29 +204,21 @@ const Login = () => {
             selected={birthDate}
             onChange={(date) => {
               setBirthDate(date);
-              setCredentials(prev => ({
-                ...prev,
-                birthday: date
-              }));
+              setFieldErrors(prev => ({ ...prev, birthday: '' }));
             }}
-            className={`auth-input ${fieldErrors.birthday ? 'error' : ''}`}
+            className={`auth-input ${attemptedNextStep && fieldErrors.birthday ? 'error' : ''}`}
             dateFormat="dd/MM/yyyy"
-            showYearDropdown
-            scrollableYearDropdown
-            yearDropdownItemNumber={100}
             placeholderText="Select date"
             required
           />
-          {fieldErrors.birthday && <span className="error-message">{fieldErrors.birthday}</span>}
+          {attemptedNextStep && fieldErrors.birthday && 
+            <span className="error-message">{fieldErrors.birthday}</span>
+          }
         </div>
         <button 
           type="button" 
           className="auth-button"
-          onClick={() => {
-            if (validateStep1()) {
-              setRegistrationStep(2);
-            }
-          }}
+          onClick={handleNextClick}
         >
           Next
         </button>
@@ -254,6 +280,16 @@ const Login = () => {
     </>
   );
 
+  // Add token to all API requests
+  const makeRequest = async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch('/api/protected-route', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  }
+
   return (
     <div className="login-page">
       <h1 className="app-title">Foster App</h1>
@@ -277,7 +313,12 @@ const Login = () => {
         </div>
 
         {isLoginForm ? (
-          <form onSubmit={handleLogin}>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if (validateLogin()) {
+              handleLogin(e);
+            }
+          }}>
             <div className="input-group">
               <input
                 type="email"
@@ -285,9 +326,10 @@ const Login = () => {
                 placeholder="Email"
                 value={credentials.email}
                 onChange={handleChange}
-                className="auth-input"
+                className={`auth-input ${loginFieldErrors.email ? 'error' : ''}`}
                 required
               />
+              {loginFieldErrors.email && <span className="error-message">{loginFieldErrors.email}</span>}
             </div>
             <div className="input-group">
               <input
@@ -296,9 +338,10 @@ const Login = () => {
                 placeholder="Password"
                 value={credentials.password}
                 onChange={handleChange}
-                className="auth-input"
+                className={`auth-input ${loginFieldErrors.password ? 'error' : ''}`}
                 required
               />
+              {loginFieldErrors.password && <span className="error-message">{loginFieldErrors.password}</span>}
             </div>
             <button type="submit" className={`auth-button ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
               {isLoading ? <span className="loading-spinner"></span> : 'Login'}

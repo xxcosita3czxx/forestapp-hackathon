@@ -131,9 +131,12 @@ input[type="date"].auth-input {
 }
 
 .error-message {
-  color: red;
+  color: #dc3545;
   text-align: center;
   margin-top: 10px;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
 }
 
 .app-title {
@@ -207,4 +210,9 @@ input[type="date"].auth-input {
 
 .react-datepicker__navigation {
   top: 8px;
+}
+
+/* Add to CSS */
+.auth-input.error {
+  border-color: #dc3545;
 }
