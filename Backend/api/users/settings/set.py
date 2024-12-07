@@ -2,6 +2,6 @@ import fastapi
 
 router = fastapi.APIRouter()
 
-@router.get("/set")
+@router.post("/set")
 def set_settings():
     return {"message": "Settings set"}
