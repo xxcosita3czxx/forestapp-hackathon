@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter } from 'react-icons/fa';
+import Navbar from './components/Navbar';
 import './forum.css';
 
 const Forum = () => {
@@ -158,23 +159,7 @@ const Forum = () => {
         </div>
       </div>
 
-      <div className="navbar">
-        <div className="nav-item">
-          <FaUser />
-        </div>
-        <div className="nav-item">
-          <FaComments />
-        </div>
-        <div className="nav-item" onClick={() => navigate('/')}>
-          <FaHome />
-        </div>
-        <div className="nav-item">
-          <FaCommentDots />
-        </div>
-        <div className="nav-item">
-          <FaQuestionCircle />
-        </div>
-      </div>
+      <Navbar />
     </div>
   );
 };
