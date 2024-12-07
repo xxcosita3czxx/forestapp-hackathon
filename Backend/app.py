@@ -3,7 +3,7 @@ import importlib.util
 import logging
 import os
 import sys
-
+import utils.configmanager as cm
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -78,6 +78,9 @@ load_routes_from_directory("api")
 @app.get("/")
 def read_root():
     return {"message": "Welcome to foster app API!"}
+
+def verify_permission(sessionid:str):
+    cm.sessions.get("sessions","")
 
 if __name__ == "__main__":
     host = os.getenv("HOST", "127.0.0.1")
