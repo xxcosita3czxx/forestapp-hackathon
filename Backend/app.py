@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
 #TODO Forum
-#TODO Accounts
+#TODO Accounts + color modes
 #TODO Stastuses
 #TODO Random message
 #TODO Message controll
