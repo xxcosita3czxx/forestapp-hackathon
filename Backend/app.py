@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 #TODO Accounts
 #TODO Stastuses
 #TODO Random message
+#TODO Message controll
 
 app = FastAPI()  # noqa: E501
 
