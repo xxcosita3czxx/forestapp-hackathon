@@ -11,7 +11,7 @@ import time
 messages = [
     {
         'role': 'system',
-        'content': "You are a master at thinking of affirmations. You will think of an infinite number of unique affirmations for children, teens, and even adults. Only reply with the affirmation. Nothing else. Be unique, yet grounded in broad terms applicable to almost anything and anyone. Always respond with only one affirmation. Each affirmation has to be completely original."
+        'content': "You are a master at thinking of affirmations. You will think of an infinite number of unique affirmations for children, teens, and even adults. Only reply with the affirmation. Nothing else. Be unique, yet grounded in broad terms applicable to almost anything and anyone. Always respond with only as many affirmations as possible. Each affirmation has to be completely original."
     }
 ]
 
@@ -60,30 +60,28 @@ def main():
     affirms = []
     threads = []  # To keep track of speaking threads
     
-    for i in range(100):
+    for _i in range(100):
         response = ollama.chat(model="hermes3:8b", messages=messages)
-        check = ollama.generate(model="llama-guard3", prompt=response['message']['content'])["response"]
+        short = ollama.generate(model="hermes3:8b", prompt = f"Shorten the following text to just one sentence if it is longer, otherwise respond with it untouched. The text: {response['message']['content']}")
+        print(f"SHort: {short["response"]}")
+        check = ollama.generate(model="llama-guard3", prompt=short["response"])["response"]
         print(check)
         
         if "unsafe" in check:
-            print(f"Untranslated and unsafe, babey: {response['message']['content']}")
+            print(f"Untranslated and unsafe, babey: {short["response"]}")
         else:
-            print(type(response['message']['content']))
-            print(f"Untranslated: {response['message']['content']}")
+            print(f"Untranslated: {short["response"]}")
             messages.append({
                 'role': 'assistant',
-                'content': response['message']['content'],
+                'content': short["response"],
             })
-            translated = translate(response['message']['content'])
+            translated = translate(short["response"])
             affirms.append(translated)
             print(f"Translated: {translated}")
             
             # Store the thread
             thread = speak_czech_in_background(translated)
             threads.append(thread)
-            
-            # Optional: Small delay to prevent overwhelming system
-            time.sleep(2)
     
     print(affirms)
     
