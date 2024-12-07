@@ -4,7 +4,6 @@ import PrivateRoute from './utils/privateroute';
 import Home from './home';
 import Login from './login';
 import Chat from './chat';
-import ChatHistory from './chatHistoy';
 
 export default function App() {
   const [isChecking, setIsChecking] = useState(true);
@@ -35,7 +34,6 @@ export default function App() {
           element={isAuth ? <Navigate to="/" replace /> : <Login />} 
         />
         <Route path="/chat" element={<Chat to="/chat" replace />} />
-        <Route path="/chatHistory" element={<ChatHistory to="/chatHistory" replace />} />
       </Routes>
     </BrowserRouter>
   );
