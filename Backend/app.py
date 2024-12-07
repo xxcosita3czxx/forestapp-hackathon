@@ -3,6 +3,8 @@ import importlib.util
 import logging
 import os
 import sys
+
+import fastapi
 import utils.configmanager as cm
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -77,7 +79,7 @@ load_routes_from_directory("api")
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to foster app API!"}
+    return fastapi.HTTPException(status_code=418,detail="Welcome to foster app API!")
 
 def verify_permission(sessionid:str):
     cm.sessions.get("sessions","")
