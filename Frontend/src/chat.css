@@ -23,7 +23,7 @@
       max-width: 80%;
     }
 
-    .yourMessage {
+    .theirMessage {
       background-color: purple;
       color: black;
       margin-bottom: 10px;
@@ -35,7 +35,7 @@
       word-wrap: break-word; /* Wrap text if it's too long */
     }
     
-    .theirMessage {
+    .yourMessage {
       background-color: pink;
       color: black;
       margin-bottom: 10px;
