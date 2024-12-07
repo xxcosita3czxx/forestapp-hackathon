@@ -9,7 +9,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 security = HTTPBearer()
 
 
-def bearer_token(credentials: HTTPAuthorizationCredentials = fastapi.Depends(security)):  # noqa: B008
+def bearer_token(credentials: HTTPAuthorizationCredentials = fastapi.Depends(security)):  # noqa: B008, E501
     try:
         # Ensure the scheme is Bearer
         if credentials.scheme != "Bearer":
