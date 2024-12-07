@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Add this import
 import "./home.css";
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from "react-icons/fa";
-import Navbar from './components/navbar';
+import Navbar from './components/Navbar';
 
 function App() {
   const [searchActive, setSearchActive] = useState(false);

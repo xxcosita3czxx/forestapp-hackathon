@@ -1,3 +1,7 @@
+body {
+    overflow-y: scroll;
+}
+
 .forum-page {
   min-height: 100vh;
   background: linear-gradient(45deg, #FF55E3, #F3C1EE);
@@ -70,39 +74,6 @@
   gap: 20px;
   color: #666;
   font-size: 0.9rem;
-}
-
-.navbar {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  border-radius: 30px;
-  padding: 10px;
-  width: calc(100% - 40px);
-  max-width: 600px;
-  box-sizing: border-box;
-  z-index: 900;
-}
-
-.nav-item {
-  flex-grow: 1;
-  flex-basis: 0;
-  margin: 0 10px;
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.nav-item:hover {
-  transform: scale(1.2);
 }
 
 .search-container {
