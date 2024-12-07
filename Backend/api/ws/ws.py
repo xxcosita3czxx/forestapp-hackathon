@@ -6,9 +6,10 @@ from fastapi import WebSocket
 
 # Create the FastAPI app
 app = fastapi.FastAPI()
-
+cmi = configmanager.ConfigManager("data/users/")
 # Create routr
 router = fastapi.APIRouter()
+cmi = configmanager.ConfigManager("data/users/")
 
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -16,11 +17,10 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         data = json.loads(data)
-        await websocket.send_text('{"senderid":"' + data["senderid"] + '","content":"' + f"You sent: {data["content"]}\"" + '}')  # noqa: E501
-        print(data)
-        print(data["type"])
         if data["type"] == "message":
-            #configmanager.get(data["recipientid"], "[general]", "name")
-            print(data["content"])
+            # Use the instance to access the get method
+            print(data["recipientid"])
+            name = cmi.get(data["recipientid"], "[general]", "name")
+            print(f"Recipient name: {name}")
 # todle tu musi bejt nesahej na to
 app.include_router(router)
