@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots } from 'react-icons/fa';
+import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch } from 'react-icons/fa';
 import './forum.css';
 
 const Forum = () => {
   const navigate = useNavigate();
+  const [searchActive, setSearchActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('newest'); // 'newest', 'likes', 'comments'
   
   // Example posts data - would normally come from an API
   const [posts] = useState([
@@ -14,7 +17,8 @@ const Forum = () => {
       content: "Nedávno jsme přijali dítě do naší rodiny a chtěla bych se podělit o několik tipů, které nám velmi pomohly během prvních dnů. Především je důležité dát dítěti prostor a čas na adaptaci...",
       author: "Jana K.",
       likes: 24,
-      comments: 8
+      comments: 8,
+      date: new Date('2024-01-15')
     },
     {
       id: 2,
@@ -22,15 +26,17 @@ const Forum = () => {
       content: "Chtěl bych se podělit o své zkušenosti s žádostí o podporu od státu při pěstounské péči. Celý proces trval přibližně 3 měsíce a zahrnoval několik návštěv sociálních pracovníků...",
       author: "Petr M.",
       likes: 15,
-      comments: 12
+      comments: 12,
+      date: new Date('2024-01-10')
     },
     {
       id: 3,
-      title: "Tipy na aktivity s dětmi",
+      title: "Tipy na aktivity s dětmiXXXXX   @workspace Zarit aby se ve forumu dalo seradit podle a vyhladavani (pridej ten search uplne stejnej jako je je v home.jsx) XXXXX",
       content: "Sestavil jsem seznam osvědčených aktivit, které pomáhají budovat vztah s přijatým dítětem. Patří mezi ně společné vaření, výlety do přírody, hraní společenských her...",
       author: "Martin V.",
       likes: 42,
-      comments: 16
+      comments: 16,
+      date: new Date('2024-01-05')
     }
   ]);
 
@@ -39,8 +45,34 @@ const Forum = () => {
     return text.substr(0, maxLength) + '...';
   };
 
+  const handleSearchClick = (e) => {
+    if (!searchActive) {
+      e.preventDefault();
+    }
+    setSearchActive(!searchActive);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    console.log("Search submitted with query:", searchQuery);
+  };
+
   return (
     <div className="forum-page">
+      <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
+        <button type="submit" className="search-button" onClick={handleSearchClick}>
+          <FaSearch />
+        </button>
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Search..." 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          autoFocus={searchActive} 
+        />
+      </form>
+
       <div className="forum-content">
         <h1 className="forum-title">Diskuzní fórum</h1>
         
