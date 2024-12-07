@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 #TODO Stastuses
 #TODO Random message
 
-app = FastAPI(root_path="/api/v1")
+app = FastAPI()  # noqa: E501
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -49,7 +49,6 @@ def load_routes_from_directory(directory, parent_router=None):
             # Import the Python module dynamically
             module_name = filename[:-3]  # Strip '.py' from filename
             module_path = full_path
-            print(module_name)
             try:
                 spec = importlib.util.spec_from_file_location(module_name, module_path)  # noqa: E501
                 module = importlib.util.module_from_spec(spec)
@@ -59,10 +58,12 @@ def load_routes_from_directory(directory, parent_router=None):
                 if hasattr(module, 'router'):
                     if parent_router is not None:
                         parent_router.include_router(module.router)
+                        logging.info(f"Loaded {module_name}")
                     else:
                         app.include_router(module.router)
+                        logging.info(f"Loaded {module_name}")
             except Exception as e:
-                logging.WARNING(f"Failed to load {str(module_name)}, \n{e}")
+                logging.warning(f"Failed to load {str(module_name)}, \n{e}")
 
 load_routes_from_directory("api")
 

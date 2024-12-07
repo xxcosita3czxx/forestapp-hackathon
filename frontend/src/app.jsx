@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Index from './index'
+import Home from './home'
 import Chat from './chat'
 
 
@@ -8,7 +8,7 @@ export default function App() {
     <>
       <BrowserRouter>
       <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
         </Routes>
       </BrowserRouter>

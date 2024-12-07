@@ -1,0 +1,144 @@
+/* Globální styl */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #333;
+  color: white;
+}
+
+/* Kontejner aplikace */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+.header {
+  display: none; /* Skrytí nadpisu "Home1" pro vzhled jako na obrázku */
+}
+
+/* Hlavní obsah */
+.content {
+  flex: 1;
+  background: linear-gradient(to top right, #FF55E3, #F3C1EE);
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+/* Vyhledávací ikona */
+.search-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon .icon {
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: black; /* Nastavení barvy ikony na černou */
+}
+
+.search-icon .icon:hover,
+.search-icon .icon:focus {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.search-icon .search-bar {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 0; /* Umístění vyhledávacího pole vlevo od tlačítka */
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 0 20px 20px 0;
+  padding: 10px 20px;
+  width: 0;
+  box-sizing: border-box;
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+.search-icon.active .search-bar {
+  display: block;
+  width: 200px;
+  padding: 10px 20px 10px 10px; /* Přidání místa pro tlačítko */
+}
+
+.search-icon.active .icon {
+  border-radius: 20px 0 0 20px; /* Změna tvaru na ovál */
+  padding: 10px 20px; /* Změna paddingu */
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  width: 40px;
+}
+
+.search-container.active {
+  width: 240px;
+}
+
+.search-button {
+  background: none;
+  border: none;
+  padding: 10px;
+  color: black;
+  cursor: pointer;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-input {
+  background: none;
+  border: none;
+  padding: 10px;
+  width: 0;
+  transition: width 0.3s ease;
+  outline: none;
+}
+
+.search-container.active .search-input {
+  width: 200px;
+}
+
+/* Navbar */
+.navbar {
+  position: absolute;
+  bottom: 20px; /* Nastavte vzdálenost od spodní části obrazovky */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.75); /* Bílá barva s 75% průhledností */
+  backdrop-filter: blur(20px); /* Blur efekt s hodnotou 20 */
+  border-radius: 30px;
+  padding: 20px; /* Zvýšení paddingu pro tlustší footer */
+  width: calc(100% - 40px); /* Šířka s mezerou 20px od každého okraje */
+  max-width: 1200px; /* Maximální šířka */
+  box-sizing: border-box; /* Zahrnutí paddingu do šířky */
+}
+
+.nav-item {
+  flex-grow: 1;
+  flex-basis: 0;
+  margin: 0 10px;
+  color: black; /* Nastavení barvy ikon na černou */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px; /* Zvýšení velikosti ikon */
+  cursor: pointer;
+}
