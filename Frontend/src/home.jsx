@@ -44,25 +44,6 @@ function App() {
         <h1>Home1</h1>
       </div>
       <div className="content">
-        <button className="path-button">
-          <div className="path-content">
-            <div className="path-text">
-              <div className="path-title">Tvoje cesta</div>
-              <div className="path-subtitle">nevíš co dál? zde ti pomůžem</div>
-            </div>
-            <div className="path-arrow">→</div>
-          </div>
-        </button>
-
-        <button className="path-button">
-          <div className="path-content">
-            <div className="path-text">
-              <div className="path-title">Informační kanál</div>
-              <div className="path-subtitle">důležité informace pro tebe</div>
-            </div>
-            <div className="path-arrow">→</div>
-          </div>
-        </button>
       </div>
       <Navbar />
     </div>
