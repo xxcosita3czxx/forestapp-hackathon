@@ -100,21 +100,23 @@ const Forum = () => {
 
   return (
     <div className="forum-page">
-      <div className="forum-controls">
-        <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
-          <button type="submit" className="search-button" onClick={handleSearchClick}>
-            <FaSearch />
-          </button>
-          <input 
-            type="text" 
-            className="search-input" 
-            placeholder="Search..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            autoFocus={searchActive} 
-          />
-        </form>
+      <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
+        <button type="submit" className="search-button" onClick={handleSearchClick}>
+          <FaSearch />
+        </button>
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Search..." 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          autoFocus={searchActive} 
+        />
+      </form>
 
+      <div className="forum-content">
+        <h1 className="forum-title">Diskuzní fórum</h1>
+        
         <div className="filter-container">
           <button 
             className="filter-button"
@@ -136,20 +138,6 @@ const Forum = () => {
           </div>
         </div>
 
-        <select 
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="sort-select"
-        >
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-          <option value="mostLiked">Most Liked</option>
-        </select>
-      </div>
-
-      <div className="forum-content">
-        <h1 className="forum-title">Diskuzní fórum</h1>
-        
         <div className="posts-container">
           {filteredPosts.map(post => (
             <div key={post.id} className="post-card">
