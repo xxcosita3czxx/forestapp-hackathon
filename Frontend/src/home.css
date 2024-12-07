@@ -146,40 +146,6 @@ body {
   width: calc(100% - 40px);
 }
 
-/* Navbar */
-.navbar {
-  position: absolute;
-  bottom: 20px; /* Nastavte vzdálenost od spodní části obrazovky */
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  background-color: rgba(255, 255, 255, 0.75); /* Bílá barva s 75% průhledností */
-  backdrop-filter: blur(20px); /* Blur efekt s hodnotou 20 */
-  border-radius: 30px;
-  padding: 10px; /* Zvýšení paddingu pro tlustší footer */
-  width: calc(100% - 40px); /* Šířka s mezerou 20px od každého okraje */
-  max-width: 600px; /* Maximální šířka */
-  box-sizing: border-box; /* Zahrnutí paddingu do šířky */
-  z-index: 900;
-}
-
-.nav-item {
-  flex-grow: 1;
-  flex-basis: 0;
-  margin: 0 10px;
-  color: black; /* Nastavení barvy ikon na černou */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px; /* Zvýšení velikosti ikon */
-  cursor: pointer;
-  transition: transform 0.2s ease; /* Add smooth transition for transform */
-}
-
-.nav-item:hover {
-  transform: scale(1.2); /* Scale up to 120% on hover */
-}
-
 /* Account Menu Panel */
 .account-menu {
   position: fixed;
