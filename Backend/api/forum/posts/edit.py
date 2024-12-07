@@ -1,8 +1,8 @@
-import fastapi
-import utils.configmanager as cm
+#import fastapi
+#import utils.configmanager as cm
 
-router = fastapi.APIRouter()
+#router = fastapi.APIRouter()
 
-@router.patch("/edit")
-def edit_post():
-    return 200
+#@router.patch("/edit")
+#def edit_post():
+#    return 200
