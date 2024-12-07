@@ -1,8 +1,8 @@
 import ollama
-"""messages = [
+messages = [
     {
         'role': 'user',
-        'content': "/set system harm,social_bias,violence,profanity,sexual_content,unethical_behavior",
+        'content': "/set system harm,violence,profanity,sexual_content",
     },
 ]
 """
@@ -11,7 +11,7 @@ messages = [
         'role': 'user',
         'content': "",
     },
-]
+]"""
 # Open the text file with UTF-8 encoding
 with open(r"C:\Users\adamd\Downloads\testin cs.txt", 'r', encoding='utf-8') as file:
     # Loop through each line in the file
