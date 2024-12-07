@@ -6,4 +6,4 @@ email = "huewhg@huewhg.com"
 contacts = "5cfdc633-d646-45ef-a778-f60a1b3fb771,0f63d70c-1f68-4cd1-81d2-531ffe48a330"
 
 [messages]
-0f63d70c-1f68-4cd1-81d2-531ffe48a330 = "{\"time\": 1733587923.7981098,\"content\": hello2!,\"role\":\"recipient\",}"
+0f63d70c-1f68-4cd1-81d2-531ffe48a330 = "{\"time\": 1733590886.8863697,\"content\": \"hello2!\",\"role\":\"recipient\"}"
