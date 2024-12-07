@@ -95,7 +95,10 @@ const App = () => {
     <div className="chat-container">   {/* Main container for the chat */}
       <div className="messages-list">   {/* Section for displaying messages */}
         {messages.map((msg, index) => (
-          <div className={msg.isOwnMessage ? 'yourMessage' : 'theirMessage'}> {/* Conditional styling based on message sender */}
+          <div 
+            key={index}  // Add a unique key for each message
+            className={msg.isOwnMessage ? 'yourMessage' : 'theirMessage'}
+          > {/* Conditional styling based on message sender */}
             <p>{msg.text}</p> {/* Display the message text */}
           </div>
         ))}
