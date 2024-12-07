@@ -52,6 +52,16 @@ function App() {
             <div className="path-arrow">→</div>
           </div>
         </button>
+
+        <button className="path-button">
+          <div className="path-content">
+            <div className="path-text">
+              <div className="path-title">Informační kanál</div>
+              <div className="path-subtitle">důležité informace pro tebe</div>
+            </div>
+            <div className="path-arrow">→</div>
+          </div>
+        </button>
       </div>
       <div className="navbar">
         <div className="nav-item" onClick={() => setAccountMenuOpen(true)}>
