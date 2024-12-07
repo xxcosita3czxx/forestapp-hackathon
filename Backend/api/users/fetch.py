@@ -6,4 +6,3 @@ router = fastapi.APIRouter()
 @router.get("/fetch/{querry}")
 def fetch(user_id:str):
     users = cm.users.config
-    
