@@ -1,6 +1,7 @@
 /* src/components/login.css */
 .login-page {
   min-height: 100vh;
+  width: 100vw; /* Add this */
   background: linear-gradient(45deg, #FF55E3, #F3C1EE);
   display: flex;
   align-items: center;
@@ -48,7 +49,7 @@
 }
 
 .auth-container {
-  max-width: 400px;
+  max-width: 400px; /* This limits the width */
   margin: 20px;
   padding: 40px;
   background: rgba(255, 255, 255, 0.9);
