@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './chat.css';
 
 const App = () => {
+  const { username } = location.state || {};
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [ws, setWs] = useState(null);
@@ -13,6 +14,7 @@ const App = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(name);
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     var socket = new WebSocket(`ws://127.0.0.1:8000/ws/ws`);
