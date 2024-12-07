@@ -1,35 +1,30 @@
-import { useState, useEffect } from 'react'
-import './chat.css'
+import { useState, useEffect } from 'react';
+import './chat.css';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
 
-  const fetchMessages = async () => {
-    try {
-      setMessages(mockMessages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  };
-
   const sendMessage = () => {
     if (!inputMessage.trim()) return;
 
-    setMessages([...messages, { text: inputMessage }]);
+    sendMessageToBackend(inputMessage);
+
+    setMessages([...messages, { text: inputMessage, isOwnMessage: true }]);
     setInputMessage('');
   };
-
-  useEffect(() => {
-    fetchMessages();
-  }, []);
 
   return (
     <div className="chat-container">
       <div className="messages-list">
         {messages.map((msg, index) => (
-          <div key={index} className="message">
-            {msg.text}
+          <div
+            key={index}
+            className={`message-wrapper ${msg.isOwnMessage ? 'yourMessage' : 'theirMessage'}`}
+          >
+            <div className={msg.isOwnMessage ? 'yourMessage' : 'theirMessage'}>
+              <p>{msg.text}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -40,13 +35,13 @@ const App = () => {
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder="Napište zprávu..."
         />
-        <button onClick={() => { sendMessage(); sendMessageToBackend(); }}>Odeslat</button>
+        <button onClick={sendMessage}>Odeslat</button>
       </div>
     </div>
   );
 };
 
-function createMessage(Type, content, recipientid, senderid) {
+function createMessage(type, content, recipientid, senderid) {
   return {
     type,
     content,
@@ -54,10 +49,12 @@ function createMessage(Type, content, recipientid, senderid) {
     senderid
   };
 }
-var client_id = Date.now();
-var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 
-const sendMessageToBackend = () => {
+var client_id = Date.now();
+var ws = new WebSocket(`ws://127.0.0.1:8000/ws/ws`);
+
+const sendMessageToBackend = (inputMessage) => {
+  console.log("sendMessageToBackend");
   if (!inputMessage.trim()) return;
 
   const messageToChange = createMessage("Message", inputMessage, "recipientid", "senderid");
@@ -73,9 +70,12 @@ const sendMessageToBackend = () => {
 
 ws.onmessage = function(event) {
   const messageObject = JSON.parse(event.data);
-  const recipientidRecieved = JSON.parse(messageObject.recipientid); 
-  const contentRecieved = JSON.parse(messageObject.content);  
-  sendMessage();
-}
+  const recipientidReceived = messageObject.recipientid;
+  const contentReceived = messageObject.content;
 
-export default App
+  console.log(`Received message from ${recipientidReceived}: ${contentReceived}`);
+
+  setMessages(prevMessages => [...prevMessages, { text: contentReceived, isOwnMessage: false }]);
+};
+
+export default App;

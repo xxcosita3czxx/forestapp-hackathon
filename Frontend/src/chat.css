@@ -1,0 +1,86 @@
+    .chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .messages-list {
+      height: 400px;
+      overflow-y: auto; /* Enable vertical scrolling */
+      overflow-x: hidden; /* Disable horizontal scrolling */
+      padding: 15px;
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      background-color: pink;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      max-width: 80%;
+    }
+
+    .theirMessage {
+      background-color: purple;
+      color: black;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      max-width: auto; /* Limit the maximum width */
+      display: inline-block; /* Shrinks width to content */
+      text-align: left; 
+      word-wrap: break-word; /* Wrap text if it's too long */
+    }
+    
+    .yourMessage {
+      background-color: pink;
+      color: black;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      max-width: auto; /* Limit the maximum width */
+      display: inline-block; /* Shrinks width to content */
+      text-align: right; 
+      word-wrap: break-word; /* Wrap text if it's too long */
+    }
+
+    .message-wrapper {
+      display: flex; /* Flex container for proper alignment */
+      justify-content: flex-start; /* Default alignment */
+    }
+    
+    .message-wrapper.theirMessage {
+      justify-content: flex-end; /* Align messages to the right */
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background-color: #f1f1f1;
+    }
+
+    .input-area input {
+      flex-grow: 1;
+      margin-right: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .input-area button {
+      padding: 8px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .input-area button:hover {
+      background-color: #0056b3;
+    }
+
