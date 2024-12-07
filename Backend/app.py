@@ -69,7 +69,7 @@ load_routes_from_directory("api")
 
 @app.get("/")
 def read_root():
-    return {"message": "Custom environment works!"}
+    return {"message": "Welcome to foster app API!"}
 
 if __name__ == "__main__":
     host = os.getenv("HOST", "127.0.0.1")
