@@ -6,7 +6,11 @@ import utils.configmanager as cm
 router = fastapi.APIRouter()
 
 @router.post("/create")
-def create_post(id:str,post_id:str,title:str,text:str,author_id:str):
+def create_post(id:str,
+                post_id:str,
+                title:str,
+                text:str,
+                author_id:str):
     cm.forums.set(id,post_id,"title",title)
     cm.forums.set(id,post_id,"text",text)
     cm.forums.set(datetime.now())
