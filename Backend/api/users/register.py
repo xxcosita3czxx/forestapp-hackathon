@@ -17,10 +17,12 @@ def is_possible_timestamp(ts):
         return False
 
 @router.post("/register",responses={406: {"description": "Password requirements wasnt met"},416: {"description": "Timestamp isnt possible to be, check if under or over 100 years"}})  # noqa: E501
-def add_user(name: str, password: str, timestamp : int):
+def add_user(name: str, password: str, timestamp : int,email: str):
     if is_possible_timestamp(timestamp):
-        if password > 16 and password < 7:  # noqa: PLR2004
+        if email.
+        if len(password) < 17 and len(password) > 7:  # noqa: PLR2004
             add.add_user(name=name,password=password,timestamp=timestamp)
+            raise HTTPException(status_code=200, detail="Success")
         else:
             raise HTTPException(status_code=406, detail="Password must be min 8 max 16")  # noqa: E501
     else:
