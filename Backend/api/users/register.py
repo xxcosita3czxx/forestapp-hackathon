@@ -4,6 +4,7 @@ import add
 import fastapi
 from fastapi import HTTPException
 
+app = fastapi.FastAPI()
 router = fastapi.APIRouter()
 
 def is_possible_timestamp(ts):
@@ -25,4 +26,4 @@ def add_user(name: str, password: str, timestamp : int):
     else:
         raise HTTPException(status_code=416, detail="Invalid Timestamp, must be within range.")  # noqa: E501
 
-router.add_route(add_user)
+app.add_route(add_user)
