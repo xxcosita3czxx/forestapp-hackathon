@@ -5,13 +5,6 @@ const App = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
 
-  const fetchMessages = async () => {
-    try {
-      setMessages(mockMessages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  };
 
   const sendMessage = () => {
     if (!inputMessage.trim()) return;
@@ -20,19 +13,20 @@ const App = () => {
     setInputMessage('');
   };
 
-  useEffect(() => {
-    fetchMessages();
-  }, []);
-
   return (
     <div className="chat-container">
       <div className="messages-list">
-        {messages.map((msg, index) => (
-          <div key={index} className="message">
-            {msg.text}
+          {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`message-wrapper ${msg.isOwnMessage ? 'yourMessage' : 'theirMessage'}`}
+          >
+            <div className={msg.isOwnMessage ? 'yourMessage' : 'theirMessage'}>
+              <p>{msg.text}</p>
+            </div>
           </div>
         ))}
-      </div>
+        </div>
       <div className="input-area">
         <input
           type="text"
@@ -74,7 +68,8 @@ const sendMessageToBackend = () => {
 ws.onmessage = function(event) {
   const messageObject = JSON.parse(event.data);
   const recipientidRecieved = JSON.parse(messageObject.recipientid); 
-  const contentRecieved = JSON.parse(messageObject.content);  
+  const contentRecieved = JSON.parse(messageObject.content);
+  receivedMessage.isOwnMessage = false;  
   sendMessage();
 }
 
