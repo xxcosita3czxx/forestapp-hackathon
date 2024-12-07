@@ -36,6 +36,6 @@ def add_user(name: str, password: str, timestamp : int):
         cm.users.set(new_id, "general", "name", name)
         cm.users.set(new_id,"general", "birthday", timestamp)
         enpassword = create_aes_encrypted_code(password,f"success-{new_id}")
-
+        cm.users.set(new_id,"general","pass",str(enpassword))
     except Exception:
         return "error"

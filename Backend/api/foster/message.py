@@ -1,5 +1,5 @@
 import fastapi
-
+import random
 router = fastapi.APIRouter()
 
 @router.get("/fetch/{user_id}")
