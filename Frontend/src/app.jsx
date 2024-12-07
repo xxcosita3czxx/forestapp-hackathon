@@ -5,6 +5,9 @@ import Home from './home';
 import Login from './login';
 import Chat from './chat';
 import ChatHistory from './chatHistory';
+import Forum from './forum';
+
+
 
 export default function App() {
   const [isChecking, setIsChecking] = useState(true);
@@ -48,6 +51,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <ChatHistory />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/forum" 
+          element={
+            <PrivateRoute>
+              <Forum />
             </PrivateRoute>
           } 
         />
