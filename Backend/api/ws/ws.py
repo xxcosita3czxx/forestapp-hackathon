@@ -39,7 +39,6 @@ async def websocket_endpoint(websocket: WebSocket):
                     "role":"recipient",
                 }))
             except:
-                print(type(time.time()))
                 cm.users.set(data["recipientid"], "messages", data["senderid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
             msgs = cm.users.get(data["senderid"], "messages", data["senderid"])
             content = str(data["content"])
@@ -51,7 +50,6 @@ async def websocket_endpoint(websocket: WebSocket):
                     "role":"sender",
                 }))
             except:
-                print(type(time.time()))
                 cm.users.set(data["senderid"], "messages", data["recipientid"], f"{{\"time\": {time.time()},\"content\": {content},\"role\":\"recipient\",}}")
 # todle tu musi bejt nesahej na to
 app.include_router(router)

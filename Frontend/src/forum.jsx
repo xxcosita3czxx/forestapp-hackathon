@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch } from 'react-icons/fa';
+import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter } from 'react-icons/fa';
 import './forum.css';
 
 const Forum = () => {
@@ -8,6 +8,8 @@ const Forum = () => {
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest'); // 'newest', 'likes', 'comments'
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   
   // Example posts data - would normally come from an API
   const [posts] = useState([
@@ -18,7 +20,7 @@ const Forum = () => {
       author: "Jana K.",
       likes: 24,
       comments: 8,
-      date: new Date('2024-01-15')
+      date: Date('2024-01-15')
     },
     {
       id: 2,
@@ -40,6 +42,45 @@ const Forum = () => {
     }
   ]);
 
+  useEffect(() => {
+    let filtered = [...posts];
+    
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter(post => 
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.content.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+  
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        case 'oldest':
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case 'mostLiked':
+          return b.likes - a.likes;
+        default:
+          return 0;
+      }
+    });
+  
+    setFilteredPosts(filtered);
+  }, [posts, searchQuery, sortBy]);
+
+  useEffect(() => {
+    const closeDropdown = (e) => {
+      if (!e.target.closest('.filter-container')) {
+        setIsFilterOpen(false);
+      }
+    };
+    
+    document.addEventListener('click', closeDropdown);
+    return () => document.removeEventListener('click', closeDropdown);
+  }, []);
+
   const truncateText = (text, maxLength = 150) => {
     if (text.length <= maxLength) return text;
     return text.substr(0, maxLength) + '...';
@@ -59,31 +100,67 @@ const Forum = () => {
 
   return (
     <div className="forum-page">
-      <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
-        <button type="submit" className="search-button" onClick={handleSearchClick}>
-          <FaSearch />
-        </button>
-        <input 
-          type="text" 
-          className="search-input" 
-          placeholder="Search..." 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          autoFocus={searchActive} 
-        />
-      </form>
+      <div className="forum-controls">
+        <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
+          <button type="submit" className="search-button" onClick={handleSearchClick}>
+            <FaSearch />
+          </button>
+          <input 
+            type="text" 
+            className="search-input" 
+            placeholder="Search..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus={searchActive} 
+          />
+        </form>
+
+        <div className="filter-container">
+          <button 
+            className="filter-button"
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+          >
+            <FaFilter /> Filter & Sort
+          </button>
+          
+          <div className={`filter-dropdown ${isFilterOpen ? 'active' : ''}`}>
+            <div className="filter-option" onClick={() => setSortBy('newest')}>
+              Newest First
+            </div>
+            <div className="filter-option" onClick={() => setSortBy('oldest')}>
+              Oldest First
+            </div>
+            <div className="filter-option" onClick={() => setSortBy('mostLiked')}>
+              Most Liked
+            </div>
+          </div>
+        </div>
+
+        <select 
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="sort-select"
+        >
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="mostLiked">Most Liked</option>
+        </select>
+      </div>
 
       <div className="forum-content">
         <h1 className="forum-title">Diskuzní fórum</h1>
         
         <div className="posts-container">
-          {posts.map(post => (
+          {filteredPosts.map(post => (
             <div key={post.id} className="post-card">
               <div className="post-header">
                 <h2 className="post-title">{post.title}</h2>
                 <span className="post-author">Autor: {post.author}</span>
               </div>
               <p className="post-content">{truncateText(post.content)}</p>
+              <p className="post-date">
+                {new Date(post.createdAt).toLocaleDateString()}
+              </p>
               <div className="post-stats">
                 <span>{post.likes} líbí se</span>
                 <span>{post.comments} komentářů</span>

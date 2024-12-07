@@ -217,3 +217,23 @@ input[type="date"].auth-input {
 .auth-input.error {
   border-color: #dc3545;
 }
+
+/* Add to login.css */
+.name-fields-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.name-fields-container .input-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* Make it responsive for mobile */
+@media (max-width: 480px) {
+  .name-fields-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

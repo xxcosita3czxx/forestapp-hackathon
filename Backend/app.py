@@ -3,6 +3,8 @@ import importlib.util
 import logging
 import os
 import sys
+
+import fastapi
 import utils.configmanager as cm
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -66,21 +68,29 @@ def load_routes_from_directory(directory, parent_router=None):
                 if hasattr(module, 'router'):
                     if parent_router is not None:
                         parent_router.include_router(module.router)
-                        print(f"Loaded {module_name}")
+                        print(f"Loaded {module_name}")  # noqa: T201
                     else:
                         app.include_router(module.router)
-                        print(f"Loaded {module_name}")
+                        print(f"Loaded {module_name}")  # noqa: T201
             except Exception as e:
-                print(f"Failed to load {str(module_name)}, \n{e}")
+                print(f"Failed to load {str(module_name)}, \n{e}")  # noqa: T201
 
 load_routes_from_directory("api")
 
 @app.get("/")
-def read_root():
-    return {"message": "Welcome to foster app API!"}
+def root():
+    return fastapi.HTTPException(status_code=418,detail="Welcome to foster app API!")  # noqa: E501
 
-def verify_permission(sessionid:str):
-    cm.sessions.get("sessions","")
+def verify_permission(sessionid:str, user_id:str, required_lvl:int):
+    perm_level = cm.users.get(user_id,"general","perm_level")
+    sessionid_saved = cm.sessions.get("sessions",user_id,"sessionid")
+    if sessionid == sessionid_saved:
+        if perm_level >= required_lvl:
+            return fastapi.HTTPException(status_code=200,detail="Success")
+        else:
+            return fastapi.HTTPException(status_code=403,detail="Unauthorized")
+    else:
+        return fastapi.HTTPException(status_code=401,detail="Please log in again")
 
 if __name__ == "__main__":
     host = os.getenv("HOST", "127.0.0.1")

@@ -30,7 +30,7 @@ def check_aes_code(password, encrypted_code, original_string="success-uuid"):
 
 
 @router.post("/add")
-def add_user(name: str, password: str, timestamp : int, email : str,first_name:str,last_name:str):  # noqa: E501
+def add_user(name: str, password: str, timestamp : int, email : str,first_name:str,last_name:str,perm_level:int=1):  # noqa: E501
     try:
         new_id = ug.generate_user_id()
         cm.users.set(new_id, "general", "name", name)
@@ -40,5 +40,6 @@ def add_user(name: str, password: str, timestamp : int, email : str,first_name:s
         cm.users.set(new_id,"general","email",email)
         cm.users.set(new_id,"general","first_name",first_name)
         cm.users.set(new_id,"general","last_name",last_name)
+        cm.users.set(new_id,"general","perm_level",perm_level)
     except Exception:
         return "error"

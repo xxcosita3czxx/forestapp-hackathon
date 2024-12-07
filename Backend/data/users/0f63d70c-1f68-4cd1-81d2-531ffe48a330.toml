@@ -5,3 +5,7 @@ pass = "Y/HbKl3QOt/CS/iYqURrI2gdwmCRBgIp4C7KjAinlLkvr7MAEZvO19ZhF1t9jtW/Lsl4ZiX3
 email = "cosita3cz@proton.me"
 first_name = "Cosita"
 last_name = "Offi"
+contacts = "a3698462-92f9-47ba-8953-473950c9f143"
+
+[messages]
+a3698462-92f9-47ba-8953-473950c9f143 = "{\"time\": 1733587923.7932994,\"content\": hello2!,\"role\":\"recipient\",}"

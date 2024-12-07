@@ -146,6 +146,81 @@
   width: calc(100% - 40px);
 }
 
+.forum-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.sort-select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.filter-container {
+  position: relative;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.filter-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  min-width: 180px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}
+
+.filter-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(5px);
+}
+
+.filter-option {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.filter-option:hover {
+  background: #f5f5f5;
+}
+
+.post-date {
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
 @media (max-width: 600px) {
   .forum-page {
     padding: 15px;
