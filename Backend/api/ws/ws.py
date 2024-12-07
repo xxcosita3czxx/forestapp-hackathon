@@ -19,20 +19,20 @@ async def websocket_endpoint(websocket: WebSocket):
             if contacts is None:
                 contacts = data["senderid"]
                 cm.users.set(data["recipientid"], "general", "contacts", contacts)
-                cm.users.set(data["recipientid"], "general", data["recipientid"], data["content"])
-            if not data["senderid"] in contacts:
+                cm.users.set(data["recipientid"], "general", data["recipientid"], data["content"])  # noqa: E501
+            if data["senderid"] not in contacts:
                 contacts += f",{data["senderid"]}"
                 cm.users.set(data["recipientid"], "general", "contacts", contacts)
-                cm.users.set(data["recipientid"], "general", data["recipientid"], "")
+                cm.users.set(data["recipientid"], "general", data["recipientid"], "")  # noqa: E501
             contacts = cm.users.get(data["senderid"], "general", "contacts")
             if contacts is None:
                 contacts = data["recipientid"]
                 cm.users.set(data["senderid"], "general", "contacts", contacts)
                 cm.users.set(data["senderid"], "general", data["senderid"], "")
-            if not data["recipientid"] in contacts:
+            if data["recipientid"] not in contacts:
                 contacts += f",{data["recipientid"]}"
                 cm.users.set(data["senderid"], "general", "contacts", contacts)
                 cm.users.set(data["senderid"], "general", data["senderid"], "")
-            
+
 # todle tu musi bejt nesahej na to
 app.include_router(router)

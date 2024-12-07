@@ -5,7 +5,7 @@ import utils.configmanager as cm
 
 router = fastapi.APIRouter()
 
-def search_data(input_value, data, login=False, full_match=False):
+def search_data(input_value, data, login=False, full_match=False):  # noqa: C901
     # Search by username (partial match)
     if login is False:
         for _uuid, details in data.items():
