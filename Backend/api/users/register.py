@@ -24,7 +24,7 @@ def add_user(name: str, password: str, timestamp : int):
         else:
             raise HTTPException(status_code=406, detail="Password must be min 8 max 16")  # noqa: E501
     else:
-        timestamp_date = datetime.datetime.fromtimestamp(ts)
+        timestamp_date = datetime.datetime.fromtimestamp(timestamp)
         now = datetime.datetime.now()
         if now - timestamp_date < 0:
             raise HTTPException(status_code=416, detail="Timestamp under, must be within range.")  # noqa: E501
