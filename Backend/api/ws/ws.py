@@ -16,7 +16,7 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         data = json.loads(data)
-        await websocket.send_text('{"senderid":"' + data["senderid"] + '","content":"' + f"You sent: {data["content"]}\"" + '}')  # noqa: E501
+        await websocket.send_text(f'{{"senderid": "{data["senderid"]}", "content": "{data["content"]}"}}')
         print(data)
         print(data["type"])
         if data["type"] == "message":
