@@ -40,7 +40,7 @@ def translate(text):
     return translation[0]
 
 affirms = []
-max_attempts = 100
+max_attempts = 50
 current_attempts = 0
 
 while len(affirms) < max_attempts and current_attempts < max_attempts * 2:

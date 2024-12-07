@@ -9,7 +9,7 @@ is_first_iteration = True  # Flag to track the first iteration
 is_first_finalcheck = True  # Flag to track the first finalcheck execution
 
 # Open the text file with UTF-8 encoding
-with open(r"C:\Users\adamd\Downloads\testin cs.txt", 'r', encoding='utf-8') as file:
+with open(r" ", 'r', encoding='utf-8') as file:
     # Loop through each line in the file
     for line in file:
         start_time = time.time()  # Start timer for this iteration
