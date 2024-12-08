@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter, FaPlus, FaTimes } from 'react-icons/fa';
 import Navbar from './components/navbar';
@@ -22,6 +22,7 @@ const Forum = () => {
     category: 'general'
   });
   const [showFilter, setShowFilter] = useState(false);
+  const filterRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
 
@@ -123,6 +124,19 @@ const Forum = () => {
     fetchTheme();
   }, [userId]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilter(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Filter posts by category
   const filteredPosts = selectedCategory 
     ? posts.filter(post => post.category && post.category === selectedCategory)
@@ -180,28 +194,49 @@ const Forum = () => {
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
+    
     try {
-      const response = await fetch(`${API_URL}/forum/posts/create/${newPost.category}`, {
+      // Generate unique post_id using timestamp + random number
+      const post_id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Build query URL with all required parameters
+      const queryParams = new URLSearchParams({
+        id: newPost.category,
+        post_id: post_id,
+        title: newPost.title,
+        text: newPost.content,
+        author_id: userId
+      }).toString();
+  
+      const url = `${API_URL}/forum/posts/create?${queryParams}`;
+  
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          title: newPost.title,
-          text: newPost.content,
-          author_id: userId
-        })
+        }
       });
   
-      if (!response.ok) throw new Error('Failed to create post');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create post');
+      }
   
-      // Refresh posts
-      window.location.reload();
+      // Reset form and refresh posts
       setShowCreatePost(false);
-      setNewPost({ title: '', content: '', category: 'general' });
+      setNewPost({
+        title: '',
+        content: '',
+        category: 'general'
+      });
+      
+      // Refresh posts list
+      window.location.reload();
+  
     } catch (error) {
-      setError('Failed to create post');
+      console.error('Error creating post:', error);
+      setError(error.message);
     }
   };
 
@@ -224,6 +259,7 @@ const Forum = () => {
         break;
     }
     setPosts(sortedPosts);
+    setShowFilter(false); // Close dropdown after selection
   };
 
   if (error) return <div className="error-message">{error}</div>;
@@ -249,7 +285,7 @@ const Forum = () => {
         </div>
 
         <div className="filter-wrapper">
-          <div className="filter-container">
+          <div className="filter-container" ref={filterRef}>
             <button className="filter-btn" onClick={() => setShowFilter(!showFilter)}>
               <FaFilter /> Sort
             </button>
