@@ -9,7 +9,7 @@ router = fastapi.APIRouter()
 
 @router.get("/login")
 def login(login:str,password:str):
-    userdata = fetch.fetch(login)
+    userdata = fetch.fetch(query=login, login=True, full_match=True)
     sessionid=str(uuid.uuid4())
     userid = userdata["uuid"]
     current_timestamp = datetime.now()
