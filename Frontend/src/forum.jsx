@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter, FaPlus, FaTimes } from 'react-icons/fa';
 import Navbar from './components/navbar';
@@ -15,6 +15,16 @@ const Forum = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem('userId');
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [newPost, setNewPost] = useState({
+    title: '',
+    content: '',
+    category: 'general'
+  });
+  const [showFilter, setShowFilter] = useState(false);
+  const filterRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   // Definice kategorií
   const categories = [
@@ -114,6 +124,19 @@ const Forum = () => {
     fetchTheme();
   }, [userId]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilter(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Filter posts by category
   const filteredPosts = selectedCategory 
     ? posts.filter(post => post.category && post.category === selectedCategory)
@@ -169,6 +192,76 @@ const Forum = () => {
     return response.ok ? await response.json() : 0;
   };
 
+  const handleCreatePost = async (e) => {
+    e.preventDefault();
+    
+    try {
+      // Generate unique post_id using timestamp + random number
+      const post_id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Build query URL with all required parameters
+      const queryParams = new URLSearchParams({
+        id: newPost.category,
+        post_id: post_id,
+        title: newPost.title,
+        text: newPost.content,
+        author_id: userId
+      }).toString();
+  
+      const url = `${API_URL}/forum/posts/create?${queryParams}`;
+  
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create post');
+      }
+  
+      // Reset form and refresh posts
+      setShowCreatePost(false);
+      setNewPost({
+        title: '',
+        content: '',
+        category: 'general'
+      });
+      
+      // Refresh posts list
+      window.location.reload();
+  
+    } catch (error) {
+      console.error('Error creating post:', error);
+      setError(error.message);
+    }
+  };
+
+  const handleSort = (sortType) => {
+    let sortedPosts = [...posts];
+    switch (sortType) {
+      case 'newest':
+        sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case 'oldest':
+        sortedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+      case 'az':
+        sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'za':
+        sortedPosts.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      default:
+        break;
+    }
+    setPosts(sortedPosts);
+    setShowFilter(false); // Close dropdown after selection
+  };
+
   if (error) return <div className="error-message">{error}</div>;
   if (isLoading) return <div className="loading">Loading...</div>;
 
@@ -189,6 +282,25 @@ const Forum = () => {
               <span>{category.name}</span>
             </button>
           ))}
+        </div>
+
+        <div className="filter-wrapper">
+          <div className="filter-container" ref={filterRef}>
+            <button className="filter-btn" onClick={() => setShowFilter(!showFilter)}>
+              <FaFilter /> Sort
+            </button>
+            <div className={`filter-dropdown ${showFilter ? 'active' : ''}`}>
+              <div className="filter-option" onClick={() => handleSort('newest')}>Newest First</div>
+              <div className="filter-option" onClick={() => handleSort('oldest')}>Oldest First</div>
+              <div className="filter-option" onClick={() => handleSort('az')}>A-Z</div>
+              <div className="filter-option" onClick={() => handleSort('za')}>Z-A</div>
+            </div>
+          </div>
+
+
+          <button className="create-post-btn" onClick={() => setShowCreatePost(true)}>
+            <FaPlus /> Create Post
+          </button>
         </div>
 
         {/* Posts List */}
@@ -248,6 +360,44 @@ const Forum = () => {
                 <span className="comments">💬 {selectedPost.comments}</span>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showCreatePost && (
+        <div className="create-post-modal">
+          <div className="modal-content">
+            <h2>Create New Post</h2>
+            <form onSubmit={handleCreatePost}>
+              <select 
+                className="post-category-select"
+                value={newPost.category}
+                onChange={(e) => setNewPost({...newPost, category: e.target.value})}
+              >
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                className="post-title-input"
+                placeholder="Post Title"
+                value={newPost.title}
+                onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                required
+              />
+              <textarea
+                className="post-content-input"
+                placeholder="Write your post..."
+                value={newPost.content}
+                onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                required
+              />
+              <div className="modal-buttons">
+                <button type="button" onClick={() => setShowCreatePost(false)}>Cancel</button>
+                <button type="submit">Create Post</button>
+              </div>
+            </form>
           </div>
         </div>
       )}

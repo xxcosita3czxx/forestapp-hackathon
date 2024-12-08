@@ -203,7 +203,6 @@
 .filter-container {
   position: relative;
   width: 100%;
-  margin: 0 0 20px 0;
 }
 
 .filter-button {
@@ -337,13 +336,14 @@ html, body {
 /* Add this new container style */
 .create-post-container {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 0 20px;
 }
 
 /* Update existing button style */
 .create-post-btn {
-  padding: 10px 20px;
+  padding: 12px 24px;
   background: rgba(0, 123, 255, 0.85); /* Blue with transparency */
   backdrop-filter: blur(10px);
   border: none;
@@ -351,12 +351,13 @@ html, body {
   cursor: pointer;
   font-size: 14px;
   color: white;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
   display: flex;
   align-items: center;
   gap: 8px;
   transition: all 0.2s ease;
-  margin-left: auto; /* This ensures it stays on the right */
+  width: 100%;
+  justify-content: center;
+  max-width: 200px;
 }
 
 .create-post-btn:hover {
@@ -460,6 +461,7 @@ html, body {
   justify-content: space-between; /* This will push elements to opposite ends */
   align-items: center;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .filter-btn, .create-post-btn {
