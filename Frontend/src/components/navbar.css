@@ -27,6 +27,7 @@
     font-size: 24px;
     cursor: pointer;
     transition: transform 0.2s ease;
+    position: relative;
 }
   
 .nav-item:hover {
@@ -238,4 +239,43 @@
 
 .logout-button:hover {
   color: rgba(128, 128, 128, 0.6); /* Slightly more visible on hover */
+}
+
+/* Add to navbar.css */
+/* Update the tooltip styles */
+.tooltip {
+  position: absolute;
+  bottom: 140%; /* Move it higher above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  width: max-content;
+  max-width: 200px;
+  text-align: center;
+  pointer-events: all; /* Make tooltip interactive */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 2000;
+}
+
+.tooltip.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Add arrow to tooltip */
+.tooltip:after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(0, 0, 0, 0.8);
 }
