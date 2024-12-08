@@ -25,32 +25,41 @@ body {
     display: block;
     width: 100%;
     margin: 10px auto;
-    padding: 15px;
+    padding: 15px 20px;
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);
-    color: black;
+    color: #333;
     border: none;
-    border-radius: 20px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 16px;
     text-align: center;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   /* Button hover effect */
   .user-button:hover {
     transform: translateY(-2px);
     background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
 /* chatHistory.css */
 .chat-history-page {
   min-height: 100vh;
-  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
-  padding: 20px;
-  padding-bottom: 80px;
+  width: 100vw;
   position: relative;
+  transition: background 0.3s ease; /* Add transition */
+  overflow-y: auto; /* Allow native scrolling */
 }
+
+/* Remove or comment out any existing background gradient */
+/* For example, remove or comment this if it exists:
+.chat-history-page {
+  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
+}
+*/
 
 .chat-header {
   background: rgba(255, 255, 255, 0.75);
@@ -76,66 +85,32 @@ body {
 
 .chat-history-content {
   max-width: 600px;
-  margin: 90px auto 0;
-  padding: 20px;
+  margin: 20px auto 0; /* Reduced top margin since search is removed */
 }
 
-.search-container {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  border-radius: 20px;
-  margin-bottom: 20px;
+/* Keep other existing styles as is */
+
+/* Remove any slider-related CSS like: */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* User list styling */
+.users-list {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0 20px;
 }
 
-.search-container input {
-  flex-grow: 1;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  font-size: 16px;
-  outline: none;
-}
-
-.search-container button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.search-input {
-  flex-grow: 1;
-  padding: 12px 20px;
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 20px;
-  font-size: 16px;
-  background: white;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-.search-input:focus {
-  border-color: #007bff;
-}
-
-.search-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.search-button:hover {
-  background: #0056b3;
-  transform: translateY(-1px);
+.chat-history-title {
+  color: black;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }

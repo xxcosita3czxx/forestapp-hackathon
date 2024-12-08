@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
 import './navbar.css';
 
@@ -62,7 +62,6 @@ const Navbar = () => {
     fetchColor();
   }, [userId]); // Závislost na `userId`
 
-  const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
@@ -72,18 +71,6 @@ const Navbar = () => {
   });
   const [showToast, setShowToast] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('PINK');
-
-  const handleSearchClick = (e) => {
-    if (!searchActive) {
-      e.preventDefault();
-    }
-    setSearchActive(!searchActive);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    console.log("Search submitted");
-  };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
@@ -161,13 +148,6 @@ const Navbar = () => {
           <FaQuestionCircle />
         </div>
       </div>
-
-      <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
-        <button type="submit" className="search-button" onClick={handleSearchClick}>
-          <FaSearch />
-        </button> 
-        <input type="text" className="search-input" placeholder="Search..." autoFocus={searchActive} />
-      </form>
 
       <div className={`account-menu ${accountMenuOpen ? 'active' : ''}`}>
         <div className="account-menu-content">
