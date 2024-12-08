@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // To navigate between pages
 import './chatHistory.css';
+import { fetchAuth } from './utils/auth';
 
 const App = () => {
   const [users, setUsers] = useState([]); // List of users
@@ -18,7 +19,7 @@ const App = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -49,7 +50,7 @@ const App = () => {
     // Fetch users from the /users/fetchall API endpoint using GET request
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/users/fetchall', {
+        const response = await fetchAuth('http://127.0.0.1:8000/users/fetchall', {
           method: 'GET',
           headers: {
             'Accept': 'application/json', // Ensure that the response is in JSON format

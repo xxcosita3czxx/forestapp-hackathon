@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FaPaperPlane, FaArrowLeft, FaCog } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './chat.css';
+import { fetchAuth } from './utils/auth';
 
 const App = () => {
   const { username } = location.state || {};
@@ -25,7 +26,7 @@ const App = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -59,7 +60,7 @@ const App = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/fetch/${username}`, {
+        const response = await fetchAuth(`http://127.0.0.1:8000/users/fetchAuthAuthAuthAuthAuthAuth/${username}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

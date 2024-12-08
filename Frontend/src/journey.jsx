@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './components/navbar';
 import './journey.css';
+import { fetchAuth } from './utils/auth';
 
 const journeyTasks = [
   {
@@ -52,7 +53,7 @@ const Journey = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
