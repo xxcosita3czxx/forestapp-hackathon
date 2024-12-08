@@ -11,7 +11,7 @@ const Login = () => {
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchColor = async () => {
       if (!userId) {
         console.error("userId není nastaven v localStorage.");
         return;
@@ -41,7 +41,7 @@ const Login = () => {
       }
     };
   
-    fetchUsers();
+    fetchColor();
   }, [userId]); // Závislost na `userId`
 
   const [isLoginForm, setIsLoginForm] = useState(true);
