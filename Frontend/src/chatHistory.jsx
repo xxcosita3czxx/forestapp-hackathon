@@ -9,7 +9,8 @@ const App = () => {
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem('token');
+
   // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
@@ -21,12 +22,14 @@ const App = () => {
       }
 
       try {
+        // Fetching the chat history
         const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`,
-          }});
+          }
+        });
 
         if (!response.ok) {
           console.error(`HTTP chyba: ${response.status}`);
@@ -36,27 +39,45 @@ const App = () => {
         }
 
         const data = await response.json();
-        console.log("Received Data:", data);
+        console.log("Received Data:", data); // Debugging log
 
-        // Fetch usernames for each user ID
-        const userPromises = Object.keys(data).map(async (id) => {
-          const userResponse = await fetch(`http://127.0.0.1:8000/users/etting/set/${id}`, {
+        // Fetch users based on the IDs in the chat history
+        const userPromises = Object.keys(data).map(async (chatUserId) => {
+          console.log(`Fetching user data for ID: ${chatUserId}`);
+
+          // Checking if the userId is valid and exists
+          if (!chatUserId) {
+            console.error("Invalid user ID found:", chatUserId);
+            return null;
+          }
+
+          const userResponse = await fetch(`http://127.0.0.1:8000/users/settings/set/${chatUserId}`, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
               'Authorization': `Bearer ${token}`,
-            }});
+            }
+          });
 
           if (userResponse.ok) {
             const userData = await userResponse.json();
-            return { id, username: userData.general.name }; // Extract `username` from the response
+            console.log("User Data:", userData); // Debugging log
+
+            // Checking if the response contains the 'general' and 'name' fields
+            if (userData && userData.general && userData.general.name) {
+              return { userId: chatUserId, username: userData.general.name };
+            } else {
+              console.error(`Chybí data pro uživatele ${chatUserId}`);
+              return null;
+            }
           } else {
-            console.error(`HTTP chyba u uživatele ${id}: ${userResponse.status}`);
+            console.error(`HTTP chyba u uživatele ${chatUserId}: ${userResponse.status}`);
             return null;
           }
         });
 
-        const userList = (await Promise.all(userPromises)).filter((user) => user !== null);
+        // Filter out null values (users with missing or invalid data)
+        const userList = (await Promise.all(userPromises)).filter(user => user !== null);
         console.log("User List:", userList);
 
         setUsers(userList);
@@ -86,11 +107,11 @@ const App = () => {
       ) : (
         users.map((user) => (
           <button
-            key={user.id}
-            onClick={() => handleUserClick(user.id)}
+            key={user.userId} // Use userId as key, not 'id'
+            onClick={() => handleUserClick(user.userId)}
             className="user-button"
           >
-            {user.username}
+            {user.username} {/* Display the user's name */}
           </button>
         ))
       )}
