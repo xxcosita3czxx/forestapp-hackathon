@@ -43,10 +43,10 @@ const App = () => {
         const data = await response.json();
         console.log("Received Data:", data); // Log the full response to inspect the structure
 
-        // Assuming data is an object with a 'name' field and it corresponds to a userId
-        const conversations = data.name ? [{
-          userId: data.name, // Directly using the 'name' as userId
-        }] : [];
+        // Assuming data contains an array of conversations, extract relevant info
+        const conversations = data.messages ? data.messages.map(message => ({
+          userId: message.name, // Assuming 'name' is the userId
+        })) : [];
 
         console.log("Extracted Conversations:", conversations); // Log the extracted conversations
 

@@ -53,7 +53,7 @@ const App = () => {
     fetchColor();
   }, [userId]); // Závislost na `userId`
 
-  const otherUserId = "otherUserId";
+  const otherUserId = ;
   useEffect(() => {
     const fetchOtherUsers = async () => {
       if (username) {
