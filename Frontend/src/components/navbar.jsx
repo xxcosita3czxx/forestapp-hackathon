@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
 import './navbar.css';
+import { fetchAuth } from '../utils/auth';
 
 const THEMES = {
   PINK: {
@@ -34,7 +35,7 @@ const Navbar = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -125,7 +126,7 @@ const Navbar = () => {
       const userId = localStorage.getItem('userId');
     
       try {
-        await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
+        await fetchAuth(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
           method: 'PATCH'
         });
       } catch (err) {

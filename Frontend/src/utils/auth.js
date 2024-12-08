@@ -12,7 +12,7 @@ export const verifySession = async () => {
   if (!sessionId || !userId) return false;
 
   try {
-    const response = await fetchAuth(`http://localhost:8000/auth/verify/${sessionId}&${userId}`, {
+    const response = await fetch(`http://localhost:8000/auth/verify/${sessionId}&${userId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export const verifySession = async () => {
 
 export const verifyAuth = async () => {
   try {
-    const response = await fetchAuth(`http://localhost:8000/auth/verify/${sessionId}&${userId}`, {
+    const response = await fetch(`http://localhost:8000/auth/verify/${sessionId}&${userId}`, {
       method: 'POST',
       headers: getAuthHeader()
     });
