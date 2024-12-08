@@ -153,7 +153,7 @@ const Navbar = () => {
         <div className="nav-item" onClick={() => navigate('/')}>
           <FaHome />
         </div>
-        <div className="nav-item">
+        <div className="nav-item" onClick={() => navigate('/chathistory')}>
           <FaCommentDots />
         </div>
         <div className="nav-item">
