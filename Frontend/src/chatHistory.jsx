@@ -8,7 +8,44 @@ const App = () => {
   const [error, setError] = useState(null); // To capture and display errors
   const navigate = useNavigate(); // Initialize the navigate function
 
+  const userId = localStorage.getItem('userId');
+
   useEffect(() => {
+    const fetchUsers = async () => {
+      if (!userId) {
+        console.error("userId není nastaven v localStorage.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          console.error(`HTTP chyba: ${response.status}`);
+          return;
+        }
+  
+        const data = await response.json(); // 
+        console.log('Response Data:', data);
+  
+        const theme = data.theme || 'default';
+        console.log('Theme:', theme);
+  
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+  
+    fetchUsers();
+  }, [userId]); // Závislost na `userId`
+
+  useEffect(() => {
+    
     // Fetch users from the /users/fetchall API endpoint using GET request
     const fetchUsers = async () => {
       try {

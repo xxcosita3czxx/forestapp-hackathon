@@ -14,9 +14,45 @@ const App = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(name);
   const navigate = useNavigate();
+
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      if (!userId) {
+        console.error("userId není nastaven v localStorage.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          console.error(`HTTP chyba: ${response.status}`);
+          return;
+        }
+  
+        const data = await response.json(); // 
+        console.log('Response Data:', data);
+  
+        const theme = data.theme || 'default';
+        console.log('Theme:', theme);
+  
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+  
+    fetchUsers();
+  }, [userId]); // Závislost na `userId`
+
+  useEffect(() => {
+    
     var socket = new WebSocket(`ws://127.0.0.1:8000/ws/ws`);
 
     socket.onopen = () => {
