@@ -4,10 +4,7 @@ import "./home.css";
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown, FaArrowRight } from "react-icons/fa";
 import Navbar from './components/navbar';
 
-function App() {
-  const userId = localStorage.getItem('userId');
-
-  
+function App() {  
   const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const navigate = useNavigate(); // Add this hook
