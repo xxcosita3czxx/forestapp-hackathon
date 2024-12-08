@@ -53,6 +53,7 @@ const App = () => {
     fetchColor();
   }, [userId]); // Závislost na `userId`
 
+  const otherUserId = "otherUserId";
   useEffect(() => {
     const fetchOtherUsers = async () => {
       if (username) {
@@ -77,7 +78,7 @@ const App = () => {
         const data = await response.json(); // 
         console.log('Response Data:', data);
   
-        const otherUserId = data.userId || 'default';
+        otherUserId = data.userId || 'default';
         console.log('otherUserId:', userId);
   
       } catch (error) {
