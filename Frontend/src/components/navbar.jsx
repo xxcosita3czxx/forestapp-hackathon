@@ -36,7 +36,7 @@ const Navbar = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://localhost:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -71,6 +71,8 @@ const Navbar = () => {
   });
   const [showToast, setShowToast] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('PINK');
+  const [affirmText, setAffirmText] = useState('');
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
@@ -127,7 +129,52 @@ const Navbar = () => {
     }
   };
 
+  const fetchAffirmText = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/foster/affirm', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        console.error('API Error:', response.status);
+        return;
+      }
   
+      const data = await response.json();
+      console.log('Received affirmation:', data); // Debug log
+      setAffirmText(data.message);
+      setShowTooltip(true);
+    } catch (error) {
+      console.error('Error fetching affirmation:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (showTooltip) {
+      // Auto-hide after 10 seconds
+      const timer = setTimeout(() => {
+        setShowTooltip(false);
+      }, 10000);
+  
+      // Handle clicks outside
+      const handleClickOutside = (event) => {
+        if (!event.target.closest('.nav-item')) {
+          setShowTooltip(false);
+        }
+      };
+  
+      document.addEventListener('click', handleClickOutside);
+  
+      // Cleanup
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener('click', handleClickOutside);
+      };
+    }
+  }, [showTooltip]);
 
   return (
     <>
@@ -144,8 +191,15 @@ const Navbar = () => {
         <div className="nav-item" onClick={() => navigate('/chathistory')}>
           <FaCommentDots />
         </div>
-        <div className="nav-item">
+        <div className="nav-item" onClick={async () => {
+          // Remove the condition and always fetch new text
+          await fetchAffirmText(); // Fetch new text on every click
+          setShowTooltip(!showTooltip); // Toggle tooltip visibility
+        }}>
           <FaQuestionCircle />
+          <div className={`tooltip ${showTooltip ? 'show' : ''}`}>
+            {affirmText || 'Loading...'}
+          </div>
         </div>
       </div>
 

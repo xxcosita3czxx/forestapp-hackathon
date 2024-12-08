@@ -28,10 +28,10 @@ const Forum = () => {
 
   // Definice kategorií
   const categories = [
-    { id: 'general', name: 'General', icon: FaComments },
-    { id: 'questions', name: 'Questions', icon: FaQuestionCircle },
-    { id: 'announcements', name: 'Announcements', icon: FaCommentDots },
-    { id: 'other', name: 'Other', icon: FaComments }
+    { id: 'general', name: 'Obecné', icon: FaComments },
+    { id: 'questions', name: 'Pomoc', icon: FaQuestionCircle },
+    { id: 'announcements', name: 'Zdělení', icon: FaCommentDots },
+    { id: 'other', name: 'Ostatní', icon: FaComments }
   ];
 
   // Fetch posts
@@ -52,27 +52,24 @@ const Forum = () => {
         
         const transformedPosts = Object.entries(data).flatMap(([groupId, group]) => {
           return Object.entries(group).map(([postId, post]) => {
-            // Handle different category types
-            let category = null;
-            let content = post.text || post.description || 'No content';
+            // Log for debugging
+            console.log('Processing groupId:', groupId);
             
-            // Check for specific categories
-            if (postId === 'general') {
-              category = 'general';
-            } else if (postId === 'questions') {
-              category = 'questions';
-            } else if (postId === 'announcements') {
-              category = 'announcements';
-            } else if (postId === 'other') {
-              category = 'other';
+            // Explicitly check against all possible category IDs
+            let category = 'none';
+            if (groupId === 'general' || 
+                groupId === 'questions' || 
+                groupId === 'announcements' || 
+                groupId === 'other') {
+              category = groupId;
             }
 
             return {
               id: `${groupId}-${postId}`,
               title: post.title || 'Untitled',
-              content: content,
+              content: post.text || post.description || 'No content',
               author: post.author_id || 'Anonymous',
-              category: category,
+              category: category, // This will now properly set all categories
               createdAt: Date.now()
             };
           });
@@ -196,12 +193,15 @@ const Forum = () => {
     e.preventDefault();
     
     try {
-      // Generate unique post_id using timestamp + random number
-      const post_id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      // Verify category is valid
+      if (!categories.find(cat => cat.id === newPost.category)) {
+        throw new Error('Invalid category selected');
+      }
+  
+      const post_id = `${newPost.category}-${Date.now()}`;
       
-      // Build query URL with all required parameters
       const queryParams = new URLSearchParams({
-        id: newPost.category,
+        id: newPost.category, // Use category id from our defined categories
         post_id: post_id,
         title: newPost.title,
         text: newPost.content,
@@ -220,10 +220,9 @@ const Forum = () => {
   
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to create post');
+        throw new Error(errorData.detail || errorData.message || errorData.error || 'Failed to create post');
       }
   
-      // Reset form and refresh posts
       setShowCreatePost(false);
       setNewPost({
         title: '',
@@ -231,7 +230,6 @@ const Forum = () => {
         category: 'general'
       });
       
-      // Refresh posts list
       window.location.reload();
   
     } catch (error) {
@@ -244,10 +242,18 @@ const Forum = () => {
     let sortedPosts = [...posts];
     switch (sortType) {
       case 'newest':
-        sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        sortedPosts.sort((a, b) => {
+          const dateA = new Date(b.createdAt);
+          const dateB = new Date(a.createdAt);
+          return dateA.getTime() - dateB.getTime();
+        });
         break;
       case 'oldest':
-        sortedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        sortedPosts.sort((a, b) => {
+          const dateA = new Date(a.createdAt);
+          const dateB = new Date(b.createdAt);
+          return dateA.getTime() - dateB.getTime();
+        });
         break;
       case 'az':
         sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
@@ -260,6 +266,11 @@ const Forum = () => {
     }
     setPosts(sortedPosts);
     setShowFilter(false); // Close dropdown after selection
+  };
+
+  const getCategoryName = (categoryId) => {
+    const category = categories.find(cat => cat.id === categoryId);
+    return category ? category.name : 'Unknown';
   };
 
   if (error) return <div className="error-message">{error}</div>;
@@ -316,10 +327,16 @@ const Forum = () => {
               <p className="post-content">{post.content}</p>
               <div className="post-footer">
                 <span className="post-date">
-                  {new Date(post.createdAt).toLocaleDateString()}
+                  {new Date(post.createdAt).toLocaleString('cs-CZ', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </span>
                 <span className="post-category-tag">
-                  {post.category || 'none'}
+                  {getCategoryName(post.category)}
                 </span>
               </div>
             </div>
@@ -349,11 +366,14 @@ const Forum = () => {
                   {new Date(selectedPost.details?.date || selectedPost.createdAt).toLocaleString()}
                 </span>
                 <span className="post-category">
-                  {selectedPost.category}
+                  {getCategoryName(selectedPost.category)}
                 </span>
               </div>
               <div className="post-body">
                 {selectedPost.content}
+                <div className="post-category-name">
+                  {getCategoryName(selectedPost.category)}
+                </div>
               </div>
               <div className="post-stats">
                 <span className="likes">👍 {selectedPost.likes}</span>
