@@ -130,6 +130,7 @@ const Navbar = () => {
         await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
           method: 'PATCH',
           headers: {
+            'Accept':"application/json",
             'Authorization': `Bearer ${token}`,
         }});
       } catch (err) {
