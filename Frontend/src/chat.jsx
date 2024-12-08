@@ -18,7 +18,7 @@ const App = () => {
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchColor = async () => {
       if (!userId) {
         console.error("userId není nastaven v localStorage.");
         return;
@@ -45,6 +45,40 @@ const App = () => {
   
       } catch (error) {
         console.error('Error fetching users:', error);
+      }
+    };
+  
+    fetchColor();
+  }, [userId]); // Závislost na `userId`
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (username) {
+        console.error("username není nastaven v localStorage.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/users/fetch/${username}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          console.error(`HTTP chyba: ${response.status}`);
+          return;
+        }
+  
+        const data = await response.json(); // 
+        console.log('Response Data:', data);
+  
+        const otherUserId = data.userId || 'default';
+        console.log('otherUserId:', userId);
+  
+      } catch (error) {
+        console.error('Error fetching otherUserId:', error);
       }
     };
   

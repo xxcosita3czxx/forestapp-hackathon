@@ -8,7 +8,7 @@ function App() {
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchColor = async () => {
       if (!userId) {
         console.error("userId není nastaven v localStorage.");
         return;
@@ -38,7 +38,7 @@ function App() {
       }
     };
   
-    fetchUsers();
+    fetchColor();
   }, [userId]); // Závislost na `userId`
 
   const [searchActive, setSearchActive] = useState(false);
