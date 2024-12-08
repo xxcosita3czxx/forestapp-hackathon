@@ -1,0 +1,11 @@
+[general]
+name = "testik"
+birthday = 945817200
+pass = "c44OWkEgTrv9PTXaSf5uOQRpoPM95iqPAq7UwS421sg9EAOBK9SH50keSZn0oh21dMBjlv/qqBoSzHchmjgBng=="
+email = "testik@gmail.com"
+first_name = "testik"
+last_name = "testik"
+perm_level = 1
+
+[settings]
+theme = "pink"
