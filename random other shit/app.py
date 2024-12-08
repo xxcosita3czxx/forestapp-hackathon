@@ -6,18 +6,27 @@ import requests
 app = FastAPI()
 import requests
 
-url = "http://localhost:96/api/generate"
-data = {
-    "model": "llama3.2",
-    "keep_alive": -1
-}
-
-response = requests.post(url, json=data)
-
-print(response.status_code)
-print(response.json())  # Assuming the response is JSON
-
 def check(msg):
+        
+    url = "http://localhost:96/api/generate"
+    data = {
+        "model": "granite3-guardian:8b",
+        "keep_alive": -1
+    }
+
+    response = requests.post(url, json=data)
+
+    print(response.status_code)
+    print(response.json())  # Assuming the response is JSON
+    data = {
+        "model": "stric-llama3.2-guardian",
+        "keep_alive": -1
+    }
+
+    response = requests.post(url, json=data)
+
+    print(response.status_code)
+    print(response.json()) 
     messages = [
         {
             'role': 'user',

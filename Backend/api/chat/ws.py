@@ -4,7 +4,7 @@ import time
 import fastapi
 import utils.configmanager as cm
 from fastapi import WebSocket
-
+import requests
 # Create the FastAPI app
 app = fastapi.FastAPI()
 router = fastapi.APIRouter()
@@ -16,6 +16,9 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         data = json.loads(data)
         if data["type"] == "message":
+            data = {"msg":data["content"]}
+            contentcheck = requests.post("192.168.0.10", data)
+            print(contentcheck)
             contacts = cm.users.get(data["recipientid"], "general", "contacts")
             if cm.users.get(data["recipientid"], "general", "name") is not None and contacts is None:  # noqa: E501
                 contacts = data["senderid"]
