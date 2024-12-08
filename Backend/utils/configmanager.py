@@ -75,7 +75,7 @@ class ConfigManager:
             self._load_all_configs()  # Reload all configs after saving
         logging.debug(f"Deleted {id}:{title}:{key}")
 
-users = ConfigManager("data/users/")
+users = ConfigManager("data/users/","data/default_settings.toml")
 sessions = ConfigManager("data","data/sessions.toml")
 forums = ConfigManager("data/forums")
 posts = ConfigManager("data/posts")
