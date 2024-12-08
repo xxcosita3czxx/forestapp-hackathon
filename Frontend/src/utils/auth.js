@@ -8,7 +8,7 @@ export const isAuthenticated = () => {
 export const verifySession = async () => {
   const sessionId = localStorage.getItem('sessionId');
   const userId = localStorage.getItem('userId');
-  
+  const token = localStorage.getItem('token');
   if (!sessionId || !userId) return false;
 
   try {
