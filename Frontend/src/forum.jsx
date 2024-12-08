@@ -77,7 +77,7 @@ const Forum = () => {
       setIsLoading(true);
       try {
         console.log('Fetching posts...');
-        const response = await fetchAuth('http://localhost:8000/forum/posts/fetchall/pokus', {
+        const response = await fetchAuth('http://localhost:8000/forum/category/fetchall/', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
