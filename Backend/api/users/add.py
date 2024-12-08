@@ -29,17 +29,7 @@ def check_aes_code(password, encrypted_code, original_string="success-uuid"):
     except Exception:
         return False
 
-
-@router.post("/add")
-def add_user(name: str,
-            password: str,
-            timestamp : int,
-            email : str,
-            first_name:str,
-            last_name:str,
-            perm_level:int=1,
-            authorization:str=fastapi.Depends(vpass.verify_permission_diez),  # noqa: E501
-            ):  # noqa: E501
+def create_user(name:str,timestamp:int,password:str,email:str,first_name:str,last_name:str,perm_level:int=1):  # noqa: E501
     try:
         vpass.set_permission_level(10)
         new_id = ug.generate_user_id()
@@ -54,3 +44,15 @@ def add_user(name: str,
         cm.users.set(new_id,"settings","theme","pink")
     except Exception:
         return "error"
+
+@router.post("/add")
+def add_user(name: str,
+            password: str,
+            timestamp : int,
+            email : str,
+            first_name:str,
+            last_name:str,
+            perm_level:int=1,
+            authorization:str=fastapi.Depends(vpass.verify_permission_diez),  # noqa: E501
+            ):  # noqa: E501
+    create_user(name,timestamp,password,email,first_name,last_name,perm_level)
