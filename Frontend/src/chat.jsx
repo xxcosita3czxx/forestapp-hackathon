@@ -13,11 +13,14 @@ const App = () => {
   const [name, setName] = useState('User Name');
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(name);
+  const [otherUserId, setOtherUserId] = useState(null);
+  const [wantToHelp, setWantToHelp] = useState(false);
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
   const token = localStorage.getItem("token");
 
+  // Fetch color theme from the backend
   useEffect(() => {
     const fetchColor = async () => {
       if (!userId) {
@@ -39,11 +42,11 @@ const App = () => {
           return;
         }
   
-        const data = await response.json(); // 
+        const data = await response.json();
         console.log('Response Data:', data);
   
         const theme = data.theme || 'default';
-        console.log('Theme:', theme);
+        setColor(theme); // Nastavit barvu na základě odpovědi
   
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -51,13 +54,13 @@ const App = () => {
     };
   
     fetchColor();
-  }, [userId]); // Závislost na `userId`
+  }, [userId]);
 
-  const otherUserId = "otherUserId";
+  // Fetch other user's data
   useEffect(() => {
     const fetchOtherUsers = async () => {
-      if (username) {
-        console.error("username není nastaven v localStorage.");
+      if (!username) {
+        console.error("username není nastaven.");
         return;
       }
   
@@ -75,11 +78,9 @@ const App = () => {
           return;
         }
   
-        const data = await response.json(); // 
-        console.log('Response Data:', data);
-  
-        otherUserId = data.userId || 'default';
-        console.log('otherUserId:', userId);
+        const data = await response.json();
+        setOtherUserId(data.userId || 'default');
+        console.log('otherUserId:', data.userId);
   
       } catch (error) {
         console.error('Error fetching otherUserId:', error);
@@ -87,12 +88,13 @@ const App = () => {
     };
   
     fetchOtherUsers();
-  }, [username]); // Závislost na `userId`
+  }, [username]);
 
+  // Fetch conversation history
   useEffect(() => {
     const fetchTextHistory = async () => {
-      if (!userId) {
-        console.error("userId není nastaven v localStorage.");
+      if (!userId || !otherUserId) {
+        console.error("userId nebo otherUserId není nastaven.");
         return;
       }
   
@@ -113,26 +115,24 @@ const App = () => {
         const data = await response.json();
         console.log('Response Data:', data);
   
-        // Filtrovat zprávy podle `otherUserId`
         const filteredMessages = Object.entries(data)
-          .filter(([key]) => key === otherUserId) // Filtr podle `otherUserId`
-          .flatMap(([_, messages]) => JSON.parse(`[${messages}]`)) // Parsování zpráv
-          .sort((a, b) => a.time - b.time); // Řazení zpráv podle času
+          .filter(([key]) => key === otherUserId)
+          .flatMap(([_, messages]) => JSON.parse(`[${messages}]`))
+          .sort((a, b) => a.time - b.time);
   
-        setMessages(filteredMessages); // Nastavit zprávy
+        setMessages(filteredMessages);
       } catch (error) {
         console.error('Error fetching userId:', error);
       }
     };
   
     fetchTextHistory();
-  }, [userId, otherUserId]); // Závislost na `userId` a `otherUserId`
+  }, [userId, otherUserId]);
 
-
+  // WebSocket setup
   useEffect(() => {
+    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/ws`);
     
-    var socket = new WebSocket(`ws://127.0.0.1:8000/ws/ws`);
-
     socket.onopen = () => {
       console.log('WebSocket connection established');
     };
@@ -140,7 +140,6 @@ const App = () => {
     socket.onmessage = (event) => {
       try {
         const messageObject = JSON.parse(event.data);
-        const recipientid = messageObject.recipientid;
         const content = messageObject.content;
         
         setMessages((prevMessages) => [
@@ -176,8 +175,8 @@ const App = () => {
       const messageToSend = {
         type: 'Message',
         content: inputMessage,
-        recipientid: 'recipientid',
-        senderid: 'senderid'
+        recipientid: otherUserId,
+        senderid: userId
       };
       ws.send(JSON.stringify(messageToSend));
     }
@@ -195,14 +194,14 @@ const App = () => {
 
   const handleEditName = () => {
     if (isEditing) {
-      setName(newName);  
+      setName(newName);
       console.log('Name has been changed');
     }
-    setIsEditing(!isEditing);  
+    setIsEditing(!isEditing);
   };
 
   const changeHelpStatus = () => {
-    wantToHelp = !wantToHelp;
+    setWantToHelp(!wantToHelp);
   };
 
   return (
@@ -212,24 +211,19 @@ const App = () => {
           <FaArrowLeft />
         </button>
         <h1>Chat</h1>
-        {/*<button 
-          className="settings-button" 
-          onClick={() => setShowOverlay(!showOverlay)}
-        >
-          <FaCog />
-        </button>*/}
       </div>
 
       {showOverlay && (
         <div className="overlay">
-          {/*<div className="color-toggle">
+          {/* You can enable the color toggle here */}
+          {/* <div className="color-toggle">
             <button onClick={() => changeBackgroundColor('chat-page-pink')}>Pink</button>
             <button onClick={() => changeBackgroundColor('chat-page-green')}>Green</button>
             <button onClick={() => changeBackgroundColor('chat-page-blue')}>Blue</button>
             <button onClick={() => changeBackgroundColor('chat-page-dark')}>Dark</button>
-            <button onClick={() => changeHelpStatus()}>Help</button>
-          </div>*/}
-          {/*<div className="name-container">
+            <button onClick={changeHelpStatus}>Help</button>
+          </div> */}
+          {/* <div className="name-container">
             <div className="name-display">
               {isEditing ? (
                 <input
@@ -245,7 +239,7 @@ const App = () => {
             <button onClick={handleEditName}>
               {isEditing ? 'Save' : 'Edit'}
             </button>
-          </div>*/}
+          </div> */}
         </div>
       )}
 
