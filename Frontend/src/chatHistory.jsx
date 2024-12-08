@@ -3,28 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import './chatHistory.css';
 
 const App = () => {
-  const [conversations, setConversations] = useState([]); // List of conversations
-  const [users, setUsers] = useState([]); // List of user details
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [conversations, setConversations] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
   const token = localStorage.getItem('token');
 
-  // Fetch chat history and get userIds directly
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        console.error("userId is not set in localStorage.");
         setError("userId is not set in localStorage.");
         setLoading(false);
         return;
       }
 
       try {
-        console.log('Fetching chat history...');
-        // Fetching the chat history
         const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
           method: 'GET',
           headers: {
@@ -34,26 +31,15 @@ const App = () => {
         });
 
         if (!response.ok) {
-          console.error(`HTTP error while fetching chat history: ${response.status}`);
           setError(`HTTP error: ${response.status}`);
           setLoading(false);
           return;
         }
 
         const data = await response.json();
-        console.log("Received Data:", data); // Log the full response to inspect the structure
+        const conversations = data.name ? [{ userId: data.name }] : [];
 
-        // Assuming data is an object with a 'name' field and it corresponds to a userId
-        const conversations = data.name ? [{
-          userId: data.name, // Directly using the 'name' as userId
-        }] : [];
-
-        console.log("Extracted Conversations:", conversations); // Log the extracted conversations
-
-        // Fetch user details for each conversation
-        console.log('Fetching user details for each conversation...');
         const userResponses = await Promise.all(conversations.map(async (conv) => {
-          console.log(`Fetching user details for ${conv.userId}`);
           const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
             method: 'GET',
             headers: {
@@ -62,14 +48,9 @@ const App = () => {
             }
           });
 
-          if (!userResponse.ok) {
-            console.error(`Error fetching user details for ${conv.userId}: ${userResponse.status}`);
-            return null;
-          }
+          if (!userResponse.ok) return null;
 
           const userData = await userResponse.json();
-          console.log(`User data for ${conv.userId}:`, userData);
-
           return {
             userId: conv.userId,
             userName: userData.general ? userData.general.name : 'Unknown User',
@@ -77,14 +58,11 @@ const App = () => {
           };
         }));
 
-        // Filter out null values in case some user data was not fetched
         const validUsers = userResponses.filter(user => user !== null);
-        console.log("Valid Users:", validUsers); // Log valid user responses
         setUsers(validUsers);
         setConversations(conversations);
 
       } catch (err) {
-        console.error('Error loading data:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -94,14 +72,50 @@ const App = () => {
     fetchUserData();
   }, [userId]);
 
-  // Handle user click to navigate to chat page
   const handleUserClick = (userId) => {
-    console.log(`User ${userId} clicked`);
     navigate('/chat', { state: { userId } });
+  };
+
+  const handleAddConfirm = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/users/fetch/${searchQuery}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+      const userData = await response.json();
+      const userExists = users.some(user => user.userId === userData.uuid);
+      
+      if (!userExists) {
+        const newUser = {
+          userId: userData.uuid,
+          userName: userData.general ? userData.general.name : 'Unknown User',
+          email: userData.general ? userData.general.email : 'No email'
+        };
+        setUsers(prevUsers => [...prevUsers, newUser]);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div>
+      <div>
+        <input 
+          type="text" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Enter username"
+        />
+        <button onClick={handleAddConfirm}>Confirm</button>
+      </div>
+
       {loading ? (
         <p className="loading-text">Loading data...</p>
       ) : error ? (
@@ -110,11 +124,11 @@ const App = () => {
         users.length > 0 ? (
           users.map((user) => (
             <button
-              key={user.userId} // Use user ID as key
+              key={user.userId}
               onClick={() => handleUserClick(user.userId)}
               className="user-button"
             >
-              {user.userName} {/* Display the user name */}
+              {user.userName}
             </button>
           ))
         ) : (

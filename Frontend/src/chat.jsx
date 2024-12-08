@@ -1,20 +1,15 @@
 import { useState, useEffect } from 'react';
-import { FaPaperPlane, FaArrowLeft, FaCog } from 'react-icons/fa';
+import { FaPaperPlane, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './components/navbar';
 import './chat.css';
 
-const App = () => {
+const Chat = () => {
   const { username } = location.state || {};
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [ws, setWs] = useState(null);
-  const [color, setColor] = useState('chat-page-dark');
-  const [showOverlay, setShowOverlay] = useState(false);
-  const [name, setName] = useState('User Name');
-  const [isEditing, setIsEditing] = useState(false);
-  const [newName, setNewName] = useState(name);
   const [otherUserId, setOtherUserId] = useState(null);
-  const [wantToHelp, setWantToHelp] = useState(false);
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
@@ -29,7 +24,7 @@ const App = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://localhost:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -65,7 +60,7 @@ const App = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/fetch/${username}`, {
+        const response = await fetch(`http://localhost:8000/users/fetch/${username}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -131,7 +126,7 @@ const App = () => {
 
   // WebSocket setup
   useEffect(() => {
-    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/ws`);
+    const socket = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
     
     socket.onopen = () => {
       console.log('WebSocket connection established');
@@ -188,72 +183,28 @@ const App = () => {
     setInputMessage('');
   };
 
-  const changeBackgroundColor = (input) => {
-    setColor(input); 
-  };
-
-  const handleEditName = () => {
-    if (isEditing) {
-      setName(newName);
-      console.log('Name has been changed');
-    }
-    setIsEditing(!isEditing);
-  };
-
-  const changeHelpStatus = () => {
-    setWantToHelp(!wantToHelp);
-  };
-
   return (
-    <div className={color}>
+    <div className="chat-page">
       <div className="chat-header">
         <button className="back-button" onClick={() => navigate(-1)}>
           <FaArrowLeft />
         </button>
-        <h1>Chat</h1>
+        <h1>Chat s {username}</h1>
       </div>
 
-      {showOverlay && (
-        <div className="overlay">
-          {/* You can enable the color toggle here */}
-          {/* <div className="color-toggle">
-            <button onClick={() => changeBackgroundColor('chat-page-pink')}>Pink</button>
-            <button onClick={() => changeBackgroundColor('chat-page-green')}>Green</button>
-            <button onClick={() => changeBackgroundColor('chat-page-blue')}>Blue</button>
-            <button onClick={() => changeBackgroundColor('chat-page-dark')}>Dark</button>
-            <button onClick={changeHelpStatus}>Help</button>
-          </div> */}
-          {/* <div className="name-container">
-            <div className="name-display">
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Enter new name"
-                />
-              ) : (
-                <span>{name}</span>
-              )}
+      <div className="chat-content">
+        <div className="messages-container">
+          {messages.map((msg, index) => (
+            <div 
+              key={index}
+              className={`message-wrapper ${msg.role === 'recipient' ? 'other-message' : 'own-message'}`}
+            >
+              <div className="message">
+                {msg.content}
+              </div>
             </div>
-            <button onClick={handleEditName}>
-              {isEditing ? 'Save' : 'Edit'}
-            </button>
-          </div> */}
+          ))}
         </div>
-      )}
-
-      <div className="messages-container">
-        {messages.map((msg, index) => (
-          <div 
-            key={index}
-            className={`message-wrapper ${msg.role === 'recipient' ? 'other-message' : 'own-message'}`}
-          >
-            <div className="message">
-              {msg.content}
-            </div>
-          </div>
-        ))}
       </div>
 
       <div className="input-container">
@@ -272,8 +223,10 @@ const App = () => {
           <FaPaperPlane />
         </button>
       </div>
+      
+      <Navbar />
     </div>
   );
 };
 
-export default App;
+export default Chat;

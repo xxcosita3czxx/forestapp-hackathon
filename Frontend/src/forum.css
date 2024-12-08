@@ -524,3 +524,81 @@ html, body {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.5);
 }
+
+/* Post Modal */
+.post-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.post-modal {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.close-modal:hover {
+  color: #333;
+}
+
+.post-modal-content {
+  margin-top: 1rem;
+}
+
+.post-meta {
+  display: flex;
+  gap: 1rem;
+  color: #666;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.post-body {
+  margin: 1.5rem 0;
+  line-height: 1.6;
+}
+
+.post-stats {
+  display: flex;
+  gap: 1rem;
+  color: #666;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.post-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+}
