@@ -38,7 +38,7 @@ def bearer_token(credentials: HTTPAuthorizationCredentials = fastapi.Depends(sec
         return user_id, sessionid
 
     except Exception as e:
-        print(e)
+        #print(e)
         raise HTTPException(status_code=400, detail=f"Error processing token: {str(e)}")  # noqa: B904, E501
 
 def verify_permission_un(session: str = fastapi.Depends(bearer_token)):  # noqa: E501
