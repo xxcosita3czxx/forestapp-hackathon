@@ -1,4 +1,5 @@
 import uuid
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 import api.users.fetch as fetch
@@ -9,7 +10,7 @@ router = fastapi.APIRouter()
 
 @router.get("/login")
 def login(login:str,password:str):
-    userdata = fetch.fetch(query=login, login=True, full_match=True)
+    userdata = fetch.search_data(input_value=login,data=defaultdict(dict,cm.users.config),login=True, full_match=True)  # noqa: E501
     sessionid=str(uuid.uuid4())
     userid = userdata["uuid"]
     current_timestamp = datetime.now()
