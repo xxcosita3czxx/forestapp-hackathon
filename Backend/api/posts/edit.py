@@ -1,6 +1,5 @@
 import api.auth.verify_pass as vpass
 import fastapi
-import utils.configmanager as cm
 
 router = fastapi.APIRouter()
 
