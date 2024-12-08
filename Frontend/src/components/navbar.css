@@ -225,3 +225,17 @@
   opacity: 1;
   visibility: visible;
 }
+
+.logout-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: rgba(128, 128, 128, 0.3); /* Light grey */
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  color: rgba(128, 128, 128, 0.6); /* Slightly more visible on hover */
+}

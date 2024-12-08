@@ -211,6 +211,15 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
+            <button
+              className="logout-button"
+              onClick={() => {
+                localStorage.clear();
+                navigate('/login');
+              }}
+            >
+              Odhlásit se
+            </button>
           </div>
         </div>
       </div>
