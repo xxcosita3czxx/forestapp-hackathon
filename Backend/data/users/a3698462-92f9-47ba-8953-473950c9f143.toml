@@ -1,9 +1,0 @@
-[general]
-name = "Huewhg"
-birthday = 1733563792
-pass = "LAku/Qoe3u1ChOX4QYWdqXJYYCrK4xJ5bjyFsTQTh90fg4258vh6oMDB4TisSijsndM3gNdtvtunVPA8Cmh93w=="
-email = "huewhg@huewhg.com"
-contacts = "5cfdc633-d646-45ef-a778-f60a1b3fb771,0f63d70c-1f68-4cd1-81d2-531ffe48a330"
-
-[messages]
-0f63d70c-1f68-4cd1-81d2-531ffe48a330 = "{\"time\": 1733590886.8863697,\"content\": \"hello2!\",\"role\":\"recipient\"}"

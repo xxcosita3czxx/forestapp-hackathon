@@ -1,7 +1,7 @@
 import uuid
 from collections import defaultdict
 from datetime import datetime, timedelta
-
+import api.users.add as add
 import api.users.fetch as fetch
 import fastapi
 import utils.configmanager as cm
@@ -17,6 +17,8 @@ def login(login:str,password:str):
     userid = userdata["uuid"]
     current_timestamp = datetime.now()
     new_timestamp = current_timestamp + timedelta(minutes=30)
+    if not add.check_aes_code(password,cm.users.get(userid,"general","password"),f"success-{userid}"):  # noqa: E501
+        return fastapi.HTTPException(status_code=403,detail="Wrong User or Password")  # noqa: E501
     cm.sessions.set("sessions",userid,"sessionid",sessionid)
     cm.sessions.set("sessions",userid,"valid_until",new_timestamp)
     return {"sessionid":sessionid,"valid_until":new_timestamp,"user_id":userid}
