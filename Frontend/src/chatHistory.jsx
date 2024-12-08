@@ -22,8 +22,8 @@ const ChatHistory = () => {
       }
 
       try {
-        const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
-          method: 'GET',
+        const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
+        method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`,
@@ -36,6 +36,7 @@ const ChatHistory = () => {
           return;
         }
 
+        
         const data = await response.json();
         const conversations = data.name ? [{ userId: data.name }] : [];
         console.log(data);
