@@ -4,6 +4,6 @@ import utils.configmanager as cm
 
 router = fastapi.APIRouter()
 
-@router.patch("/edit/{id}&{key}&{value}")
-def create_post(id:str,key:str,value:str,authorization:str=fastapi.Depends(vpass.verify_permission_diez)):  # noqa: E501
+@router.patch("/edit")
+def create_post(id:str,authorization:str=fastapi.Depends(vpass.verify_permission_diez)):  # noqa: E501
     return fastapi.HTTPException(status_code=200,detail="Success")

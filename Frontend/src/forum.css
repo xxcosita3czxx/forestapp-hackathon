@@ -34,55 +34,6 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Categories Grid */
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-bottom: 30px;
-  padding: 0 20px;
-}
-
-.category-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #333;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  min-height: 120px;
-}
-
-.category-btn svg {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.category-btn span {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.category-btn:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.category-btn.active {
-  background: rgba(0, 123, 255, 0.15);
-  color: #007bff;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
-}
-
-/* Posts Container */
 .posts-container {
   display: flex;
   flex-direction: column;
@@ -126,24 +77,11 @@
   margin: 0 0 16px 0;
 }
 
-.post-footer {
+.post-stats {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.post-date {
+  gap: 20px;
   color: #666;
-  font-size: 0.8rem;
-}
-
-.post-category-tag {
-  color: black;
   font-size: 0.9rem;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.5);
 }
 
 .search-container {
@@ -268,6 +206,12 @@
   color: #000;
 }
 
+.post-date {
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
 /* Remove the .sort-select styles since we're removing that element */
 
 @media (max-width: 600px) {
@@ -289,24 +233,6 @@
 
   .post-content {
     font-size: 0.95rem;
-  }
-  
-  .categories-grid {
-    gap: 10px;
-    padding: 0 10px;
-  }
-
-  .category-btn {
-    padding: 15px;
-    min-height: 100px;
-  }
-
-  .category-btn svg {
-    font-size: 20px;
-  }
-
-  .category-btn span {
-    font-size: 14px;
   }
 }
 
@@ -494,35 +420,6 @@ html, body {
   margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
-}
-
-/* Přidat do forum.css */
-.no-posts {
-  text-align: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.75);
-  border-radius: 12px;
-  margin-top: 1rem;
-  color: #333; /* Add dark text color */
-  font-size: 1rem;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* Add to forum.css */
-.post-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.post-category-tag {
-  color: black;
-  font-size: 0.9rem;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.5);
 }
 
 /* Post Modal */
