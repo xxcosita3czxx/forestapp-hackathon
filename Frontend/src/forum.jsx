@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter } from 'react-icons/fa';
+import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter, FaPlus } from 'react-icons/fa';
 import Navbar from './components/navbar';
 import './forum.css';
 import { fetchAuth } from './utils/auth';
@@ -15,10 +15,16 @@ const Forum = () => {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [categories, setCategories] = useState([]); // Přidáno pro kategorie
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
-  
+  const [newPost, setNewPost] = useState({
+    title: '',
+    content: '',
+    category: ''
+  });
+
   function addPost(title, content, author, likes = 0, comments = 0, date = new Date()) {
     const newPost = {
       title: title,
@@ -129,6 +135,24 @@ const Forum = () => {
     fetchPosts();
   }, []);
 
+  // Nový useEffect pro získání kategorií z API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetchAuth(`${API_URL}/forum/categories`, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+        });
+        if (!response.ok) throw new Error('Failed to fetch categories');
+        const data = await response.json();
+        setCategories(data.categories); // Předpokládáme, že API vrací { categories: [...] }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     let filtered = [...posts];
     
@@ -185,6 +209,33 @@ const Forum = () => {
     console.log("Search submitted with query:", searchQuery);
   };
 
+  const handleCreatePostChange = (e) => {
+    setNewPost({ ...newPost, [e.target.name]: e.target.value });
+  };
+
+  const handleCreatePostSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetchAuth(`${API_URL}/forum/posts/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newPost.title,
+          content: newPost.content,
+          category: newPost.category,
+          authorId: userId
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to create post');
+      const createdPost = await response.json();
+      setPosts([createdPost, ...posts]);
+      setIsCreatePostOpen(false);
+      setNewPost({ title: '', content: '', category: '' });
+    } catch (error) {
+      console.error('Error creating post:', error);
+    }
+  };
+
   const handleFilterClick = (option) => {
     setSelectedFilter(option); // Set the selected filter
     setIsDropdownOpen(false); // Close the dropdown
@@ -223,7 +274,7 @@ const Forum = () => {
                 className="create-post-btn"
                 onClick={() => setIsCreatePostOpen(true)}
               >
-                Vytvořit
+                <FaPlus /> Vytvořit
               </button>
 
               <div className={`filter-dropdown ${isFilterOpen ? 'active' : ''}`}>
@@ -264,20 +315,44 @@ const Forum = () => {
       {isCreatePostOpen && (
         <div className="create-post-modal">
           <div className="modal-content">
-            <h2>Create New Post</h2>
-            <form onSubmit={(e) => e.preventDefault()}>
+            <h2>Vytvořit Nový Příspěvek</h2>
+            <form onSubmit={handleCreatePostSubmit}>
               <input
                 type="text"
-                placeholder="Post Title"
+                name="title"
+                placeholder="Název Příspěvku"
                 className="post-title-input"
+                value={newPost.title}
+                onChange={handleCreatePostChange}
+                required
               />
               <textarea
-                placeholder="Post Content"
+                name="content"
+                placeholder="Obsah Příspěvku"
                 className="post-content-input"
+                value={newPost.content}
+                onChange={handleCreatePostChange}
+                required
               />
+              <select
+                name="category"
+                className="post-category-select"
+                value={newPost.category}
+                onChange={handleCreatePostChange}
+                required
+              >
+                <option value="">Vyberte kategorii</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
               <div className="modal-buttons">
-                <button onClick={() => setIsCreatePostOpen(false)}>Cancel</button>
-                <button type="submit">Create</button>
+                <button type="button" onClick={() => setIsCreatePostOpen(false)}>
+                  Zrušit
+                </button>
+                <button type="submit">Vytvořit</button>
               </div>
             </form>
           </div>
