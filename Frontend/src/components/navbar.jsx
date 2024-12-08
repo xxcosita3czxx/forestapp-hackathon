@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
 import './navbar.css';
-import { fetchAuth } from '../utils/auth';
 
+
+const token = localStorage.getItem("token");
 const THEMES = {
   PINK: {
     from: '#FF55E3',
@@ -35,11 +36,11 @@ const Navbar = () => {
       }
   
       try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
-            'Accept': 'application/json',
-          },
+            'Authorization': `Bearer ${token}`,
+          }
         });
   
         if (!response.ok) {
@@ -108,7 +109,7 @@ const Navbar = () => {
     setSettingsOpen(false);
     setTimeout(() => setAccountMenuOpen(true), 300); // Wait for settings animation to finish
   };
-
+  
   const handleThemeChange = async (e) => {
     const selectedTheme = e.target.value;
     setCurrentTheme(selectedTheme);
@@ -124,11 +125,13 @@ const Navbar = () => {
 
       // Get userId from localStorage
       const userId = localStorage.getItem('userId');
-    
+      const token = localStorage.getItem("token")
       try {
-        await fetchAuth(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
-          method: 'PATCH'
-        });
+        await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+        }});
       } catch (err) {
         console.error('Failed to save theme:', err);
       }

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"; // Add this import
 import "./home.css";
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown, FaArrowRight } from "react-icons/fa";
 import Navbar from './components/navbar';
-import { fetchAuth } from './utils/auth';
 
 function App() {  
   const userId = localStorage.getItem('userId');
@@ -16,7 +15,7 @@ function App() {
       }
   
       try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

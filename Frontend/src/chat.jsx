@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { FaPaperPlane, FaArrowLeft, FaCog } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './chat.css';
-import { fetchAuth } from './utils/auth';
 
 const App = () => {
   const { username } = location.state || {};
@@ -17,6 +16,7 @@ const App = () => {
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchColor = async () => {
@@ -26,10 +26,11 @@ const App = () => {
       }
   
       try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
   
@@ -60,10 +61,11 @@ const App = () => {
       }
   
       try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/fetchAuthAuthAuthAuthAuthAuth/${username}`, {
+        const response = await fetch(`http://127.0.0.1:8000/users/fetch/${username}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
   
@@ -98,6 +100,7 @@ const App = () => {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
   

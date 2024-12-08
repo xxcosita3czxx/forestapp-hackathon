@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter, FaPlus } from 'react-icons/fa';
 import Navbar from './components/navbar';
 import './forum.css';
-import { fetchAuth } from './utils/auth';
 
 const API_URL = 'http://localhost:8000';
 
@@ -24,7 +23,7 @@ const Forum = () => {
     content: '',
     category: ''
   });
-
+const token = localStorage.getItem("token")
   function addPost(title, content, author, likes = 0, comments = 0, date = new Date()) {
     const newPost = {
       title: title,
@@ -52,10 +51,11 @@ const Forum = () => {
       }
   
       try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
   
@@ -83,10 +83,11 @@ const Forum = () => {
       setIsLoading(true);
       try {
         console.log('Fetching posts...');
-        const response = await fetchAuth('http://localhost:8000/forum/category/fetchall/', {
+        const response = await fetch('http://localhost:8000/forum/category/fetchall/', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
 
@@ -139,9 +140,12 @@ const Forum = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetchAuth(`${API_URL}/forum/categories`, {
+        const response = await fetch(`${API_URL}/forum/category/fetchall`, {
           method: 'GET',
-          headers: { 'Accept': 'application/json' },
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
         });
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data = await response.json();
@@ -216,9 +220,12 @@ const Forum = () => {
   const handleCreatePostSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetchAuth(`${API_URL}/forum/posts/create`, {
+      const response = await fetch(`${API_URL}/forum/posts/create`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({
           title: newPost.title,
           content: newPost.content,
