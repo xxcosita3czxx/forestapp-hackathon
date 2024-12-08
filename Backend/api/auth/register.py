@@ -36,7 +36,7 @@ def add_user(username: str, password: str, timestamp: int,email: str,first_name:
             if "@" in email:
                 if is_valid_username(username):
                     if is_valid_fullname(first_name) and is_valid_fullname(last_name):  # noqa: E501
-                        add.add_user(name=username,password=password,timestamp=timestamp,email=email,first_name=first_name,last_name=last_name)
+                        add.create_user(name=username,password=password,timestamp=timestamp,email=email,first_name=first_name,last_name=last_name)
                         raise HTTPException(status_code=200, detail="Success")
                     else:
                         raise HTTPException(status_code=406,detail="Full name is not valid")  # noqa: E501
