@@ -11,6 +11,8 @@ router = fastapi.APIRouter()
 @router.get("/login")
 def login(login:str,password:str):
     userdata = fetch.search_data(input_value=login,data=defaultdict(dict,cm.users.config),login=True, full_match=True)  # noqa: E501
+    if userdata is None:
+        raise fastapi.HTTPException(status_code=404,detail="User not found")
     sessionid=str(uuid.uuid4())
     userid = userdata["uuid"]
     current_timestamp = datetime.now()
