@@ -25,7 +25,7 @@ app = FastAPI()  # noqa: E501
 app.add_middleware(ServerHeaderMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000","http://192.168.0.69:81"],  # Allow all origins or specify allowed domains here  # noqa: E501
+    allow_origins=["*"],  # Allow all origins or specify allowed domains here  # noqa: E501
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods (GET, POST, WS, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -81,7 +81,7 @@ def root():
     return fastapi.HTTPException(status_code=418,detail="Welcome to foster app API!")  # noqa: E501
 
 if __name__ == "__main__":
-    host = os.getenv("HOST", "0.0.0.0")  # noqa: S104
+    host = os.getenv("HOST", "127.0.0.1")  # noqa: S104
     port = int(os.getenv("PORT", 8000))
     debug = os.getenv("DEBUG", "false").lower() == "true"
 
