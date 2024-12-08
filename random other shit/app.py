@@ -6,7 +6,7 @@ import requests
 app = FastAPI()
 import requests
 
-url = "http://localhost:11434/api/generate"
+url = "http://localhost:96/api/generate"
 data = {
     "model": "llama3.2",
     "keep_alive": -1
