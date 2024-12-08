@@ -1,7 +1,7 @@
 // src/components/PrivateRoute.jsx
 import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { verifySession } from '../utils/auth';
+import { verifySession } from './auth';
 
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
