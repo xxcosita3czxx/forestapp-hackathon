@@ -14,7 +14,9 @@ const ChatHistory = () => {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
+
     const fetchUserData = async () => {
+
       if (!userId) {
         setError("userId is not set in localStorage.");
         setLoading(false);
@@ -29,18 +31,19 @@ const ChatHistory = () => {
             'Authorization': `Bearer ${token}`,
           }
         });
-
+        
         if (!response.ok) {
           setError(`HTTP error: ${response.status}`);
           setLoading(false);
           return;
         }
 
-        
+                
         const data = await response.json();
         const conversations = data.name ? [{ userId: data.name }] : [];
-        console.log(data);
+        console.log("dksajdhsfaghfdgshal");
 
+        console.log("data is " +  data);
         const userResponses = await Promise.all(conversations.map(async (conv) => {
           console.log(`Fetching user details for ${conv.userId}`);
           const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
