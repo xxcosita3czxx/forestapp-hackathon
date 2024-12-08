@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './chatHistory.css';
+import { fetchAuth } from './utils/auth';
 
 const App = () => {
   const [users, setUsers] = useState([]); // List of users

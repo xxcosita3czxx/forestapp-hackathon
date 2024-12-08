@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter } from 'react-icons/fa';
 import Navbar from './components/navbar';
 import './forum.css';
+import { fetchAuth } from './utils/auth';
 
 const API_URL = 'http://localhost:8000';
 
@@ -45,7 +46,7 @@ const Forum = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -76,7 +77,7 @@ const Forum = () => {
       setIsLoading(true);
       try {
         console.log('Fetching posts...');
-        const response = await fetch('http://localhost:8000/forum/posts/fetchall/pokus', {
+        const response = await fetchAuth('http://localhost:8000/forum/posts/fetchall/pokus', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

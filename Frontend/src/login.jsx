@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import './login.css';
+import { fetchAuth } from './utils/auth';
 
 const API_URL = 'http://localhost:8000';
 
@@ -18,7 +19,7 @@ const Login = () => {
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -90,6 +91,7 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem('sessionId', data.sessionid);
         localStorage.setItem('userId', data.user_id);
+        localStorage.setItem('token', JSON.stringify(data));
         navigate('/');
       } else {
         setError(data.message || 'Login failed');
