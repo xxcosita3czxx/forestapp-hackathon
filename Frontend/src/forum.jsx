@@ -14,6 +14,7 @@ const Forum = () => {
   const [error, setError] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem('userId');
 
   // Definice kategorií
   const categories = [
@@ -77,6 +78,41 @@ const Forum = () => {
 
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    const fetchTheme = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await fetch(`http://localhost:8000/users/settings/set/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const theme = data.settings.theme;
+
+        // Apply theme
+        const gradients = {
+          PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
+          BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+          GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
+          BLACK: 'linear-gradient(45deg, #333333, #666666)'
+        };
+
+        document.body.style.background = gradients[theme];
+
+      } catch (error) {
+        console.error('Error fetching theme:', error);
+      }
+    };
+
+    fetchTheme();
+  }, [userId]);
 
   // Filter posts by category
   const filteredPosts = selectedCategory 

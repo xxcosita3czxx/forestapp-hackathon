@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
 import './navbar.css';
 
@@ -62,7 +62,6 @@ const Navbar = () => {
     fetchColor();
   }, [userId]); // Závislost na `userId` 
 
-  const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
@@ -72,18 +71,6 @@ const Navbar = () => {
   });
   const [showToast, setShowToast] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('PINK');
-
-  const handleSearchClick = (e) => {
-    if (!searchActive) {
-      e.preventDefault();
-    }
-    setSearchActive(!searchActive);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    console.log("Search submitted");
-  };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
@@ -114,29 +101,30 @@ const Navbar = () => {
     const selectedTheme = e.target.value;
     setCurrentTheme(selectedTheme);
     
-    // Update background gradient based on theme
-    const root = document.documentElement;
+    // Define gradients
     const gradients = {
       PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
-      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)', 
       GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
       BLACK: 'linear-gradient(45deg, #333333, #666666)'
     };
 
-      // Get userId from localStorage
-      const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem("token")
-      try {
-        await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
-          method: 'PATCH',
-          headers: {
-            'Accept':"application/json",
-            'Authorization': `Bearer ${token}`,
-        }});
-      } catch (err) {
-        console.error('Failed to save theme:', err);
-      }
+    // Update background
     document.body.style.background = gradients[selectedTheme];
+    document.body.style.transition = 'background 0.3s ease';
+
+    // Save to backend
+    try {
+      await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
+        method: 'PATCH',
+        headers: {
+          'Accept': "application/json",
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+    } catch (err) {
+      console.error('Failed to save theme:', err);
+    }
   };
 
   
@@ -160,13 +148,6 @@ const Navbar = () => {
           <FaQuestionCircle />
         </div>
       </div>
-
-      <form className={`search-container ${searchActive ? 'active' : ''}`} onSubmit={handleSearchSubmit}>
-        <button type="submit" className="search-button" onClick={handleSearchClick}>
-          <FaSearch />
-        </button> 
-        <input type="text" className="search-input" placeholder="Search..." autoFocus={searchActive} />
-      </form>
 
       <div className={`account-menu ${accountMenuOpen ? 'active' : ''}`}>
         <div className="account-menu-content">

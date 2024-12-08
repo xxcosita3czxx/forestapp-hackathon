@@ -23,21 +23,94 @@ body {
   /* Style the user buttons */
   .user-button {
     display: block;
-    width: 200px;
+    width: 100%;
     margin: 10px auto;
-    padding: 12px 20px;
-    background-color: #007bff;
-    color: white;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    color: #333;
     border: none;
-    border-radius: 5px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 16px;
     text-align: center;
-    transition: background-color 0.3s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   /* Button hover effect */
   .user-button:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
-  
+
+/* chatHistory.css */
+.chat-history-page {
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  transition: background 0.3s ease; /* Add transition */
+  overflow-y: auto; /* Allow native scrolling */
+}
+
+/* Remove or comment out any existing background gradient */
+/* For example, remove or comment this if it exists:
+.chat-history-page {
+  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
+}
+*/
+
+.chat-header {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  border-radius: 20px;
+  z-index: 100;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: black;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.chat-history-content {
+  max-width: 600px;
+  margin: 20px auto 0; /* Reduced top margin since search is removed */
+}
+
+/* Keep other existing styles as is */
+
+/* Remove any slider-related CSS like: */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* User list styling */
+.users-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.chat-history-title {
+  color: black;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
