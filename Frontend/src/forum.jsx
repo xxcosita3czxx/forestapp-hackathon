@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter, FaPlus } from 'react-icons/fa';
+import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaFilter, FaPlus, FaTimes } from 'react-icons/fa';
 import Navbar from './components/navbar';
 import './forum.css';
 
@@ -12,6 +12,7 @@ const Forum = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
   const token = localStorage.getItem("token");
 
   // Definice kategorií
@@ -86,6 +87,52 @@ const Forum = () => {
     setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
   };
 
+  // Handle post click to open detail view
+  const handlePostClick = async (post) => {
+    try {
+      const response = await fetch(`http://localhost:8000/forum/posts/fetchall/${post.id.split('-')[0]}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch post details');
+      
+      const data = await response.json();
+      const postDetails = data[post.id.split('-')[1]];
+      setSelectedPost({
+        ...post,
+        details: postDetails,
+        likes: await fetchLikeCount(post.id),
+        comments: await fetchCommentCount(post.id)
+      });
+    } catch (error) {
+      console.error('Error fetching post details:', error);
+    }
+  };
+
+  // Helper functions to fetch additional data
+  const fetchLikeCount = async (postId) => {
+    const [catId, postId2] = postId.split('-');
+    const response = await fetch(`http://localhost:8000/forum/posts/count/likes/${catId}&${postId2}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.ok ? await response.json() : 0;
+  };
+
+  const fetchCommentCount = async (postId) => {
+    const [catId, postId2] = postId.split('-');
+    const response = await fetch(`http://localhost:8000/forum/posts/count/comments/${catId}&${postId2}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.ok ? await response.json() : 0;
+  };
+
   if (error) return <div className="error-message">{error}</div>;
   if (isLoading) return <div className="loading">Loading...</div>;
 
@@ -111,7 +158,9 @@ const Forum = () => {
         {/* Posts List */}
         <div className="posts-container">
           {filteredPosts.map(post => (
-            <div key={post.id} className="post-card">
+            <div key={post.id} 
+                 className="post-card"
+                 onClick={() => handlePostClick(post)}>
               <div className="post-header">
                 <h2 className="post-title">{post.title}</h2>
                 <span className="post-author">Author: {post.author}</span>
@@ -134,6 +183,39 @@ const Forum = () => {
           )}
         </div>
       </div>
+
+      {/* Post Detail Modal */}
+      {selectedPost && (
+        <div className="post-modal-overlay">
+          <div className="post-modal">
+            <button className="close-modal" onClick={() => setSelectedPost(null)}>
+              <FaTimes />
+            </button>
+            <div className="post-modal-content">
+              <h2>{selectedPost.title}</h2>
+              <div className="post-meta">
+                <span className="post-author">
+                  <FaUser /> {selectedPost.author}
+                </span>
+                <span className="post-date">
+                  {new Date(selectedPost.details?.date || selectedPost.createdAt).toLocaleString()}
+                </span>
+                <span className="post-category">
+                  {selectedPost.category}
+                </span>
+              </div>
+              <div className="post-body">
+                {selectedPost.content}
+              </div>
+              <div className="post-stats">
+                <span className="likes">👍 {selectedPost.likes}</span>
+                <span className="comments">💬 {selectedPost.comments}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Navbar />
     </div>
   );
