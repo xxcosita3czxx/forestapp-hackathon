@@ -60,7 +60,7 @@ const Navbar = () => {
     };
   
     fetchColor();
-  }, [userId]); // Závislost na `userId`
+  }, [userId]); // Závislost na `userId` 
 
   const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
@@ -68,7 +68,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "cosita",
-    username: "cosita123" 
+    username: "cosita123"  
   });
   const [showToast, setShowToast] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('PINK');
