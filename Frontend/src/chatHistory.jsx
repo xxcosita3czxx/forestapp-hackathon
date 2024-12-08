@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './chatHistory.css';
-import { fetchAuth } from './utils/auth';
+import Navbar from './components/navbar'; // Add import
 
-const App = () => {
-  const [users, setUsers] = useState([]); // List of users
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+const ChatHistory = () => {
+  const [conversations, setConversations] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem('token');
 
-  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        console.error("userId není nastaven v localStorage.");
-        setError("userId není nastaven v localStorage.");
+        setError("userId is not set in localStorage.");
         setLoading(false);
         return;
       }
@@ -24,41 +25,45 @@ const App = () => {
       try {
         const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
           method: 'GET',
-          headers: { 'Accept': 'application/json' },
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
         });
 
         if (!response.ok) {
-          console.error(`HTTP chyba: ${response.status}`);
-          setError(`HTTP chyba: ${response.status}`);
+          setError(`HTTP error: ${response.status}`);
           setLoading(false);
           return;
         }
 
         const data = await response.json();
-        console.log("Received Data:", data);
+        const conversations = data.name ? [{ userId: data.name }] : [];
 
-        // Fetch usernames for each user ID
-        const userPromises = Object.keys(data).map(async (id) => {
-          const userResponse = await fetch(`http://127.0.0.1:8000/users/etting/set/${id}`, {
+        const userResponses = await Promise.all(conversations.map(async (conv) => {
+          const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
             method: 'GET',
-            headers: { 'Accept': 'application/json' },
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
           });
 
-          if (userResponse.ok) {
-            const userData = await userResponse.json();
-            return { id, username: userData.general.name }; // Extract `username` from the response
-          } else {
-            console.error(`HTTP chyba u uživatele ${id}: ${userResponse.status}`);
-            return null;
-          }
-        });
+          if (!userResponse.ok) return null;
 
-        const userList = (await Promise.all(userPromises)).filter((user) => user !== null);
-        console.log("User List:", userList);
+          const userData = await userResponse.json();
+          return {
+            userId: conv.userId,
+            userName: userData.general ? userData.general.name : 'Unknown User',
+            email: userData.general ? userData.general.email : 'No email',
+          };
+        }));
 
-        setUsers(userList);
+        const validUsers = userResponses.filter(user => user !== null);
+        setUsers(validUsers);
+        setConversations(conversations);
+
       } catch (err) {
-        console.error('Chyba při načítání dat:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -68,31 +73,81 @@ const App = () => {
     fetchUserData();
   }, [userId]);
 
-  // Handle user click to navigate to chat page
   const handleUserClick = (userId) => {
-    console.log(`User ${userId} clicked`);
     navigate('/chat', { state: { userId } });
   };
 
+  const handleAddConfirm = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/users/fetch/${searchQuery}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+      const userData = await response.json();
+      const userExists = users.some(user => user.userId === userData.uuid);
+      
+      if (!userExists) {
+        const newUser = {
+          userId: userData.uuid,
+          userName: userData.general ? userData.general.name : 'Unknown User',
+          email: userData.general ? userData.general.email : 'No email'
+        };
+        setUsers(prevUsers => [...prevUsers, newUser]);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
-    <div>
-      {loading ? (
-        <p className="loading-text">Načítám data...</p>
-      ) : error ? (
-        <p className="error-message">{error}</p>
-      ) : (
-        users.map((user) => (
-          <button
-            key={user.id}
-            onClick={() => handleUserClick(user.id)}
-            className="user-button"
+    <div className="chat-history-page">
+      <div className="chat-history-content">
+        <div className="search-container">
+          <input 
+            type="text" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Vyhledat uživatele..."
+            className="search-input"
+          />
+          <button 
+            onClick={handleAddConfirm}
+            className="search-button"
           >
-            {user.username}
+            Přidat
           </button>
-        ))
-      )}
+        </div>
+
+        {loading ? (
+          <p className="loading-text">Loading data...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
+        ) : (
+          users.length > 0 ? (
+            users.map((user) => (
+              <button
+                key={user.userId}
+                onClick={() => handleUserClick(user.userId)}
+                className="user-button"
+              >
+                {user.userName}
+              </button>
+            ))
+          ) : (
+            <p>No conversations found.</p>
+          )
+        )}
+      </div>
+      
+      <Navbar /> {/* Add navbar at bottom */}
     </div>
   );
 };
 
-export default App;
+export default ChatHistory;

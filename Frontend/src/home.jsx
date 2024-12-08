@@ -3,53 +3,54 @@ import { useNavigate } from "react-router-dom"; // Add this import
 import "./home.css";
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown, FaArrowRight } from "react-icons/fa";
 import Navbar from './components/navbar';
-import { fetchAuth } from './utils/auth';
 
 function App() {  
   const userId = localStorage.getItem('userId');
-
-  useEffect(() => {
-    const fetchColor = async () => {
-      if (!userId) {
-        console.error("userId není nastaven v localStorage.");
-        return;
-      }
+  const token = localStorage.getItem("token");
   
-      try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-  
-        if (!response.ok) {
-          console.error(`HTTP chyba: ${response.status}`);
-          return;
-        }
-  
-        const data = await response.json(); // 
-        console.log('Response Data:', data);
-  
-        const theme = data.theme || 'default';
-        console.log('Theme:', theme);
-  
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-  
-    fetchColor();
-  }, [userId]); // Závislost na `userId`
-
   const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const navigate = useNavigate(); // Add this hook
   const [userData, setUserData] = useState({
-    name: "cosita", // placeholder, will come from DB
-    username: "cosita123" // placeholder, will come from DB
+    name: "name", // placeholder, will come from DB
+    username: "username" // placeholder, will come from DB
   });
   const [showToast, setShowToast] = useState(false); // Add new state for toast
+
+  useEffect(() => {
+    const fetchTheme = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await fetch(`http://localhost:8000/users/settings/set/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const theme = data.settings.theme;
+
+        // Apply theme
+        const gradients = {
+          PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
+          BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+          GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
+          BLACK: 'linear-gradient(45deg, #333333, #666666)'
+        };
+
+        document.body.style.background = gradients[theme];
+
+      } catch (error) {
+        console.error('Error fetching theme:', error);
+      }
+    };
+
+    fetchTheme();
+  }, [userId]);
 
   const handleSearchClick = (e) => {
     if (!searchActive) {

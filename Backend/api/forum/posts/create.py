@@ -14,6 +14,8 @@ def create_post(id:str,
                 author_id:str,
                 autohorization:str= fastapi.Depends(vpass.verify_permission_dos),
                 ):
+    if post_id.lower() == "general":
+        raise fastapi.HTTPException(status_code=406,detail="Post ID cant be 'general'")  # noqa: E501
     cm.forums.set(id.lower(),post_id.lower(),"title",title)
     cm.forums.set(id.lower(),post_id.lower(),"text",text)
     cm.forums.set(id.lower(),post_id.lower(),"date",datetime.now())

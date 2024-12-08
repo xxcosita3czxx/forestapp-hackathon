@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import './login.css';
-import { fetchAuth } from './utils/auth';
+
 
 const API_URL = 'http://localhost:8000';
 

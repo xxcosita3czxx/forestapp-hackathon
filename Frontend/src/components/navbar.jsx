@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
 import './navbar.css';
-import { fetchAuth } from '../utils/auth';
 
+
+const token = localStorage.getItem("token");
 const THEMES = {
   PINK: {
     from: '#FF55E3',
@@ -35,11 +36,11 @@ const Navbar = () => {
       }
   
       try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
           method: 'GET',
           headers: {
-            'Accept': 'application/json',
-          },
+            'Authorization': `Bearer ${token}`,
+          }
         });
   
         if (!response.ok) {
@@ -50,7 +51,7 @@ const Navbar = () => {
         const data = await response.json(); // 
         console.log('Response Data:', data);
   
-        const theme = data.theme || 'default';
+        const theme = data.settings.theme;
         console.log('Theme:', theme);
   
       } catch (error) {
@@ -108,31 +109,35 @@ const Navbar = () => {
     setSettingsOpen(false);
     setTimeout(() => setAccountMenuOpen(true), 300); // Wait for settings animation to finish
   };
-
+  
   const handleThemeChange = async (e) => {
     const selectedTheme = e.target.value;
     setCurrentTheme(selectedTheme);
     
-    // Update background gradient based on theme
-    const root = document.documentElement;
+    // Define gradients
     const gradients = {
       PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
-      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)', 
       GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
       BLACK: 'linear-gradient(45deg, #333333, #666666)'
     };
 
-      // Get userId from localStorage
-      const userId = localStorage.getItem('userId');
-    
-      try {
-        await fetchAuth(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
-          method: 'PATCH'
-        });
-      } catch (err) {
-        console.error('Failed to save theme:', err);
-      }
+    // Update background
     document.body.style.background = gradients[selectedTheme];
+    document.body.style.transition = 'background 0.3s ease';
+
+    // Save to backend
+    try {
+      await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
+        method: 'PATCH',
+        headers: {
+          'Accept': "application/json",
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+    } catch (err) {
+      console.error('Failed to save theme:', err);
+    }
   };
 
   
@@ -149,7 +154,7 @@ const Navbar = () => {
         <div className="nav-item" onClick={() => navigate('/')}>
           <FaHome />
         </div>
-        <div className="nav-item">
+        <div className="nav-item" onClick={() => navigate('/chathistory')}>
           <FaCommentDots />
         </div>
         <div className="nav-item">
