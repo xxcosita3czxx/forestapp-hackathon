@@ -25,7 +25,7 @@ app = FastAPI()  # noqa: E501
 app.add_middleware(ServerHeaderMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["localhost","192.168.0.69"],  # Allow all origins or specify allowed domains here
+    allow_origins=["localhost","192.168.0.69"],  # Allow all origins or specify allowed domains here  # noqa: E501
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods (GET, POST, WS, etc.)
     allow_headers=["*"],  # Allow all headers
