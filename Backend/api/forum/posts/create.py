@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import api.auth.verify_pass as vpass
 import fastapi
 import utils.configmanager as cm
 
@@ -10,7 +11,9 @@ def create_post(id:str,
                 post_id:str,
                 title:str,
                 text:str,
-                author_id:str):
+                author_id:str,
+                autohorization:str= fastapi.Depends(vpass.verify_permission_dos),
+                ):
     cm.forums.set(id.lower(),post_id.lower(),"title",title)
     cm.forums.set(id.lower(),post_id.lower(),"text",text)
     cm.forums.set(id.lower(),post_id.lower(),"date",datetime.now())

@@ -5,7 +5,6 @@ import os
 import sys
 
 import fastapi
-import utils.configmanager as cm
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
