@@ -108,7 +108,7 @@ const Navbar = () => {
     setTimeout(() => setAccountMenuOpen(true), 300); // Wait for settings animation to finish
   };
 
-  const handleThemeChange = (e) => {
+  const handleThemeChange = async (e) => {
     const selectedTheme = e.target.value;
     setCurrentTheme(selectedTheme);
     
@@ -120,9 +120,21 @@ const Navbar = () => {
       GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
       BLACK: 'linear-gradient(45deg, #333333, #666666)'
     };
+
+      // Get userId from localStorage
+      const userId = localStorage.getItem('userId');
     
+      try {
+        await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
+          method: 'PATCH'
+        });
+      } catch (err) {
+        console.error('Failed to save theme:', err);
+      }
     document.body.style.background = gradients[selectedTheme];
   };
+
+  
 
   return (
     <>

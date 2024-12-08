@@ -10,7 +10,7 @@ security = HTTPBearer()
 
 
 def bearer_token(credentials: HTTPAuthorizationCredentials = fastapi.Depends(security)):  # noqa: B008, E501
-    try:
+    #try:
         # Ensure the scheme is Bearer
         if credentials.scheme != "Bearer":
             raise HTTPException(status_code=401, detail="Invalid Authorization scheme")  # noqa: E501
@@ -37,8 +37,9 @@ def bearer_token(credentials: HTTPAuthorizationCredentials = fastapi.Depends(sec
 
         return user_id, sessionid
 
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error processing token: {str(e)}")  # noqa: B904, E501
+#    except Exception as e:
+#        print(e)
+#        raise HTTPException(status_code=400, detail=f"Error processing token: {str(e)}")  # noqa: B904, E501
 
 def verify_permission_un(session: str = fastapi.Depends(bearer_token)):  # noqa: E501
     user_id, sessionid = session
