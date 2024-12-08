@@ -6,7 +6,7 @@ router = fastapi.APIRouter()
 @router.get("/affirm")
 def affirm():
     # Open and read the file
-    with open(r"C:\Users\xdvor\OneDrive\Dokumenty\GitHub\forestapp-hackathon\Backend\api\foster\output.txt", encoding='utf-8') as f:
+    with open(r"output.txt", encoding='utf-8') as f:
         content = f.read()
     
     try:
