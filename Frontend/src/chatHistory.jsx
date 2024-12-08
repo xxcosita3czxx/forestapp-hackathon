@@ -22,8 +22,8 @@ const ChatHistory = () => {
       }
 
       try {
-        const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
-          method: 'GET',
+        const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
+        method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`,
@@ -36,10 +36,13 @@ const ChatHistory = () => {
           return;
         }
 
+        
         const data = await response.json();
         const conversations = data.name ? [{ userId: data.name }] : [];
+        console.log(data);
 
         const userResponses = await Promise.all(conversations.map(async (conv) => {
+          console.log(`Fetching user details for ${conv.userId}`);
           const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
             method: 'GET',
             headers: {
@@ -133,9 +136,37 @@ const ChatHistory = () => {
           userName: userData.general ? userData.general.name : 'Unknown User',
           email: userData.general ? userData.general.email : 'No email'
         };
+        
+        // Add the new user to the current user's connections
+        await editUserConnections(userId, newUser.userId);
+        
         setUsers(prevUsers => [...prevUsers, newUser]);
       }
     } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const editUserConnections = async (currentUserId, newUserId) => {
+    try {
+      const editResponse = await fetch(
+        `http://127.0.0.1:8000/users/edit/${currentUserId}&messages&name1&${newUserId}`, 
+        {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!editResponse.ok) {
+        throw new Error(`Failed to edit user connections: ${editResponse.status}`);
+      }
+    } catch (err) {
+      console.error('Error editing user connections:', err);
+      // Optionally, you might want to show an error to the user
       setError(err.message);
     }
   };

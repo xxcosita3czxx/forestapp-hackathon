@@ -60,14 +60,14 @@ const Navbar = () => {
     };
   
     fetchColor();
-  }, [userId]); // Závislost na `userId`
+  }, [userId]); // Závislost na `userId` 
 
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "cosita",
-    username: "cosita123" 
+    username: "cosita123"  
   });
   const [showToast, setShowToast] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('PINK');
