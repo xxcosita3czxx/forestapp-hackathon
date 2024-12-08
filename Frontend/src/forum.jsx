@@ -16,6 +16,7 @@ const Forum = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   
   function addPost(title, content, author, likes = 0, comments = 0, date = new Date()) {
     const newPost = {
@@ -207,23 +208,34 @@ const Forum = () => {
       <div className="forum-content">
         <h1 className="forum-title">Diskuzní fórum</h1>
         
-        <div className="filter-container">
-          <button 
-            className="filter-button"
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-          >
-            <FaFilter /> Filter & Sort
-          </button>
-          
-          <div className={`filter-dropdown ${isFilterOpen ? 'active' : ''}`}>
-            <div className="filter-option" onClick={() => setSortBy('newest')}>
-              Newest First
-            </div>
-            <div className="filter-option" onClick={() => setSortBy('oldest')}>
-              Oldest First
-            </div>
-            <div className="filter-option" onClick={() => setSortBy('mostLiked')}>
-              Most Liked
+        <div className="forum-header">
+          <div className="filter-container">
+            <div className="filter-wrapper">
+              <button 
+                className="filter-btn" 
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+              >
+                <FaFilter /> Seřazení
+              </button>
+              
+              <button 
+                className="create-post-btn"
+                onClick={() => setIsCreatePostOpen(true)}
+              >
+                Vytvořit
+              </button>
+
+              <div className={`filter-dropdown ${isFilterOpen ? 'active' : ''}`}>
+                <div className="filter-option" onClick={() => setSortBy('newest')}>
+                  Newest First
+                </div>
+                <div className="filter-option" onClick={() => setSortBy('oldest')}>
+                  Oldest First
+                </div>
+                <div className="filter-option" onClick={() => setSortBy('mostLiked')}>
+                  Most Liked
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -247,6 +259,29 @@ const Forum = () => {
           ))}
         </div>
       </div>
+
+      {isCreatePostOpen && (
+        <div className="create-post-modal">
+          <div className="modal-content">
+            <h2>Create New Post</h2>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="text"
+                placeholder="Post Title"
+                className="post-title-input"
+              />
+              <textarea
+                placeholder="Post Content"
+                className="post-content-input"
+              />
+              <div className="modal-buttons">
+                <button onClick={() => setIsCreatePostOpen(false)}>Cancel</button>
+                <button type="submit">Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Navbar />
     </div>
