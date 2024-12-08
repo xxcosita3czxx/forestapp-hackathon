@@ -1,107 +1,91 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // To navigate between pages
+import { useNavigate } from 'react-router-dom';
 import './chatHistory.css';
 import { fetchAuth } from './utils/auth';
 
 const App = () => {
   const [users, setUsers] = useState([]); // List of users
-  const [loading, setLoading] = useState(true); // Loading state for users
-  const [error, setError] = useState(null); // To capture and display errors
-  const navigate = useNavigate(); // Initialize the navigate function
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
 
+  // Fetch user data
   useEffect(() => {
-    const fetchColor = async () => {
+    const fetchUserData = async () => {
       if (!userId) {
         console.error("userId není nastaven v localStorage.");
+        setError("userId není nastaven v localStorage.");
+        setLoading(false);
         return;
       }
-  
+
       try {
-        const response = await fetchAuth(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
           method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          },
+          headers: { 'Accept': 'application/json' },
         });
-  
+
         if (!response.ok) {
           console.error(`HTTP chyba: ${response.status}`);
+          setError(`HTTP chyba: ${response.status}`);
+          setLoading(false);
           return;
         }
-  
-        const data = await response.json(); // 
-        console.log('Response Data:', data);
-  
-        const theme = data.theme || 'default';
-        console.log('Theme:', theme);
-  
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-  
-    fetchColor();
-  }, [userId]); // Závislost na `userId`
 
-  useEffect(() => {
-    
-    // Fetch users from the /users/fetchall API endpoint using GET request
-    const fetchUsers = async () => {
-      try {
-        const response = await fetchAuth('http://127.0.0.1:8000/users/fetchall', {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json', // Ensure that the response is in JSON format
-          },
+        const data = await response.json();
+        console.log("Received Data:", data);
+
+        // Fetch usernames for each user ID
+        const userPromises = Object.keys(data).map(async (id) => {
+          const userResponse = await fetch(`http://127.0.0.1:8000/users/etting/set/${id}`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+          });
+
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            return { id, username: userData.general.name }; // Extract `username` from the response
+          } else {
+            console.error(`HTTP chyba u uživatele ${id}: ${userResponse.status}`);
+            return null;
+          }
         });
 
-        if (response.ok) {
-          const textData = await response.text(); // Get the response as raw text
-          console.log('Response Body (Text):', textData); // Log the raw text response
+        const userList = (await Promise.all(userPromises)).filter((user) => user !== null);
+        console.log("User List:", userList);
 
-          const data = JSON.parse(textData); // Parse the response text to JSON
-
-          // Convert the object to an array of user objects
-          const usersArray = Object.values(data).map(user => ({
-            id: user.general.name, // Assuming name is unique for each user
-            username: user.general.name,
-          }));
-
-          setUsers(usersArray); // Set the users data in state
-        } else {
-          setError(`Failed to fetch users. Status: ${response.status}`);
-        }
-
-        setLoading(false); // Stop loading once data is received
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        setError('Error fetching users. Please try again later.');
-        setLoading(false); // Stop loading if error occurs
+        setUsers(userList);
+      } catch (err) {
+        console.error('Chyba při načítání dat:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchUsers(); // Call the fetchUsers function when the component mounts
-  }, []); // Empty dependency array ensures this runs only once
+    fetchUserData();
+  }, [userId]);
 
-  const handleUserClick = (username) => {
-    console.log(`${username} - Clicked`); // Log the username
-    navigate('/chat', { state: { username } }); // Navigate to the chat page with username
+  // Handle user click to navigate to chat page
+  const handleUserClick = (userId) => {
+    console.log(`User ${userId} clicked`);
+    navigate('/chat', { state: { userId } });
   };
 
   return (
     <div>
       {loading ? (
-        <p className="loading-text">Loading users...</p> // Apply loading-text class
+        <p className="loading-text">Načítám data...</p>
       ) : error ? (
-        <p className="error-message">{error}</p> // Apply error-message class
+        <p className="error-message">{error}</p>
       ) : (
         users.map((user) => (
           <button
             key={user.id}
-            onClick={() => handleUserClick(user.username)} // Pass username to handleUserClick
-            className="user-button" // Apply user-button class
+            onClick={() => handleUserClick(user.id)}
+            className="user-button"
           >
             {user.username}
           </button>

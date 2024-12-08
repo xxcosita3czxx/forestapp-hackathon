@@ -53,7 +53,7 @@ const App = () => {
   }, [userId]); // Závislost na `userId`
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchOtherUsers = async () => {
       if (username) {
         console.error("username není nastaven v localStorage.");
         return;
@@ -83,8 +83,47 @@ const App = () => {
       }
     };
   
-    fetchUsers();
-  }, [userId]); // Závislost na `userId`
+    fetchOtherUsers();
+  }, [username]); // Závislost na `userId`
+
+  useEffect(() => {
+    const fetchTextHistory = async () => {
+      if (!userId) {
+        console.error("userId není nastaven v localStorage.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          console.error(`HTTP chyba: ${response.status}`);
+          return;
+        }
+  
+        const data = await response.json();
+        console.log('Response Data:', data);
+  
+        // Filtrovat zprávy podle `otherUserId`
+        const filteredMessages = Object.entries(data)
+          .filter(([key]) => key === otherUserId) // Filtr podle `otherUserId`
+          .flatMap(([_, messages]) => JSON.parse(`[${messages}]`)) // Parsování zpráv
+          .sort((a, b) => a.time - b.time); // Řazení zpráv podle času
+  
+        setMessages(filteredMessages); // Nastavit zprávy
+      } catch (error) {
+        console.error('Error fetching userId:', error);
+      }
+    };
+  
+    fetchTextHistory();
+  }, [userId, otherUserId]); // Závislost na `userId` a `otherUserId`
+
 
   useEffect(() => {
     
@@ -210,10 +249,10 @@ const App = () => {
         {messages.map((msg, index) => (
           <div 
             key={index}
-            className={`message-wrapper ${msg.isOwnMessage ? 'own-message' : 'other-message'}`}
+            className={`message-wrapper ${msg.role === 'recipient' ? 'other-message' : 'own-message'}`}
           >
             <div className="message">
-              {msg.text}
+              {msg.content}
             </div>
           </div>
         ))}
