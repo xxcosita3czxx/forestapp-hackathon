@@ -9,7 +9,7 @@ const App = () => {
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
-
+  const token = localStorage.getItem("token")
   // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
@@ -23,8 +23,10 @@ const App = () => {
       try {
         const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
           method: 'GET',
-          headers: { 'Accept': 'application/json' },
-        });
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }});
 
         if (!response.ok) {
           console.error(`HTTP chyba: ${response.status}`);
@@ -40,8 +42,10 @@ const App = () => {
         const userPromises = Object.keys(data).map(async (id) => {
           const userResponse = await fetch(`http://127.0.0.1:8000/users/etting/set/${id}`, {
             method: 'GET',
-            headers: { 'Accept': 'application/json' },
-          });
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }});
 
           if (userResponse.ok) {
             const userData = await userResponse.json();

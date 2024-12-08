@@ -6,7 +6,7 @@ import Navbar from './components/navbar';
 
 function App() {  
   const userId = localStorage.getItem('userId');
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchColor = async () => {
       if (!userId) {
@@ -19,6 +19,7 @@ function App() {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
   
