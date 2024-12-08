@@ -16,8 +16,8 @@ const App = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        console.error("userId není nastaven v localStorage.");
-        setError("userId není nastaven v localStorage.");
+        console.error("userId is not set in localStorage.");
+        setError("userId is not set in localStorage.");
         setLoading(false);
         return;
       }
@@ -34,8 +34,8 @@ const App = () => {
         });
 
         if (!response.ok) {
-          console.error(`HTTP chyba při fetching chat history: ${response.status}`);
-          setError(`HTTP chyba: ${response.status}`);
+          console.error(`HTTP error while fetching chat history: ${response.status}`);
+          setError(`HTTP error: ${response.status}`);
           setLoading(false);
           return;
         }
@@ -43,10 +43,10 @@ const App = () => {
         const data = await response.json();
         console.log("Received Data:", data); // Log the full response to inspect the structure
 
-        // Assuming data contains an array of conversations, extract relevant info
-        const conversations = data.messages ? data.messages.map(message => ({
-          userId: message.name, // Assuming 'name' is the userId
-        })) : [];
+        // Assuming data is an object with a 'name' field and it corresponds to a userId
+        const conversations = data.name ? [{
+          userId: data.name, // Directly using the 'name' as userId
+        }] : [];
 
         console.log("Extracted Conversations:", conversations); // Log the extracted conversations
 
@@ -84,7 +84,7 @@ const App = () => {
         setConversations(conversations);
 
       } catch (err) {
-        console.error('Chyba při načítání dat:', err);
+        console.error('Error loading data:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -103,7 +103,7 @@ const App = () => {
   return (
     <div>
       {loading ? (
-        <p className="loading-text">Načítám data...</p>
+        <p className="loading-text">Loading data...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
