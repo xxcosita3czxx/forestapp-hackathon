@@ -114,29 +114,30 @@ const Navbar = () => {
     const selectedTheme = e.target.value;
     setCurrentTheme(selectedTheme);
     
-    // Update background gradient based on theme
-    const root = document.documentElement;
+    // Define gradients
     const gradients = {
       PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
-      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+      BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)', 
       GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
       BLACK: 'linear-gradient(45deg, #333333, #666666)'
     };
 
-      // Get userId from localStorage
-      const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem("token")
-      try {
-        await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
-          method: 'PATCH',
-          headers: {
-            'Accept':"application/json",
-            'Authorization': `Bearer ${token}`,
-        }});
-      } catch (err) {
-        console.error('Failed to save theme:', err);
-      }
+    // Update background
     document.body.style.background = gradients[selectedTheme];
+    document.body.style.transition = 'background 0.3s ease';
+
+    // Save to backend
+    try {
+      await fetch(`http://localhost:8000/users/settings/set/${userId}&settings&theme&${selectedTheme}`, {
+        method: 'PATCH',
+        headers: {
+          'Accept': "application/json",
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+    } catch (err) {
+      console.error('Failed to save theme:', err);
+    }
   };
 
   

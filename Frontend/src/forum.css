@@ -1,6 +1,8 @@
 .forum-page {
   min-height: 100vh;
-  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
+  width: 100vw;
+  padding: 20px;
+  transition: background 0.3s ease;
   padding: 20px;
   padding-bottom: 100px;
   position: relative;

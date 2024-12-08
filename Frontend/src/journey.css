@@ -1,7 +1,8 @@
 .journey-page {
   min-height: 100vh;
+  width: 100vw;
   padding: 20px;
-  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
+  transition: background 0.3s ease;
 }
 
 .journey-path {
@@ -118,4 +119,12 @@
 
 .path-line.locked {
   background: #999;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  transition: background 0.3s ease;
 }
