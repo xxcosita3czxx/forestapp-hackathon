@@ -242,10 +242,18 @@ const Forum = () => {
     let sortedPosts = [...posts];
     switch (sortType) {
       case 'newest':
-        sortedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        sortedPosts.sort((a, b) => {
+          const dateA = new Date(b.createdAt);
+          const dateB = new Date(a.createdAt);
+          return dateA.getTime() - dateB.getTime();
+        });
         break;
       case 'oldest':
-        sortedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        sortedPosts.sort((a, b) => {
+          const dateA = new Date(a.createdAt);
+          const dateB = new Date(b.createdAt);
+          return dateA.getTime() - dateB.getTime();
+        });
         break;
       case 'az':
         sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
@@ -319,7 +327,13 @@ const Forum = () => {
               <p className="post-content">{post.content}</p>
               <div className="post-footer">
                 <span className="post-date">
-                  {new Date(post.createdAt).toLocaleDateString()}
+                  {new Date(post.createdAt).toLocaleString('cs-CZ', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </span>
                 <span className="post-category-tag">
                   {getCategoryName(post.category)}
