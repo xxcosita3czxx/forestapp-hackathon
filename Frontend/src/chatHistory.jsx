@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './chatHistory.css';
 
 const App = () => {
-  const [users, setUsers] = useState([]); // List of users
+  const [conversations, setConversations] = useState([]); // List of conversations
+  const [users, setUsers] = useState([]); // List of user details
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const App = () => {
   const userId = localStorage.getItem('userId');
   const token = localStorage.getItem('token');
 
-  // Fetch user data
+  // Fetch chat history and get userIds directly
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
@@ -22,6 +23,7 @@ const App = () => {
       }
 
       try {
+        console.log('Fetching chat history...');
         // Fetching the chat history
         const response = await fetch(`http://127.0.0.1:8000/chat/fetchconvos/${userId}`, {
           method: 'GET',
@@ -32,26 +34,27 @@ const App = () => {
         });
 
         if (!response.ok) {
-          console.error(`HTTP chyba: ${response.status}`);
+          console.error(`HTTP chyba při fetching chat history: ${response.status}`);
           setError(`HTTP chyba: ${response.status}`);
           setLoading(false);
           return;
         }
 
         const data = await response.json();
-        console.log("Received Data:", data); // Debugging log
+        console.log("Received Data:", data); // Log the full response to inspect the structure
 
-        // Fetch users based on the IDs in the chat history
-        const userPromises = Object.keys(data).map(async (chatUserId) => {
-          console.log(`Fetching user data for ID: ${chatUserId}`);
+        // Assuming data is an object with a 'name' field and it corresponds to a userId
+        const conversations = data.name ? [{
+          userId: data.name, // Directly using the 'name' as userId
+        }] : [];
 
-          // Checking if the userId is valid and exists
-          if (!chatUserId) {
-            console.error("Invalid user ID found:", chatUserId);
-            return null;
-          }
+        console.log("Extracted Conversations:", conversations); // Log the extracted conversations
 
-          const userResponse = await fetch(`http://127.0.0.1:8000/users/settings/set/${chatUserId}`, {
+        // Fetch user details for each conversation
+        console.log('Fetching user details for each conversation...');
+        const userResponses = await Promise.all(conversations.map(async (conv) => {
+          console.log(`Fetching user details for ${conv.userId}`);
+          const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -59,28 +62,27 @@ const App = () => {
             }
           });
 
-          if (userResponse.ok) {
-            const userData = await userResponse.json();
-            console.log("User Data:", userData); // Debugging log
-
-            // Checking if the response contains the 'general' and 'name' fields
-            if (userData && userData.general && userData.general.name) {
-              return { userId: chatUserId, username: userData.general.name };
-            } else {
-              console.error(`Chybí data pro uživatele ${chatUserId}`);
-              return null;
-            }
-          } else {
-            console.error(`HTTP chyba u uživatele ${chatUserId}: ${userResponse.status}`);
+          if (!userResponse.ok) {
+            console.error(`Error fetching user details for ${conv.userId}: ${userResponse.status}`);
             return null;
           }
-        });
 
-        // Filter out null values (users with missing or invalid data)
-        const userList = (await Promise.all(userPromises)).filter(user => user !== null);
-        console.log("User List:", userList);
+          const userData = await userResponse.json();
+          console.log(`User data for ${conv.userId}:`, userData);
 
-        setUsers(userList);
+          return {
+            userId: conv.userId,
+            userName: userData.general ? userData.general.name : 'Unknown User',
+            email: userData.general ? userData.general.email : 'No email',
+          };
+        }));
+
+        // Filter out null values in case some user data was not fetched
+        const validUsers = userResponses.filter(user => user !== null);
+        console.log("Valid Users:", validUsers); // Log valid user responses
+        setUsers(validUsers);
+        setConversations(conversations);
+
       } catch (err) {
         console.error('Chyba při načítání dat:', err);
         setError(err.message);
@@ -105,15 +107,19 @@ const App = () => {
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
-        users.map((user) => (
-          <button
-            key={user.userId} // Use userId as key, not 'id'
-            onClick={() => handleUserClick(user.userId)}
-            className="user-button"
-          >
-            {user.username} {/* Display the user's name */}
-          </button>
-        ))
+        users.length > 0 ? (
+          users.map((user) => (
+            <button
+              key={user.userId} // Use user ID as key
+              onClick={() => handleUserClick(user.userId)}
+              className="user-button"
+            >
+              {user.userName} {/* Display the user name */}
+            </button>
+          ))
+        ) : (
+          <p>No conversations found.</p>
+        )
       )}
     </div>
   );
