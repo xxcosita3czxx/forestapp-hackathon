@@ -51,7 +51,7 @@ const Navbar = () => {
         const data = await response.json(); // 
         console.log('Response Data:', data);
   
-        const theme = data.theme || 'default';
+        const theme = data.settings.theme;
         console.log('Theme:', theme);
   
       } catch (error) {
