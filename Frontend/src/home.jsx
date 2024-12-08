@@ -46,8 +46,8 @@ function App() {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const navigate = useNavigate(); // Add this hook
   const [userData, setUserData] = useState({
-    name: "cosita", // placeholder, will come from DB
-    username: "cosita123" // placeholder, will come from DB
+    name: "name", // placeholder, will come from DB
+    username: "username" // placeholder, will come from DB
   });
   const [showToast, setShowToast] = useState(false); // Add new state for toast
 
