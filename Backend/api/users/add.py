@@ -26,7 +26,8 @@ def check_aes_code(password, encrypted_code, original_string="success-uuid"):
     try:
         decrypted = unpad(cipher.decrypt(encrypted), AES.block_size).decode()
         return decrypted == original_string
-    except Exception:
+    except Exception as e:  # noqa: F841
+        #print(e)
         return False
 
 def create_user(name:str,timestamp:int,password:str,email:str,first_name:str,last_name:str,perm_level:int=1):  # noqa: E501

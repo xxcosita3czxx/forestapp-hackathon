@@ -4,7 +4,7 @@ import time
 import fastapi
 import utils.configmanager as cm
 from fastapi import WebSocket
-
+import requests
 # Create the FastAPI app
 app = fastapi.FastAPI()
 router = fastapi.APIRouter()
@@ -16,6 +16,16 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         data = json.loads(data)
         if data["type"] == "message":
+            try:
+                data = {"msg":data["content"]}
+                contentcheck = requests.post("192.168.0.10", data)
+                print(contentcheck)
+                if contentcheck["safe"] == "True":
+                    print("safe")
+                else:
+                    print(f"Suspicious message: {data["content"]}")
+            except:
+                pass
             contacts = cm.users.get(data["recipientid"], "general", "contacts")
             if cm.users.get(data["recipientid"], "general", "name") is not None and contacts is None:  # noqa: E501
                 contacts = data["senderid"]
@@ -48,5 +58,6 @@ async def websocket_endpoint(websocket: WebSocket):
                 #print(e)
                 msgs = f"{{\"time\": {time.time()},\"content\":\"{content}\",\"role\":\"sender\"}}"
             cm.users.set(data["recipientid"], "messages", data["recipientid"], msgs)
+            
 # todle tu musi bejt nesahej na to
 app.include_router(router)
