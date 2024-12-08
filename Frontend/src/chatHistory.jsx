@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './chatHistory.css';
+import Navbar from './components/navbar'; // Add import
 
-const App = () => {
+const ChatHistory = () => {
   const [conversations, setConversations] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -105,38 +106,48 @@ const App = () => {
   };
 
   return (
-    <div>
-      <div>
-        <input 
-          type="text" 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Enter username"
-        />
-        <button onClick={handleAddConfirm}>Confirm</button>
-      </div>
+    <div className="chat-history-page">
+      <div className="chat-history-content">
+        <div className="search-container">
+          <input 
+            type="text" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Vyhledat uživatele..."
+            className="search-input"
+          />
+          <button 
+            onClick={handleAddConfirm}
+            className="search-button"
+          >
+            Přidat
+          </button>
+        </div>
 
-      {loading ? (
-        <p className="loading-text">Loading data...</p>
-      ) : error ? (
-        <p className="error-message">{error}</p>
-      ) : (
-        users.length > 0 ? (
-          users.map((user) => (
-            <button
-              key={user.userId}
-              onClick={() => handleUserClick(user.userId)}
-              className="user-button"
-            >
-              {user.userName}
-            </button>
-          ))
+        {loading ? (
+          <p className="loading-text">Loading data...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
         ) : (
-          <p>No conversations found.</p>
-        )
-      )}
+          users.length > 0 ? (
+            users.map((user) => (
+              <button
+                key={user.userId}
+                onClick={() => handleUserClick(user.userId)}
+                className="user-button"
+              >
+                {user.userName}
+              </button>
+            ))
+          ) : (
+            <p>No conversations found.</p>
+          )
+        )}
+      </div>
+      
+      <Navbar /> {/* Add navbar at bottom */}
     </div>
   );
 };
 
-export default App;
+export default ChatHistory;

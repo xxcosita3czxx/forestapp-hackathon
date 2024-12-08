@@ -23,21 +23,119 @@ body {
   /* Style the user buttons */
   .user-button {
     display: block;
-    width: 200px;
+    width: 100%;
     margin: 10px auto;
-    padding: 12px 20px;
-    background-color: #007bff;
-    color: white;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    color: black;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 16px;
     text-align: center;
-    transition: background-color 0.3s ease;
+    transition: all 0.2s ease;
   }
   
   /* Button hover effect */
   .user-button:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.9);
   }
-  
+
+/* chatHistory.css */
+.chat-history-page {
+  min-height: 100vh;
+  background: linear-gradient(45deg, #FF55E3, #F3C1EE);
+  padding: 20px;
+  padding-bottom: 80px;
+  position: relative;
+}
+
+.chat-header {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  border-radius: 20px;
+  z-index: 100;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: black;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.chat-history-content {
+  max-width: 600px;
+  margin: 90px auto 0;
+  padding: 20px;
+}
+
+.search-container {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.search-container input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-container button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 12px 20px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 20px;
+  font-size: 16px;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+}
+
+.search-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
