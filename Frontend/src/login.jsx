@@ -1,5 +1,5 @@
 // src/components/Login.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,6 +8,42 @@ import './login.css';
 const API_URL = 'http://localhost:8000';
 
 const Login = () => {
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const fetchColor = async () => {
+      if (!userId) {
+        console.error("userId není nastaven v localStorage.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          console.error(`HTTP chyba: ${response.status}`);
+          return;
+        }
+  
+        const data = await response.json(); // 
+        console.log('Response Data:', data);
+  
+        const theme = data.theme || 'default';
+        console.log('Theme:', theme);
+  
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+  
+    fetchColor();
+  }, [userId]); // Závislost na `userId`
+
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [registrationStep, setRegistrationStep] = useState(1);
   const [credentials, setCredentials] = useState({

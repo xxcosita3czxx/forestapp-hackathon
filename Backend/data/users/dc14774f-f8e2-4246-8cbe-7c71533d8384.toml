@@ -1,0 +1,11 @@
+[general]
+name = "mrnobody"
+birthday = 1607389930
+pass = "2Y7sfzPOaCduPvtzy+ALZzvfaC8/2n3QcufyGvttK1iVZTV7wrGE6sPM0X8EgSY0M4dQO53q6LPYK4HcHAEmsQ=="
+email = "mrnobody@nothanks.cz"
+first_name = "Mr"
+last_name = "Nobody"
+perm_level = 10
+
+[settings]
+theme = "pink"

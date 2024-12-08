@@ -29,6 +29,18 @@ def check_aes_code(password, encrypted_code, original_string="success-uuid"):
     except Exception:
         return False
 
+def create_user(name:str,timestamp:int,password:str,email:str,first_name:str,last_name:str,perm_level:int=1):  # noqa: E501
+    new_id = ug.generate_user_id()
+    cm.users.set(new_id, "general", "name", name)
+    cm.users.set(new_id,"general", "birthday", timestamp)
+    enpassword = create_aes_encrypted_code(password,f"success-{new_id}")
+    cm.users.set(new_id,"general","pass",str(enpassword))
+    cm.users.set(new_id,"general","email",email)
+    cm.users.set(new_id,"general","first_name",first_name)
+    cm.users.set(new_id,"general","last_name",last_name)
+    cm.users.set(new_id,"general","perm_level",perm_level)
+    cm.users.set(new_id,"settings","theme","pink")
+
 
 @router.post("/add")
 def add_user(name: str,
@@ -40,17 +52,4 @@ def add_user(name: str,
             perm_level:int=1,
             authorization:str=fastapi.Depends(vpass.verify_permission_diez),  # noqa: E501
             ):  # noqa: E501
-    try:
-        vpass.set_permission_level(10)
-        new_id = ug.generate_user_id()
-        cm.users.set(new_id, "general", "name", name)
-        cm.users.set(new_id,"general", "birthday", timestamp)
-        enpassword = create_aes_encrypted_code(password,f"success-{new_id}")
-        cm.users.set(new_id,"general","pass",str(enpassword))
-        cm.users.set(new_id,"general","email",email)
-        cm.users.set(new_id,"general","first_name",first_name)
-        cm.users.set(new_id,"general","last_name",last_name)
-        cm.users.set(new_id,"general","perm_level",perm_level)
-        cm.users.set(new_id,"settings","theme","pink")
-    except Exception:
-        return "error"
+    create_user(name,timestamp,password,email,first_name,last_name,perm_level)

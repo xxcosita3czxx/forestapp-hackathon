@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
@@ -24,6 +24,42 @@ const THEMES = {
 };
 
 const Navbar = () => {
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const fetchColor = async () => {
+      if (!userId) {
+        console.error("userId není nastaven v localStorage.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/users/settings/set/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          console.error(`HTTP chyba: ${response.status}`);
+          return;
+        }
+  
+        const data = await response.json(); // 
+        console.log('Response Data:', data);
+  
+        const theme = data.theme || 'default';
+        console.log('Theme:', theme);
+  
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+  
+    fetchColor();
+  }, [userId]); // Závislost na `userId`
+
   const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
