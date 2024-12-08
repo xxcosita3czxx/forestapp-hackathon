@@ -19,7 +19,7 @@ async def websocket_endpoint(websocket: WebSocket):
             data = {"msg":data["content"]}
             contentcheck = requests.post("192.168.0.10", data)
             print(contentcheck)
-            if contentcheck["safe"] == True:
+            if contentcheck["safe"] == "True":
                 contacts = cm.users.get(data["recipientid"], "general", "contacts")
                 if cm.users.get(data["recipientid"], "general", "name") is not None and contacts is None:  # noqa: E501
                     contacts = data["senderid"]
