@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './chatHistory.css';
+import Navbar from './components/navbar'; // Add import
 
-const App = () => {
+const ChatHistory = () => {
   const [conversations, setConversations] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
@@ -72,6 +72,42 @@ const App = () => {
     fetchUserData();
   }, [userId]);
 
+  useEffect(() => {
+    const fetchTheme = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await fetch(`http://localhost:8000/users/settings/set/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const theme = data.settings.theme;
+
+        // Apply theme
+        const gradients = {
+          PINK: 'linear-gradient(45deg, #FF55E3, #F3C1EE)',
+          BLUE: 'linear-gradient(45deg, #55B4FF, #C1E4EE)',
+          GREEN: 'linear-gradient(45deg, #55FF7E, #C1EED3)',
+          BLACK: 'linear-gradient(45deg, #333333, #666666)'
+        };
+
+        document.body.style.background = gradients[theme];
+        document.body.style.transition = 'background 0.3s ease';
+
+      } catch (error) {
+        console.error('Error fetching theme:', error);
+      }
+    };
+
+    fetchTheme();
+  }, [userId]);
+
   const handleUserClick = (userId) => {
     navigate('/chat', { state: { userId } });
   };
@@ -105,38 +141,34 @@ const App = () => {
   };
 
   return (
-    <div>
-      <div>
-        <input 
-          type="text" 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Enter username"
-        />
-        <button onClick={handleAddConfirm}>Confirm</button>
-      </div>
-
-      {loading ? (
-        <p className="loading-text">Loading data...</p>
-      ) : error ? (
-        <p className="error-message">{error}</p>
-      ) : (
-        users.length > 0 ? (
-          users.map((user) => (
-            <button
-              key={user.userId}
-              onClick={() => handleUserClick(user.userId)}
-              className="user-button"
-            >
-              {user.userName}
-            </button>
-          ))
+    <div className="chat-history-page">
+      <div className="chat-history-content">
+        <h1 className="chat-history-title">Chats</h1>
+        
+        {loading ? (
+          <p className="loading-text">Loading data...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
         ) : (
-          <p>No conversations found.</p>
-        )
-      )}
+          users.length > 0 ? (
+            users.map((user) => (
+              <button
+                key={user.userId}
+                onClick={() => handleUserClick(user.userId)}
+                className="user-button"
+              >
+                {user.userName}
+              </button>
+            ))
+          ) : (
+            <p>No conversations found.</p>
+          )
+        )}
+      </div>
+      
+      <Navbar /> {/* Add navbar at bottom */}
     </div>
   );
 };
 
-export default App;
+export default ChatHistory;
