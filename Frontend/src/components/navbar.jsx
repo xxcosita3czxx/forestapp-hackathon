@@ -4,8 +4,6 @@ import { FaUser, FaComments, FaHome, FaQuestionCircle, FaCommentDots, FaTimes, F
 import { FiSettings } from 'react-icons/fi';
 import './navbar.css';
 
-
-const token = localStorage.getItem("token");
 const THEMES = {
   PINK: {
     from: '#FF55E3',
@@ -26,6 +24,7 @@ const THEMES = {
 };
 
 const Navbar = () => {
+  const token = localStorage.getItem("token");
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
