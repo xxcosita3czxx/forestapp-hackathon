@@ -40,6 +40,7 @@ const Navbar = () => {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Accept': "application/json",
           }
         });
   
@@ -66,8 +67,8 @@ const Navbar = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
-    name: "cosita",
-    username: "cosita123"  
+    name: "Mr Nobody",
+    username: "mrnobody"  
   });
   const [showToast, setShowToast] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('PINK');

@@ -318,8 +318,8 @@ const Forum = () => {
         <div className="posts-container">
           {filteredPosts.map(post => (
             <div key={post.id} 
-                 className="post-card"
-                 onClick={() => handlePostClick(post)}>
+                className="post-card"
+                onClick={() => handlePostClick(post)}>
               <div className="post-header">
                 <h2 className="post-title">{post.title}</h2>
                 <span className="post-author">Author: {post.author}</span>
