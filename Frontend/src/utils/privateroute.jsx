@@ -19,6 +19,14 @@ const PrivateRoute = ({ children }) => {
       }
 
       const isValid = await verifySession();
+      
+      if (!isValid) {
+        // Clear invalid session data
+        localStorage.removeItem('sessionId');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      
       setIsAuthenticated(isValid);
       setIsLoading(false);
     };
