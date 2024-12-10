@@ -7,6 +7,6 @@ router = fastapi.APIRouter()
 @router.get("/fetchall")
 def fetchall_cat(authorization:str=fastapi.Depends(vpass.verify_permission_un)):
     try:
-        return fastapi.responses.JSONResponse(cm.forums.config)
+        return cm.forums.config
     except Exception as e:
         return fastapi.HTTPException(status_code=500,detail=e)
