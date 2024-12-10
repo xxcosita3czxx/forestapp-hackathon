@@ -41,8 +41,8 @@ const Chat = () => {
         console.log('Response Data:', data);
   
         const theme = data.theme || 'default';
-        setColor(theme); // Nastavit barvu na základě odpovědi
-  
+        //setColor(theme); // Nastavit barvu na základě odpovědi
+
       } catch (error) {
         console.error('Error fetching users:', error);
       }

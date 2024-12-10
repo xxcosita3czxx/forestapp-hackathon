@@ -14,7 +14,7 @@ def verify(sessionid:str, userid:str):
     if sessionid_saved == sessionid:
         if int(current_timestamp) - int(valid_until) > 0:
             new_timestamp = current_timestamp + 1800
-            cm.sessions.set("sessions",userid,"valid_until",int(datetime.timestamp(new_timestamp)))
+            cm.sessions.set("sessions",userid,"valid_until",int(new_timestamp))
             return fastapi.responses.JSONResponse(status_code=200,detail="Success")
         else:
             return HTTPException(status_code=401,detail="User was logged out")

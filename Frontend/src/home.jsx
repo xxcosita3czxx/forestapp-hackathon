@@ -6,11 +6,34 @@ import Navbar from './components/navbar';
 
 function App() {  
   const userId = localStorage.getItem('userId');
+  const sessionId = localStorage.getItem("sessionId")
   const token = localStorage.getItem("token");
-  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verify = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/auth/verify/sessionid=${sessionId}&userid=${userId}`, {
+          method: "GET",
+          headers: {
+            "Accept":"application/json",
+          }
+        });
+          
+        if (response.status !== 200) {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        navigate("/login");
+      }
+    };
+
+    verify();
+  }, [navigate]);
+
   const [searchActive, setSearchActive] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
-  const navigate = useNavigate(); // Add this hook
   const [userData, setUserData] = useState({
     name: "name", // placeholder, will come from DB
     username: "username" // placeholder, will come from DB

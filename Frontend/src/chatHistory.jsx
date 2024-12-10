@@ -22,9 +22,13 @@ const ChatHistory = () => {
         setLoading(false);
         return;
       }
-
+      if (!token) {
+        setError("Please login again");
+        setLoading(false);
+        return;
+      }
       try {
-        const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
+        const response = await fetch(`http://127.0.0.1:8000/users/fetch/${userId}`, {
         method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -33,7 +37,7 @@ const ChatHistory = () => {
         });
         
         if (!response.ok) {
-          setError(`HTTP error: ${response.status}`);
+          setError(`HTTP error: ${response.status}, ${response.statusText}`);
           setLoading(false);
           return;
         }
@@ -46,7 +50,7 @@ const ChatHistory = () => {
         console.log("data is " +  data);
         const userResponses = await Promise.all(conversations.map(async (conv) => {
           console.log(`Fetching user details for ${conv.userId}`);
-          const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${conv.userId}`, {
+          const userResponse = await fetch(`http://127.0.0.1:8000/users/fetch/${userId}`, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',

@@ -32,7 +32,7 @@ def bearer_token(credentials: HTTPAuthorizationCredentials = fastapi.Depends(sec
 
         # Validate expiration
         valid_until_dt = valid_until
-        if int(datetime.timestamp(datetime.now())) > int(valid_until_dt):
+        if int(datetime.timestamp(datetime.now())) - int(valid_until_dt) > 0:
             raise HTTPException(status_code=401, detail="Token has expired")
 
         return user_id, sessionid
