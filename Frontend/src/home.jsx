@@ -13,10 +13,10 @@ function App() {
   useEffect(() => {
     const verify = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/auth/verify/sessionid=${sessionId}&userid=${userId}`, {
-          method: "GET",
+        const response = await fetch(`http://localhost:8000/auth/verify/${sessionId}&${userId}`, {
+          method: 'POST',
           headers: {
-            "Accept":"application/json",
+            'Accept':"application/json",
           }
         });
           
@@ -46,7 +46,7 @@ function App() {
 
       try {
         const response = await fetch(`http://localhost:8000/users/settings/set/${userId}`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
           }

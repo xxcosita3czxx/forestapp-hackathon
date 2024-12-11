@@ -51,7 +51,8 @@ def fetch(query:str,
     users = cm.users.config
     users_formated = defaultdict(dict,users)
     data = search_data(query,users_formated,login=login,full_match=full_match)
-    if data is None:
+    print (data)
+    if data is None or data == "null" or data =="None":
         fastapi.HTTPException(status_code=404,detail="User not found")
     else:
         return data

@@ -68,9 +68,9 @@ const Forum = () => {
               id: `${groupId}-${postId}`,
               title: post.title || 'Untitled',
               content: post.text || post.description || 'No content',
-              author: post.author_id || 'Anonymous',
+              author: post.author_id || 'Anonymous/Deleted user',
               category: category, // This will now properly set all categories
-              createdAt: Date.now()
+              createdAt: post.date
             };
           });
         });
